@@ -30,7 +30,7 @@ class _LoginPageState extends State<LoginPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(
-                height: MediaQuery.of(context).viewPadding.top,
+                height: MediaQuery.of(context).viewPadding.top + 16,
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(
@@ -61,7 +61,7 @@ class _LoginPageState extends State<LoginPage> {
                         style: createBlackTextStyle(32),
                         children: [
                           TextSpan(
-                            text: 'HR dpp_mobile',
+                            text: 'HR Attendee',
                             style: createPrimaryTextStyle(32),
                           ),
                         ],
@@ -177,29 +177,29 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
               ),
-              const SizedBox(
-                height: 56,
-              ),
-              Container(
-                alignment: Alignment.center,
-                padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "Belum punya akun? ",
-                      style: createBlackTextStyle(14),
-                    ),
-                    GestureDetector(
-                      onTap: () {},
-                      child: Text(
-                        "Daftar",
-                        style: createPrimaryTextStyle(14),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              // const SizedBox(
+              //   height: 56,
+              // ),
+              // Container(
+              //   alignment: Alignment.center,
+              //   padding: const EdgeInsets.symmetric(horizontal: 24.0),
+              //   child: Row(
+              //     mainAxisAlignment: MainAxisAlignment.center,
+              //     children: [
+              //       Text(
+              //         "Belum punya akun? ",
+              //         style: createBlackTextStyle(14),
+              //       ),
+              //       GestureDetector(
+              //         onTap: () {},
+              //         child: Text(
+              //           "Daftar",
+              //           style: createPrimaryTextStyle(14),
+              //         ),
+              //       ),
+              //     ],
+              //   ),
+              // ),
               const SizedBox(
                 height: 32,
               ),

@@ -19,6 +19,7 @@ class DashboardPage extends StatefulWidget {
 class _DashboardPageState extends State<DashboardPage> {
   int pageIndex = 0;
   bool isCheckIn = true;
+  bool isFit = true;
 
   final pages = [
     const DashboardHome(),
@@ -40,23 +41,191 @@ class _DashboardPageState extends State<DashboardPage> {
             pages[pageIndex],
             pageIndex == 0
                 ? buildSwipeButton(context, isCheckIn, () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          isCheckIn
-                              ? "Check In Success..."
-                              : "Check Out Success...",
-                          style: createWhiteMediumTextStyle(16),
-                        ),
-                        backgroundColor: isCheckIn
-                            ? AppColors().primaryColor
-                            : Colors.orange,
-                      ),
-                    );
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text(
+                            isCheckIn ? "Check In" : "Check Out",
+                          ),
+                          content: SingleChildScrollView(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                // Text('Lokasimu Saat Ini'),
+                                // Image.asset(
+                                //   "asset/images/maps.png",
+                                //   width: 150,
+                                //   height: 75,
+                                // ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      'Foto',
+                                      style: createBlackMediumTextStyle(14),
+                                    ),
+                                    Text(
+                                      'Camera >>',
+                                      style: createPrimaryThinTextStyle(14),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(
+                                  height: 8.0,
+                                ),
+                                Container(
+                                  width: double.infinity,
+                                  padding: const EdgeInsets.all(16.0),
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey.shade200,
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(8.0)),
+                                  ),
+                                  child: Text(
+                                    "assets-library://asset/asset.PNG?id=CE542E92-B1FF-42DC-BD89-D61BB70EB4BF&ext=PNG",
+                                    style: createBlackThinTextStyle(14),
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 16.0,
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      'Bagaimana Kondisimu?',
+                                      style: createBlackMediumTextStyle(14),
+                                    ),
+                                    const Spacer(),
+                                  ],
+                                ),
+                                const SizedBox(
+                                  height: 8.0,
+                                ),
+                                Flex(
+                                  direction: Axis.horizontal,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Flexible(
+                                      flex: 1,
+                                      child: Container(
+                                        width: double.infinity,
+                                        padding: const EdgeInsets.all(16.0),
+                                        decoration: BoxDecoration(
+                                          color: isCheckIn
+                                              ? AppColors().primaryColor
+                                              : Colors.orange,
+                                          borderRadius: const BorderRadius.all(
+                                              Radius.circular(8.0)),
+                                        ),
+                                        child: Text(
+                                          textAlign: TextAlign.center,
+                                          "Sehat",
+                                          style: createWhiteTextStyle(14),
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      width: 16.0,
+                                    ),
+                                    Flexible(
+                                      flex: 1,
+                                      child: Container(
+                                        width: double.infinity,
+                                        padding: const EdgeInsets.all(16.0),
+                                        decoration: BoxDecoration(
+                                          color: Colors.grey.shade200,
+                                          borderRadius: const BorderRadius.all(
+                                              Radius.circular(8.0)),
+                                        ),
+                                        child: Text(
+                                          textAlign: TextAlign.center,
+                                          "Tidak Sehat",
+                                          style: createBlackThinTextStyle(14),
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                                const SizedBox(
+                                  height: 16.0,
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      "Detail Aktivitas Hari Ini",
+                                      style: createBlackMediumTextStyle(14),
+                                    ),
+                                    const Spacer(),
+                                  ],
+                                ),
+                                const SizedBox(
+                                  height: 16.0,
+                                ),
+                                Container(
+                                  width: double.infinity,
+                                  height: 100,
+                                  padding: const EdgeInsets.all(8.0),
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey.shade200,
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(16.0)),
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 16.0,
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                          isCheckIn
+                                              ? "Check In Success..."
+                                              : "Check Out Success...",
+                                          style: createWhiteMediumTextStyle(16),
+                                        ),
+                                        backgroundColor: isCheckIn
+                                            ? AppColors().primaryColor
+                                            : Colors.orange,
+                                      ),
+                                    );
 
-                    setState(() {
-                      isCheckIn = !isCheckIn;
-                    });
+                                    setState(() {
+                                      isCheckIn = !isCheckIn;
+                                    });
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Container(
+                                    width: double.infinity,
+                                    padding: const EdgeInsets.all(16.0),
+                                    decoration: BoxDecoration(
+                                      color: isCheckIn
+                                          ? AppColors().primaryColor
+                                          : Colors.orange,
+                                      borderRadius: const BorderRadius.all(
+                                          Radius.circular(8.0)),
+                                    ),
+                                    child: Text(
+                                      textAlign: TextAlign.center,
+                                      isCheckIn ? "Check In" : "Check Out",
+                                      style: createWhiteTextStyle(14),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    );
                   })
                 : Container(),
           ],

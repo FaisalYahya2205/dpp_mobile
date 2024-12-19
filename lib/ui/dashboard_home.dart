@@ -1,3 +1,4 @@
+import 'package:dpp_mobile/ui/attendance_history.dart';
 import 'package:dpp_mobile/utils/constants/attendance_list.dart';
 import 'package:dpp_mobile/utils/constants/calendar_sample.dart';
 import 'package:dpp_mobile/utils/constants/profile_sample.dart';
@@ -18,6 +19,22 @@ class DashboardHome extends StatefulWidget {
 
 class _DashboardHomeState extends State<DashboardHome> {
   bool isCheckIn = true;
+  List<Map<String, dynamic>> copyAttendanceListSamples = [
+    ...attendanceListSamples
+  ];
+  List<Map<String, dynamic>> descAttendanceListSamples = [];
+  Map<String, dynamic>? latestCheckIn;
+  String? todayCheckInTime;
+  String? todayCheckInStatus;
+  String? todayCheckOutTime;
+  String? todayCheckOutStatus;
+  String? todayHappinessIndex;
+
+  @override
+  void initState() {
+    super.initState();
+    latestCheckIn = copyAttendanceListSamples.last;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -116,8 +133,12 @@ class _DashboardHomeState extends State<DashboardHome> {
                         children: [
                           todayAttendanceCard(
                             "Check In",
-                            "07:54 am",
-                            "Tepat Waktu",
+                            latestCheckIn!['time'] == null
+                                ? "-"
+                                : latestCheckIn?['time'],
+                            latestCheckIn!['status'] == null
+                                ? "-"
+                                : latestCheckIn?['status'],
                             Iconsax.login_1,
                           ),
                           const SizedBox(
@@ -125,8 +146,12 @@ class _DashboardHomeState extends State<DashboardHome> {
                           ),
                           todayAttendanceCard(
                             "Check Out",
-                            "-",
-                            "-",
+                            todayCheckOutTime == null
+                                ? "-"
+                                : todayCheckOutTime!,
+                            todayCheckOutStatus == null
+                                ? "-"
+                                : todayCheckOutStatus!,
                             Iconsax.logout_1,
                           ),
                         ],
@@ -142,7 +167,9 @@ class _DashboardHomeState extends State<DashboardHome> {
                           todayAttendanceCard(
                             "Health",
                             "Check In",
-                            "Sehat",
+                            latestCheckIn!['check_in_status'] == null
+                                ? "-"
+                                : latestCheckIn?['check_in_status'],
                             Iconsax.health,
                           ),
                           const SizedBox(
@@ -167,7 +194,17 @@ class _DashboardHomeState extends State<DashboardHome> {
                             style: createBlackMediumTextStyle(14),
                           ),
                           GestureDetector(
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (BuildContext context) {
+                                    return AttendanceHistory(
+                                      attendanceList: copyAttendanceListSamples,
+                                    );
+                                  },
+                                ),
+                              );
+                            },
                             child: Text(
                               "Lihat Lainnya",
                               style: createPrimaryBoldTextStyle(14),
@@ -185,12 +222,11 @@ class _DashboardHomeState extends State<DashboardHome> {
                         padding: const EdgeInsets.all(0),
                         itemBuilder: (context, index) {
                           return latestAttendanceListItem(
-                            attendanceListSamples[index],
-                          );
+                              attendanceListSamples[index], context);
                         },
                       ),
                       const SizedBox(
-                        height: 16.0,
+                        height: 96.0,
                       ),
                     ],
                   ),
