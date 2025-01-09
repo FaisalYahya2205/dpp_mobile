@@ -1,3 +1,6 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'package:dpp_mobile/services/odoo_service.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 
@@ -155,14 +158,22 @@ class _LoginPageState extends State<LoginPage> {
                 width: double.infinity,
                 height: 48,
                 child: ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
                     if (_formKey.currentState!.validate()) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Processing Data...')),
+                      bool auth = await OdooService().authentication(
+                        emailTextController.text,
+                        passwordTextController.text,
                       );
-                      Future.delayed(const Duration(seconds: 5), () {
+                      if (auth) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Login Berhasil...')),
+                        );
                         context.go("/dashboard");
-                      });
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Login Gagal...')),
+                        );
+                      }
                     }
                   },
                   style: ElevatedButton.styleFrom(

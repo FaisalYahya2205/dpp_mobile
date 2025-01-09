@@ -4,7 +4,8 @@ import 'package:dpp_mobile/utils/themes/text_style.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 
-Widget latestAttendanceListItem(Map<String, dynamic> attendanceListItem, BuildContext context) =>
+Widget latestAttendanceListItem(
+        Map<String, dynamic> attendanceListItem, BuildContext context) =>
     GestureDetector(
       onTap: () {
         Navigator.of(context).push(
@@ -26,34 +27,39 @@ Widget latestAttendanceListItem(Map<String, dynamic> attendanceListItem, BuildCo
         ),
         child: Row(
           children: [
-            Container(
-              padding: const EdgeInsets.all(8.0),
-              decoration: BoxDecoration(
-                color: AppColors().primaryColor.withAlpha(20),
-                borderRadius: BorderRadius.circular(8.0),
-              ),
-              child: Icon(
-                attendanceListItem["activity"].toString() == "Check In"
-                    ? Iconsax.login_1
-                    : Iconsax.logout_1,
-                color: AppColors().primaryColor,
-              ),
-            ),
-            const SizedBox(
-              width: 8.0,
-            ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  attendanceListItem["activity"].toString(),
-                  style: createBlackMediumTextStyle(16),
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(2.0),
+                      decoration: BoxDecoration(
+                        color: AppColors().primaryColor.withAlpha(20),
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      child: Icon(
+                        Iconsax.login_1,
+                        color: AppColors().primaryColor,
+                        size: 24,
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 8.0,
+                    ),
+                    Text(
+                      "Check In",
+                      style: createBlackMediumTextStyle(16),
+                    ),
+                  ],
                 ),
                 const SizedBox(
                   height: 4,
                 ),
                 Text(
-                  attendanceListItem["date"].toString(),
+                  attendanceListItem["check_in"].toString() == "false"
+                      ? "-"
+                      : attendanceListItem["check_in"].toString(),
                   style: createBlackThinTextStyle(14),
                 ),
               ],
@@ -62,15 +68,36 @@ Widget latestAttendanceListItem(Map<String, dynamic> attendanceListItem, BuildCo
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Text(
-                  attendanceListItem["time"].toString(),
-                  style: createBlackMediumTextStyle(16),
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(2.0),
+                      decoration: BoxDecoration(
+                        color: AppColors().primaryColor.withAlpha(20),
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      child: Icon(
+                        Iconsax.logout_1,
+                        color: AppColors().primaryColor,
+                        size: 24,
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 8.0,
+                    ),
+                    Text(
+                      "Check Out",
+                      style: createBlackMediumTextStyle(16),
+                    ),
+                  ],
                 ),
                 const SizedBox(
                   height: 4,
                 ),
                 Text(
-                  attendanceListItem["status"].toString(),
+                  attendanceListItem["check_out"].toString() == "false"
+                      ? "-"
+                      : attendanceListItem["check_out"].toString(),
                   style: createBlackThinTextStyle(14),
                 ),
               ],

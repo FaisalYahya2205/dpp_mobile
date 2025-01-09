@@ -1,7 +1,10 @@
 import 'dart:async';
-
+import 'package:dpp_mobile/database/database.dart';
+import 'package:dpp_mobile/main.dart';
+import 'package:dpp_mobile/services/odoo_service.dart';
 import 'package:dpp_mobile/utils/themes/app_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:go_router/go_router.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -12,10 +15,26 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  Future<void> redirectFunction() async {
+    localSession = await DatabaseHelper.instance.getAllQuery("session");
+    if (localSession!.isEmpty) {
+      Timer(const Duration(seconds: 5), () => context.replace('/login'));
+    } else {
+      try {
+        await OdooService().authentication(
+            localSession!.first['user_login'], localSession!.first['password']);
+        Timer(const Duration(seconds: 5), () => context.replace('/dashboard'));
+      } catch (e) {
+        await DatabaseHelper.instance.truncateQuery("session");
+        Timer(const Duration(seconds: 5), () => context.replace('/login'));
+      }
+    }
+  }
+
   @override
   void initState() {
     super.initState();
-    Timer(const Duration(seconds: 5), () => context.replace('/login'));
+    redirectFunction();
   }
 
   @override

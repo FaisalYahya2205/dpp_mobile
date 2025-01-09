@@ -1,18 +1,39 @@
-import 'dart:async';
+// ignore_for_file: prefer_typing_uninitialized_variables
 
+import 'package:dpp_mobile/database/database.dart';
 import 'package:dpp_mobile/routing/app_routing.dart';
+import 'package:dpp_mobile/utils/app_bloc_observer.dart';
 import 'package:dpp_mobile/utils/themes/app_colors.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:odoo_rpc/odoo_rpc.dart';
 
-void main() {
+OdooClient? client;
+DatabaseHelper? databaseHelper;
+List<Map<String, dynamic>>? localSession;
+var subscription;
+var loginSubscription;
+var inRequestSubscription;
+
+void main() async {
+  // declare bloc observer
+  WidgetsFlutterBinding.ensureInitialized();
+  Bloc.observer = const AppBlocObserver();
+  // init local database & env file
+  databaseHelper = DatabaseHelper.instance;
+  await databaseHelper!.initDb();
+  await dotenv.load(fileName: ".env");
+
+  // init odooRpc
+  final url = dotenv.get("URL");
+  client = OdooClient(url);
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
@@ -38,7 +59,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
   @override
   Widget build(BuildContext context) {
     return const Scaffold(

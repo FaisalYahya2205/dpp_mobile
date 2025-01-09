@@ -1,4 +1,3 @@
-import 'package:dpp_mobile/utils/constants/attendance_list.dart';
 import 'package:dpp_mobile/utils/constants/profile_sample.dart';
 import 'package:dpp_mobile/utils/themes/text_style.dart';
 import 'package:dpp_mobile/widgets/attendance_latest_list_item.dart';
@@ -6,18 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 
 class AttendanceHistory extends StatefulWidget {
-  const AttendanceHistory({super.key, required this.attendanceList});
-
-  final List<Map<String, dynamic>> attendanceList;
+  const AttendanceHistory({super.key});
 
   @override
   State<AttendanceHistory> createState() => _AttendanceHistoryState();
 }
 
 class _AttendanceHistoryState extends State<AttendanceHistory> {
-  List<Map<String, dynamic>> copyAttendanceListSamples = [
-    ...attendanceListSamples
-  ];
+  List<Map<String, dynamic>> attendanceList = [];
 
   @override
   Widget build(BuildContext context) {
@@ -49,13 +44,13 @@ class _AttendanceHistoryState extends State<AttendanceHistory> {
                 height: 16,
               ),
               ListView.builder(
-                itemCount: widget.attendanceList.length,
+                itemCount: attendanceList.length,
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
                 padding: const EdgeInsets.all(0),
                 itemBuilder: (context, index) {
                   return latestAttendanceListItem(
-                      widget.attendanceList[index], context);
+                      attendanceList[index], context);
                 },
               ),
             ],
