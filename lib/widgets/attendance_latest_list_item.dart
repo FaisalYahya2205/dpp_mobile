@@ -1,11 +1,12 @@
-import 'package:dpp_mobile/ui/attendance_history_detail.dart';
+import 'package:dpp_mobile/models/attendance.dart';
+import 'package:dpp_mobile/ui/attendance_history/attendance_history_detail.dart';
 import 'package:dpp_mobile/utils/themes/app_colors.dart';
 import 'package:dpp_mobile/utils/themes/text_style.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 
 Widget latestAttendanceListItem(
-        Map<String, dynamic> attendanceListItem, BuildContext context) =>
+        Attendance attendanceListItem, BuildContext context) =>
     GestureDetector(
       onTap: () {
         Navigator.of(context).push(
@@ -57,9 +58,9 @@ Widget latestAttendanceListItem(
                   height: 4,
                 ),
                 Text(
-                  attendanceListItem["check_in"].toString() == "false"
+                  attendanceListItem.check_in == null
                       ? "-"
-                      : attendanceListItem["check_in"].toString(),
+                      : attendanceListItem.check_in.toString(),
                   style: createBlackThinTextStyle(14),
                 ),
               ],
@@ -95,9 +96,9 @@ Widget latestAttendanceListItem(
                   height: 4,
                 ),
                 Text(
-                  attendanceListItem["check_out"].toString() == "false"
+                  attendanceListItem.check_out == null
                       ? "-"
-                      : attendanceListItem["check_out"].toString(),
+                      : attendanceListItem.check_out.toString(),
                   style: createBlackThinTextStyle(14),
                 ),
               ],

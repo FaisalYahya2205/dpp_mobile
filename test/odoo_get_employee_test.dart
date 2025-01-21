@@ -46,7 +46,9 @@ void main() async {
           '__last_update',
           'image_128',
           'image_1920',
-          'tz'
+          'tz',
+          'last_check_in',
+          'last_check_out'
         ],
       },
     });

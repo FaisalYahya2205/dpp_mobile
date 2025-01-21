@@ -1,3 +1,6 @@
+import 'package:dpp_mobile/main.dart';
+import 'package:dpp_mobile/models/attendance.dart';
+import 'package:dpp_mobile/models/employee.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:odoo_rpc/odoo_rpc.dart';
@@ -8,6 +11,7 @@ void main() async {
   try {
     await client.authenticate(
         dotenv.get("DATABASE"), "andiade52@gmail.com", "a");
+
     final userData = await client.callKw({
       'model': 'res.users',
       'method': 'search_read',
@@ -17,67 +21,44 @@ void main() async {
         'domain': [
           ["email", "=", "andiade52@gmail.com"]
         ],
-        'fields': ['id'],
+        'fields': ['id', 'partner_id'],
         'limit': 80,
       },
     });
-    debugPrint("DATA USER => " + userData[0].toString());
-    final employeeData = await client.callKw({
-      'model': 'hr.employee',
-      'method': 'search_read',
-      'args': [],
-      'kwargs': {
-        'context': {'bin_size': true},
-        'domain': [
-          ["user_id", "=", userData[0]["id"]]
+
+    List<dynamic> employee = await client.callKw({
+      "model": "hr.employee",
+      "method": "search_read",
+      "args": [],
+      "kwargs": {
+        "context": {"bin_size": true},
+        "domain": [
+          ["user_id", "=", userData[0]['id']]
         ],
-        'fields': [
-          'id',
-          'name',
-          'nrp',
-          'job_id',
-          'job_title',
-          'work_email',
-          'work_phone',
-          '__last_update',
-          'image_128',
-          'tz'
-        ],
+        "fields": getEmployeeFields(),
       },
     });
-    debugPrint(employeeData.toString());
-    final attendanceList = await client.callKw({
+    Employee employeeData = Employee.fromMap(employee[0]);
+
+    List<dynamic> data = await client.callKw({
       'model': 'hr.attendance',
       'method': 'search_read',
       'args': [],
       'kwargs': {
         'context': {'bin_size': true},
         'domain': [
-          ["employee_id", "=", employeeData[0]["id"]],
-          ["check_out", "like", "%2025-01-09%"],
+          ["employee_id", "=", employeeData.id],
+          ["check_out", "=", false],
         ],
-        'fields': [
-          'employee_id',
-          'check_in',
-          'geo_access_check_in',
-          'ismobile_check_in',
-          'geo_check_in',
-          'map_url_check_in',
-          'check_in_image',
-          'check_out',
-          'geo_access_check_out',
-          'ismobile_check_out',
-          'geo_check_out',
-          'map_url_check_out',
-          'check_out_image',
-        ],
+        'fields': getAttendanceFields(),
         'limit': 1,
       },
     });
-    debugPrint(attendanceList.toString());
-  } on OdooException catch (e) {
-    debugPrint(e.message);
-    client.close();
+    List<Attendance> attendancesList = List<Attendance>.from(
+      data.map((item) => Attendance.fromMap(item)),
+    );
+    debugPrint(attendancesList.toString());
+  } catch (e) {
+    debugPrint(e.toString());
   }
-  client.close();
 }

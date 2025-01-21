@@ -1,3 +1,4 @@
+import 'package:dpp_mobile/models/attendance.dart';
 import 'package:dpp_mobile/utils/constants/profile_sample.dart';
 import 'package:dpp_mobile/utils/themes/app_colors.dart';
 import 'package:dpp_mobile/utils/themes/text_style.dart';
@@ -7,7 +8,7 @@ import 'package:iconsax/iconsax.dart';
 class AttendaceHistoryDetail extends StatefulWidget {
   const AttendaceHistoryDetail({super.key, required this.attendanceItem});
 
-  final Map<String, dynamic> attendanceItem;
+  final Attendance attendanceItem;
 
   @override
   State<AttendaceHistoryDetail> createState() => _AttendaceHistoryDetailState();
@@ -57,21 +58,21 @@ class _AttendaceHistoryDetailState extends State<AttendaceHistoryDetail> {
                 height: 16.0,
               ),
               Text(
-                profileSample["name"],
+                "",
                 style: createBlackMediumTextStyle(20),
               ),
               const SizedBox(
                 height: 8,
               ),
               Text(
-                "Fullstack Developer",
+                "",
                 style: createBlackThinTextStyle(16),
               ),
               const SizedBox(
                 height: 16.0,
               ),
               Text(
-                widget.attendanceItem["date"],
+                "",
                 style: createBlackMediumTextStyle(20),
               ),
               const SizedBox(
@@ -110,7 +111,7 @@ class _AttendaceHistoryDetailState extends State<AttendaceHistoryDetail> {
                                 style: createBlackBoldTextStyle(14),
                               ),
                               Text(
-                                widget.attendanceItem["time"],
+                                "",
                                 style: createBlackThinTextStyle(14),
                               ),
                             ],
@@ -174,7 +175,7 @@ class _AttendaceHistoryDetailState extends State<AttendaceHistoryDetail> {
                       width: 8.0,
                     ),
                     Text(
-                      widget.attendanceItem["check_in_status"],
+                      "",
                       style: createBlackBoldTextStyle(14),
                     ),
                   ],
@@ -196,7 +197,7 @@ class _AttendaceHistoryDetailState extends State<AttendaceHistoryDetail> {
                       width: 8.0,
                     ),
                     Text(
-                      widget.attendanceItem["check_out_status"],
+                      "",
                       style: createBlackBoldTextStyle(14),
                     ),
                   ],
@@ -261,7 +262,7 @@ class _AttendaceHistoryDetailState extends State<AttendaceHistoryDetail> {
                       height: 8.0,
                     ),
                     Text(
-                      widget.attendanceItem["detail_activity"],
+                      "",
                       style: createBlackThinTextStyle(14),
                     ),
                     const SizedBox(
@@ -275,7 +276,7 @@ class _AttendaceHistoryDetailState extends State<AttendaceHistoryDetail> {
                       height: 8.0,
                     ),
                     Text(
-                      widget.attendanceItem["detail_activity"],
+                      "",
                       style: createBlackThinTextStyle(14),
                     ),
                   ],

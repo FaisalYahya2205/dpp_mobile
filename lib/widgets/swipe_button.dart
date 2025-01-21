@@ -25,7 +25,7 @@ Padding buildSwipeButton(BuildContext context, bool isCheckIn, VoidCallback onSw
         height: 64,
         onSwipe: onSwipe,
         child: Text(
-          isCheckIn ? "Geser Untuk Check In" : "Geser Unutk Check Out",
+          isCheckIn ? "Geser Untuk Check In" : "Geser Untuk Check Out",
           style: createWhiteBoldTextStyle(14),
         ),
       ),

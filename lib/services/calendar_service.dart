@@ -1,3 +1,29 @@
+              // Padding(
+              //   padding: const EdgeInsets.symmetric(
+              //     horizontal: 16.0,
+              //     vertical: 16.0,
+              //   ),
+              //   child: FutureBuilder(
+              //     future: CalendarService().generateDateList(),
+              //     builder:
+              //         (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+              //       if (snapshot.hasData) {
+              //         int currentDay = DateTime.now().day;
+              //         return Flex(
+              //           direction: Axis.horizontal,
+              //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //           crossAxisAlignment: CrossAxisAlignment.center,
+              //           children: [
+              //             for (Map<String, dynamic> dateItem in snapshot.data)
+              //               calendarItem(dateItem, currentDay, () {}),
+              //           ],
+              //         );
+              //       }
+              //       return const DashboardHomeLoading();
+              //     },
+              //   ),
+              // ),
+
 class CalendarService {
   Future<List<Map<String, dynamic>>> generateDateList() async {
     List<Map<String, dynamic>> tempListDates = [];

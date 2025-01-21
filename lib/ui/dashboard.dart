@@ -1,6 +1,7 @@
+import 'package:dpp_mobile/bloc/attendance_bloc.dart';
 import 'package:dpp_mobile/bloc/employee_bloc.dart';
-import 'package:dpp_mobile/repository/employee_repository.dart';
-import 'package:dpp_mobile/services/employee_service.dart';
+import 'package:dpp_mobile/repository/odoo_repository.dart';
+import 'package:dpp_mobile/services/odoo_service.dart';
 import 'package:dpp_mobile/ui/dashboard_timesheet.dart';
 import 'package:dpp_mobile/ui/dashboard_home/dashboard_home.dart';
 import 'package:dpp_mobile/ui/dashboard_overtime.dart';
@@ -9,7 +10,6 @@ import 'package:dpp_mobile/widgets/bottom_navigation_bar_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -28,23 +28,21 @@ class _DashboardPageState extends State<DashboardPage> {
     const DashboardProfile(),
   ];
 
-  Future<void> requestPermissions() async {
-    await [
-      Permission.location,
-      Permission.camera,
-    ].request();
-  }
-
   @override
   Widget build(BuildContext context) {
     return RepositoryProvider(
-      create: (context) => EmployeeRepository(service: EmployeeService()),
+      create: (context) => OdooRepository(service: OdooService()),
       child: MultiBlocProvider(
         providers: [
           BlocProvider<EmployeeBloc>(
             create: (context) => EmployeeBloc(
-              employeeRepository: context.read<EmployeeRepository>(),
+              odooRepository: context.read<OdooRepository>(),
             )..add(GetEmployee()),
+          ),
+          BlocProvider<AttendanceBloc>(
+            create: (context) => AttendanceBloc(
+              odooRepository: context.read<OdooRepository>(),
+            )..add(GetAttendance()),
           ),
         ],
         child: Scaffold(

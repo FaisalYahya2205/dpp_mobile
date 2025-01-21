@@ -1,5 +1,3 @@
-import 'package:dpp_mobile/models/employee.dart';
-import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -43,7 +41,7 @@ class DatabaseHelper {
         work_phone VARCHAR(15),
         address_id VARCHAR(50),
         coach_id VARCHAR(50),
-        last_update VARCHAR(50),
+        __last_update VARCHAR(50),
         image_128 TEXT,
         image_1920 TEXT,
         tz VARCHAR(100)

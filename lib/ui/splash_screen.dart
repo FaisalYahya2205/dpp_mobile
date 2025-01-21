@@ -4,8 +4,8 @@ import 'package:dpp_mobile/main.dart';
 import 'package:dpp_mobile/services/odoo_service.dart';
 import 'package:dpp_mobile/utils/themes/app_colors.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:go_router/go_router.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -15,6 +15,21 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  Future<void> requestPermissions() async {
+    await [
+      Permission.camera,
+      Permission.location,
+    ].request();
+
+    PermissionStatus cameraStatus = await Permission.camera.status;
+    PermissionStatus locationStatus = await Permission.location.status;
+
+    debugPrint("CAMERA PERMISSION => ${cameraStatus.toString()}");
+    debugPrint("LOCATION PERMISSION => ${locationStatus.toString()}");
+
+    redirectFunction();
+  }
+
   Future<void> redirectFunction() async {
     localSession = await DatabaseHelper.instance.getAllQuery("session");
     if (localSession!.isEmpty) {
@@ -23,7 +38,7 @@ class _SplashScreenState extends State<SplashScreen> {
       try {
         await OdooService().authentication(
             localSession!.first['user_login'], localSession!.first['password']);
-        Timer(const Duration(seconds: 5), () => context.replace('/dashboard'));
+      Timer(const Duration(seconds: 5), () => context.replace('/dashboard'));
       } catch (e) {
         await DatabaseHelper.instance.truncateQuery("session");
         Timer(const Duration(seconds: 5), () => context.replace('/login'));
@@ -34,7 +49,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    redirectFunction();
+    requestPermissions();
   }
 
   @override

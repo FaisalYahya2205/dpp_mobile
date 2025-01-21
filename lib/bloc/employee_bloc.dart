@@ -1,5 +1,5 @@
 import 'package:dpp_mobile/models/employee.dart';
-import 'package:dpp_mobile/repository/employee_repository.dart';
+import 'package:dpp_mobile/repository/odoo_repository.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -47,18 +47,18 @@ class GetEmployee extends EmployeeEvent {
 
 class EmployeeBloc extends Bloc<EmployeeEvent, EmployeeState> {
   EmployeeBloc({
-    required this.employeeRepository,
+    required this.odooRepository,
   }) : super(EmployeeState()) {
     on<GetEmployee>(_mapGetEmployeeEventToState);
   }
 
-  final EmployeeRepository employeeRepository;
+  final OdooRepository odooRepository;
 
   void _mapGetEmployeeEventToState(
       GetEmployee event, Emitter<EmployeeState> emit) async {
     try {
       emit(state.copyWith(status: EmployeeStatus.loading));
-      final employee = await employeeRepository.getEmployee();
+      final employee = await odooRepository.getEmployee();
       emit(
         state.copyWith(
           status: EmployeeStatus.success,
