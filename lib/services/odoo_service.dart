@@ -202,8 +202,12 @@ class OdooService {
     }
   }
 
-  Future<int> postCheckInAttendance(String checkIn, double latitude,
-      double longitude, String checkInImage) async {
+  Future<int> postCheckInAttendance(
+    String checkIn,
+    double latitude,
+    double longitude,
+    String checkInImage,
+  ) async {
     try {
       Employee employeeData = await getEmployee();
       debugPrint("GET EMPLOYEE CHECK IN => ${employeeData.toString()}");

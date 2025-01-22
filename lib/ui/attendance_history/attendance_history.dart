@@ -1,4 +1,4 @@
-import 'package:dpp_mobile/bloc/attendance_bloc.dart';
+import 'package:dpp_mobile/bloc/list_attendances_bloc.dart';
 import 'package:dpp_mobile/repository/odoo_repository.dart';
 import 'package:dpp_mobile/services/odoo_service.dart';
 import 'package:dpp_mobile/utils/themes/app_colors.dart';

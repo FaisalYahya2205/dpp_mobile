@@ -1,26 +1,37 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'package:dpp_mobile/bloc/attendance_bloc.dart';
+import 'package:dpp_mobile/bloc/list_attendances_bloc.dart';
 import 'package:dpp_mobile/bloc/employee_bloc.dart';
 import 'package:dpp_mobile/ui/attendance_history/attendance_history.dart';
 import 'package:dpp_mobile/ui/dashboard_check_in/dashboard_home_check_in.dart';
 import 'package:dpp_mobile/ui/dashboard_check_out/dashboard_home_check_out.dart';
+import 'package:dpp_mobile/ui/dashboard_home/widgets/current_attendances_error.dart';
+import 'package:dpp_mobile/ui/dashboard_home/widgets/current_attendances_loading.dart';
+import 'package:dpp_mobile/ui/dashboard_home/widgets/current_attendances_success.dart';
 import 'package:dpp_mobile/ui/dashboard_home/widgets/dashboard_home_error.dart';
 import 'package:dpp_mobile/ui/dashboard_home/widgets/dashboard_home_loading.dart';
-import 'package:dpp_mobile/ui/dashboard_home/widgets/dashboard_home_profile_part.dart';
+import 'package:dpp_mobile/ui/dashboard_home/widgets/dashboard_home_profile_error.dart';
+import 'package:dpp_mobile/ui/dashboard_home/widgets/dashboard_home_profile_loading.dart';
+import 'package:dpp_mobile/ui/dashboard_home/widgets/dashboard_home_profile_success.dart';
+import 'package:dpp_mobile/ui/dashboard_home/widgets/latest_attendance_error.dart';
+import 'package:dpp_mobile/ui/dashboard_home/widgets/latest_attendance_loading.dart';
+import 'package:dpp_mobile/ui/dashboard_home/widgets/latest_attendance_success.dart';
+import 'package:dpp_mobile/utils/themes/app_colors.dart';
 import 'package:dpp_mobile/utils/themes/text_style.dart';
-import 'package:dpp_mobile/widgets/attendance_latest_list_item.dart';
-import 'package:dpp_mobile/widgets/attendance_today_card.dart';
 import 'package:dpp_mobile/widgets/swipe_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:iconsax/iconsax.dart';
 
 class DashboardHome extends StatelessWidget {
   const DashboardHome({super.key});
 
   @override
   Widget build(BuildContext context) {
+    void refreshData() {
+      BlocProvider.of<AttendanceBloc>(context).add(GetAttendance());
+      BlocProvider.of<EmployeeBloc>(context).add(GetEmployee());
+    }
+
     return Scaffold(
       body: Stack(
         children: [
@@ -31,23 +42,15 @@ class DashboardHome extends StatelessWidget {
               ),
               BlocBuilder<EmployeeBloc, EmployeeState>(
                 builder: (context, state) {
-                  if (state.status.isSuccess) {
-                    return ProfilePart(employee: state.employee);
-                  } else if (state.status.isError) {
-                    return Center(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 40.0),
-                        child: Text(
-                          "Terjadi Kesalahan",
-                          style: createBlackTextStyle(14),
-                        ),
-                      ),
-                    );
-                  } else if (state.status.isLoading) {
-                    return const DashboardHomeLoading();
-                  } else {
-                    return const SizedBox();
+                  if (state.status.isLoading) {
+                    return const DashboardHomeProfileLoading();
                   }
+                  if (state.status.isSuccess) {
+                    return DashboardHomeProfileSuccess(
+                      employee: state.employee,
+                    );
+                  }
+                  return const DashboardHomeProfileError();
                 },
               ),
               const SizedBox(
@@ -57,18 +60,14 @@ class DashboardHome extends StatelessWidget {
                 child: Container(
                   width: double.infinity,
                   decoration: BoxDecoration(
-                    color: Colors.grey.shade200,
+                    color: Colors.grey.shade100,
                     borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(16),
-                      topRight: Radius.circular(16),
+                      topLeft: Radius.circular(24),
+                      topRight: Radius.circular(24),
                     ),
                   ),
                   child: RefreshIndicator(
-                    onRefresh: () async {
-                      BlocProvider.of<AttendanceBloc>(context)
-                          .add(GetAttendance());
-                      BlocProvider.of<EmployeeBloc>(context).add(GetEmployee());
-                    },
+                    onRefresh: () async => refreshData(),
                     child: SingleChildScrollView(
                       physics: const AlwaysScrollableScrollPhysics(
                         parent: BouncingScrollPhysics(),
@@ -79,7 +78,7 @@ class DashboardHome extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             const SizedBox(
-                              height: 16,
+                              height: 24,
                             ),
                             Text(
                               "Kehadiran Terbaru Hari Ini",
@@ -90,63 +89,15 @@ class DashboardHome extends StatelessWidget {
                             ),
                             BlocBuilder<EmployeeBloc, EmployeeState>(
                               builder: (context, state) {
-                                if (state.status.isSuccess) {
-                                  return Flex(
-                                    direction: Axis.horizontal,
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      todayAttendanceCard(
-                                        "Check In",
-                                        state.employee.last_check_in == null
-                                            ? "-"
-                                            : state.employee.last_check_in
-                                                .toString()
-                                                .split(" ")[0],
-                                        state.employee.last_check_in == null
-                                            ? "-"
-                                            : state.employee.last_check_in
-                                                .toString()
-                                                .split(" ")[1],
-                                        Iconsax.login_1,
-                                      ),
-                                      const SizedBox(
-                                        width: 16.0,
-                                      ),
-                                      todayAttendanceCard(
-                                        "Check Out",
-                                        state.employee.last_check_out == null
-                                            ? "-"
-                                            : state.employee.last_check_out
-                                                .toString()
-                                                .split(" ")[0],
-                                        state.employee.last_check_out == null
-                                            ? "-"
-                                            : state.employee.last_check_out
-                                                .toString()
-                                                .split(" ")[1],
-                                        Iconsax.logout_1,
-                                      ),
-                                    ],
-                                  );
-                                } else if (state.status.isError) {
-                                  return Center(
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 40.0),
-                                      child: Text(
-                                        "Terjadi Kesalahan",
-                                        style: createBlackTextStyle(14),
-                                      ),
-                                    ),
-                                  );
-                                } else if (state.status.isLoading) {
-                                  return const DashboardHomeLoading();
-                                } else {
-                                  return const SizedBox();
+                                if (state.status.isLoading) {
+                                  return const LatestAttendanceLoading();
                                 }
+                                if (state.status.isSuccess) {
+                                  return LatestAttendanceSuccess(
+                                    employee: state.employee,
+                                  );
+                                }
+                                return const LatestAttendanceError();
                               },
                             ),
                             const SizedBox(
@@ -159,21 +110,28 @@ class DashboardHome extends StatelessWidget {
                                   "Aktivitasmu",
                                   style: createBlackMediumTextStyle(14),
                                 ),
-                                GestureDetector(
-                                  onTap: () {
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (BuildContext context) {
-                                          return const AttendanceHistory();
+                                BlocBuilder<AttendanceBloc, AttendanceState>(
+                                  builder: (context, state) {
+                                    if (state.status.isSuccess) {
+                                      return GestureDetector(
+                                        onTap: () {
+                                          Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                              builder: (BuildContext context) {
+                                                return const AttendanceHistory();
+                                              },
+                                            ),
+                                          );
                                         },
-                                      ),
-                                    );
+                                        child: Text(
+                                          "Lihat Lainnya",
+                                          style: createPrimaryBoldTextStyle(14),
+                                        ),
+                                      );
+                                    }
+                                    return const SizedBox();
                                   },
-                                  child: Text(
-                                    "Lihat Lainnya",
-                                    style: createPrimaryBoldTextStyle(14),
-                                  ),
-                                )
+                                ),
                               ],
                             ),
                             const SizedBox(
@@ -181,27 +139,15 @@ class DashboardHome extends StatelessWidget {
                             ),
                             BlocBuilder<AttendanceBloc, AttendanceState>(
                               builder: (context, state) {
-                                if (state.status.isSuccess) {
-                                  return ListView.builder(
-                                    itemCount: 5,
-                                    physics:
-                                        const NeverScrollableScrollPhysics(),
-                                    shrinkWrap: true,
-                                    padding: const EdgeInsets.all(0),
-                                    itemBuilder: (context, index) {
-                                      return latestAttendanceListItem(
-                                        state.attendances[index],
-                                        context,
-                                      );
-                                    },
-                                  );
-                                } else if (state.status.isError) {
-                                  return const DashboardHomeError();
-                                } else if (state.status.isLoading) {
-                                  return const DashboardHomeLoading();
-                                } else {
-                                  return const SizedBox();
+                                if (state.status.isLoading) {
+                                  return const CurrentAttendancesLoading();
                                 }
+                                if (state.status.isSuccess) {
+                                  return CurrentAttendancesSuccess(
+                                    attendanceList: state.attendances,
+                                  );
+                                }
+                                return const CurrentAttendancesError();
                               },
                             ),
                             const SizedBox(
@@ -243,17 +189,35 @@ class DashboardHome extends StatelessWidget {
                       );
 
                       if (success) {
-                        BlocProvider.of<AttendanceBloc>(context)
-                            .add(GetAttendance());
-                        BlocProvider.of<EmployeeBloc>(context)
-                            .add(GetEmployee());
+                        refreshData();
                       }
                     },
                   ),
                 );
-              } else {
-                return const SizedBox();
               }
+
+              return Container(
+                height: MediaQuery.of(context).size.height - 96,
+                alignment: AlignmentDirectional.bottomCenter,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                  width: double.infinity,
+                  height: 64,
+                  child: ElevatedButton(
+                    onPressed: () => refreshData(),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors().primaryColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(100),
+                      ),
+                    ),
+                    child: Text(
+                      "Muat Ulang",
+                      style: createWhiteBoldTextStyle(14),
+                    ),
+                  ),
+                ),
+              );
             },
           ),
         ],

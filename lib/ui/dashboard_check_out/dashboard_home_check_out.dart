@@ -8,7 +8,6 @@ import 'package:dpp_mobile/main.dart';
 import 'package:dpp_mobile/services/odoo_service.dart';
 import 'package:dpp_mobile/ui/dashboard_home/widgets/dashboard_home_error.dart';
 import 'package:dpp_mobile/ui/dashboard_home/widgets/dashboard_home_loading.dart';
-import 'package:dpp_mobile/utils/themes/app_colors.dart';
 import 'package:dpp_mobile/utils/themes/text_style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -226,13 +225,13 @@ class _DashboardHomeCheckOutState extends State<DashboardHomeCheckOut> {
                           child: FutureBuilder(
                             future: OdooService().getCurrentPosition(),
                             builder: (context, snapshot) {
+                              if (snapshot.hasError) {
+                                return const DashboardHomeError();
+                              }
+                              
                               if (snapshot.connectionState ==
                                   ConnectionState.waiting) {
                                 return const DashboardHomeLoading();
-                              }
-
-                              if (snapshot.hasError) {
-                                return const DashboardHomeError();
                               }
 
                               currentPositionLatitude.value =

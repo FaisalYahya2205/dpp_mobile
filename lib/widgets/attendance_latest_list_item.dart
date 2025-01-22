@@ -60,7 +60,9 @@ Widget latestAttendanceListItem(
                 Text(
                   attendanceListItem.check_in == null
                       ? "-"
-                      : attendanceListItem.check_in.toString(),
+                      : DateTime.parse(
+                          "${attendanceListItem.check_in.toString()}Z",
+                        ).toLocal().toString(),
                   style: createBlackThinTextStyle(14),
                 ),
               ],

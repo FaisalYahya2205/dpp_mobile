@@ -1,6 +1,10 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'package:dpp_mobile/database/database.dart';
+import 'package:dpp_mobile/main.dart';
 import 'package:dpp_mobile/services/odoo_service.dart';
+import 'package:dpp_mobile/widgets/dialogs/app_dialog.dart';
+import 'package:dpp_mobile/widgets/dialogs/loading_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 
@@ -90,7 +94,7 @@ class _LoginPageState extends State<LoginPage> {
                   keyboardType: TextInputType.text,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(100),
                     ),
                     hintText: "example@email.com",
                     contentPadding: const EdgeInsets.all(16.0),
@@ -114,7 +118,7 @@ class _LoginPageState extends State<LoginPage> {
                   obscureText: hidePassword,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(100),
                     ),
                     hintText: "",
                     contentPadding: const EdgeInsets.all(16.0),
@@ -160,18 +164,51 @@ class _LoginPageState extends State<LoginPage> {
                 child: ElevatedButton(
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
+                      showDialog(
+                        barrierDismissible: false,
+                        context: context,
+                        builder: (BuildContext dialogContext) => AppDialog(
+                          type: "loading",
+                          title: "Memproses",
+                          message: "Mohon tunggu...",
+                          onOkPress: () {},
+                        ),
+                      );
+
                       bool auth = await OdooService().authentication(
                         emailTextController.text,
                         passwordTextController.text,
                       );
+
                       if (auth) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Login Berhasil...')),
+                        Navigator.of(context).pop();
+                        showDialog(
+                          barrierDismissible: false,
+                          context: context,
+                          builder: (BuildContext dialogContext) => AppDialog(
+                            type: "success",
+                            title: "Login Berhasil!",
+                            message: "Mengalihkan...",
+                            onOkPress: () {},
+                          ),
                         );
-                        context.go("/dashboard");
+                        Future.delayed(const Duration(seconds: 2), () async {
+                          localSession = await DatabaseHelper.instance
+                              .getAllQuery("session");
+                          Navigator.of(context).pop();
+                          context.go("/dashboard");
+                        });
                       } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Login Gagal...')),
+                        Navigator.of(context).pop();
+                        showDialog(
+                          barrierDismissible: false,
+                          context: context,
+                          builder: (BuildContext dialogContext) => AppDialog(
+                            type: "error",
+                            title: "Login Gagal!",
+                            message: "Cek kembali data anda...",
+                            onOkPress: () => Navigator.of(context).pop(),
+                          ),
                         );
                       }
                     }
@@ -179,7 +216,7 @@ class _LoginPageState extends State<LoginPage> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors().primaryColor,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(100),
                     ),
                   ),
                   child: Text(

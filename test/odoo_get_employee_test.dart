@@ -7,7 +7,7 @@ void main() async {
   final client = OdooClient(dotenv.get("URL"));
   try {
     final session = await client.authenticate(
-        dotenv.get("DATABASE"), "andiade52@gmail.com", "a");
+        dotenv.get("DATABASE"), "andiade52@gmail.com", "b");
     debugPrint("DATA USER => " + session.toString());
     final userData = await client.callKw({
       'model': 'res.users',
