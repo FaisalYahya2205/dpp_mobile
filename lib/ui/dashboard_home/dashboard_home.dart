@@ -8,8 +8,6 @@ import 'package:dpp_mobile/ui/dashboard_check_out/dashboard_home_check_out.dart'
 import 'package:dpp_mobile/ui/dashboard_home/widgets/current_attendances_error.dart';
 import 'package:dpp_mobile/ui/dashboard_home/widgets/current_attendances_loading.dart';
 import 'package:dpp_mobile/ui/dashboard_home/widgets/current_attendances_success.dart';
-import 'package:dpp_mobile/ui/dashboard_home/widgets/dashboard_home_error.dart';
-import 'package:dpp_mobile/ui/dashboard_home/widgets/dashboard_home_loading.dart';
 import 'package:dpp_mobile/ui/dashboard_home/widgets/dashboard_home_profile_error.dart';
 import 'package:dpp_mobile/ui/dashboard_home/widgets/dashboard_home_profile_loading.dart';
 import 'package:dpp_mobile/ui/dashboard_home/widgets/dashboard_home_profile_success.dart';
@@ -38,7 +36,7 @@ class DashboardHome extends StatelessWidget {
           Column(
             children: [
               SizedBox(
-                height: MediaQuery.of(context).viewPadding.top,
+                height: MediaQuery.of(context).viewPadding.top + 16,
               ),
               BlocBuilder<EmployeeBloc, EmployeeState>(
                 builder: (context, state) {

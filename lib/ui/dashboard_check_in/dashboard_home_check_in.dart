@@ -10,6 +10,7 @@ import 'package:dpp_mobile/ui/dashboard_home/widgets/dashboard_home_error.dart';
 import 'package:dpp_mobile/ui/dashboard_home/widgets/dashboard_home_loading.dart';
 import 'package:dpp_mobile/utils/themes/app_colors.dart';
 import 'package:dpp_mobile/utils/themes/text_style.dart';
+import 'package:dpp_mobile/widgets/dialogs/app_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:iconsax/iconsax.dart';
@@ -40,7 +41,7 @@ class _DashboardHomeCheckInState extends State<DashboardHomeCheckIn> {
     currentTime.value = DateTime.now().toUtc().toString().split(".")[0];
 
     _controller = CameraController(
-      cameras.first,
+      cameras.last,
       ResolutionPreset.medium,
       enableAudio: false,
     );
@@ -93,7 +94,7 @@ class _DashboardHomeCheckInState extends State<DashboardHomeCheckIn> {
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.done) {
                   return RotatedBox(
-                    quarterTurns: 1,
+                    quarterTurns: -1,
                     child: CameraPreview(_controller),
                   );
                 } else {
@@ -343,13 +344,55 @@ class _DashboardHomeCheckInState extends State<DashboardHomeCheckIn> {
                       height: 48,
                       child: ElevatedButton(
                         onPressed: () async {
-                          debugPrint("CHECK IN STATUS => Loading");
-                          bool checkInSuccess = await checkIn();
-                          if (checkInSuccess) {
-                            debugPrint("CHECK IN STATUS => Loading");
-                            Navigator.of(context).pop(true);
+                          showDialog(
+                            barrierDismissible: false,
+                            context: context,
+                            builder: (BuildContext dialogContext) => AppDialog(
+                              type: "loading",
+                              title: "Memproses",
+                              message: "Mohon tunggu...",
+                              onOkPress: () {},
+                            ),
+                          );
+                          bool checkOutSuccess = await checkIn();
+                          if (checkOutSuccess) {
+                            // dismiss loading dialog
+                            Navigator.of(context).pop();
+                            // show success dialog
+                            showDialog(
+                              barrierDismissible: false,
+                              context: context,
+                              builder: (BuildContext dialogContext) =>
+                                  AppDialog(
+                                type: "success",
+                                title: "Check In Berhasil",
+                                message: "Kembali ke dashboard...",
+                                onOkPress: () {},
+                              ),
+                            );
+                            Future.delayed(const Duration(seconds: 2), () {
+                              // dismiss loading dialog
+                              Navigator.of(context).pop();
+                              // back to dashboard
+                              Navigator.of(context).pop(true);
+                            });
                           } else {
-                            debugPrint("CHECK IN STATUS => Failed");
+                            // dismiss loading dialog
+                            Navigator.of(context).pop();
+                            // show error dialog
+                            showDialog(
+                              barrierDismissible: false,
+                              context: context,
+                              builder: (BuildContext dialogContext) =>
+                                  AppDialog(
+                                type: "error",
+                                title: "Check In Gagal",
+                                message: "Terjadi kesalahan...",
+                                onOkPress: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                            );
                           }
                         },
                         style: ElevatedButton.styleFrom(

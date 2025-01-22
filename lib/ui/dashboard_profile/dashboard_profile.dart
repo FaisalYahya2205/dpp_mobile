@@ -1,5 +1,6 @@
 import 'package:dpp_mobile/bloc/employee_bloc.dart';
 import 'package:dpp_mobile/ui/dashboard_profile/widgets/dashboard_profile_error.dart';
+import 'package:dpp_mobile/ui/dashboard_profile/widgets/dashboard_profile_loading.dart';
 import 'package:dpp_mobile/ui/dashboard_profile/widgets/dashboard_profile_success.dart';
 import 'package:dpp_mobile/utils/themes/app_colors.dart';
 import 'package:flutter/material.dart';
@@ -22,23 +23,12 @@ class _DashboardProfileState extends State<DashboardProfile> {
             return DashboardProfileSuccess(
               employee: state.employee,
             );
-          } else if (state.status.isError) {
-            return const DashboardProfileError();
-          } else if (state.status.isLoading) {
-            return Center(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 40.0),
-                child: SizedBox(
-                  width: 64,
-                  child: LinearProgressIndicator(
-                    color: AppColors().primaryColor,
-                  ),
-                ),
-              ),
-            );
-          } else {
-            return const SizedBox();
           }
+          if (state.status.isError) {
+            return const DashboardProfileError();
+          }
+
+          return const DashboardProfileLoading();
         },
       ),
     );

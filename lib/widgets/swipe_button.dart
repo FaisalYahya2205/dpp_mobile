@@ -8,14 +8,14 @@ Padding buildSwipeButton(BuildContext context, bool isCheckIn, VoidCallback onSw
     return Padding(
       padding: const EdgeInsets.all(24.0),
       child: SwipeButton(
-        borderRadius: BorderRadius.circular(100.0),
+        borderRadius: BorderRadius.circular(24.0),
         activeThumbColor: isCheckIn ? AppColors().primaryColor : Colors.orange,
         activeTrackColor: isCheckIn ? AppColors().primaryColor : Colors.orange,
         thumb: Container(
           margin: const EdgeInsets.all(8.0),
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(100.0),
+            borderRadius: BorderRadius.circular(16.0),
           ),
           child: Icon(
             Iconsax.arrow_right_1,

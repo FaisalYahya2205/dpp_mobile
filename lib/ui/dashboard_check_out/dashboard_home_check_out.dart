@@ -9,6 +9,7 @@ import 'package:dpp_mobile/services/odoo_service.dart';
 import 'package:dpp_mobile/ui/dashboard_home/widgets/dashboard_home_error.dart';
 import 'package:dpp_mobile/ui/dashboard_home/widgets/dashboard_home_loading.dart';
 import 'package:dpp_mobile/utils/themes/text_style.dart';
+import 'package:dpp_mobile/widgets/dialogs/app_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:iconsax/iconsax.dart';
@@ -40,7 +41,7 @@ class _DashboardHomeCheckOutState extends State<DashboardHomeCheckOut> {
     currentTime.value = DateTime.now().toUtc().toString().split(".")[0];
 
     _controller = CameraController(
-      cameras.first,
+      cameras.last,
       ResolutionPreset.medium,
       enableAudio: false,
     );
@@ -97,7 +98,7 @@ class _DashboardHomeCheckOutState extends State<DashboardHomeCheckOut> {
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.done) {
                     return RotatedBox(
-                      quarterTurns: 1,
+                      quarterTurns: -1,
                       child: CameraPreview(_controller),
                     );
                   } else {
@@ -216,163 +217,158 @@ class _DashboardHomeCheckOutState extends State<DashboardHomeCheckOut> {
                   ),
                   child: Column(
                     children: [
-                      Expanded(
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(24.0),
-                            color: Colors.grey.shade200,
-                          ),
-                          child: FutureBuilder(
-                            future: OdooService().getCurrentPosition(),
-                            builder: (context, snapshot) {
-                              if (snapshot.hasError) {
-                                return const DashboardHomeError();
-                              }
-                              
-                              if (snapshot.connectionState ==
-                                  ConnectionState.waiting) {
-                                return const DashboardHomeLoading();
-                              }
+                      Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(24.0),
+                          color: Colors.grey.shade200,
+                        ),
+                        height: MediaQuery.of(context).size.height / 9,
+                        child: FutureBuilder(
+                          future: OdooService().getCurrentPosition(),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasError) {
+                              return const DashboardHomeError();
+                            }
 
-                              currentPositionLatitude.value =
-                                  snapshot.data!.latitude;
-                              currentPositionLongitude.value =
-                                  snapshot.data!.longitude;
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return const DashboardHomeLoading();
+                            }
 
-                              return Stack(
-                                children: [
-                                  ClipRRect(
-                                    borderRadius: const BorderRadius.all(
-                                      Radius.circular(24),
-                                    ),
-                                    child: FlutterMap(
-                                      options: MapOptions(
-                                        initialCenter: LatLng(
-                                          currentPositionLatitude.value,
-                                          currentPositionLongitude.value,
-                                        ),
-                                        initialZoom: 16,
-                                      ),
-                                      children: [
-                                        TileLayer(
-                                          urlTemplate:
-                                              'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                                          userAgentPackageName:
-                                              'com.example.dpp_mobile',
-                                        ),
-                                        MarkerLayer(
-                                          markers: [
-                                            Marker(
-                                              point: LatLng(
-                                                currentPositionLatitude.value,
-                                                currentPositionLongitude.value,
-                                              ),
-                                              child: const Icon(
-                                                Icons.location_pin,
-                                                color: Colors.red,
-                                                size: 32,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
+                            currentPositionLatitude.value =
+                                snapshot.data!.latitude;
+                            currentPositionLongitude.value =
+                                snapshot.data!.longitude;
+
+                            return Stack(
+                              children: [
+                                ClipRRect(
+                                  borderRadius: const BorderRadius.all(
+                                    Radius.circular(24),
                                   ),
-                                  Column(
-                                    children: [
-                                      Container(
-                                        padding: const EdgeInsets.all(8.0),
-                                        margin: const EdgeInsets.all(8.0),
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(100),
-                                          color: Colors.white,
-                                        ),
-                                        child: Row(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            Container(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(100),
-                                                color:
-                                                    Colors.orange.withAlpha(50),
-                                              ),
-                                              child: const Icon(
-                                                Icons.location_pin,
-                                                color: Colors.orange,
-                                              ),
-                                            ),
-                                            const SizedBox(
-                                              width: 16,
-                                            ),
-                                            Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  "Lokasi saat ini",
-                                                  style:
-                                                      createBlackThinTextStyle(
-                                                          12),
-                                                ),
-                                                const SizedBox(
-                                                  height: 4,
-                                                ),
-                                                Text(
-                                                  "${snapshot.data!.latitude}, ${snapshot.data!.longitude}",
-                                                  style:
-                                                      createBlackTextStyle(14),
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
+                                  child: FlutterMap(
+                                    options: MapOptions(
+                                      initialCenter: LatLng(
+                                        currentPositionLatitude.value,
+                                        currentPositionLongitude.value,
                                       ),
-                                      const Spacer(),
-                                      Container(
-                                        padding: const EdgeInsets.all(8.0),
-                                        margin: const EdgeInsets.all(8.0),
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(16.0),
-                                          color: Colors.white,
-                                        ),
-                                        child: TextFormField(
-                                          controller: descController,
-                                          keyboardType: TextInputType.text,
-                                          style: createBlackTextStyle(14),
-                                          minLines: 1,
-                                          maxLines: 4,
-                                          decoration: InputDecoration(
-                                            border: InputBorder.none,
-                                            hintText: "Aktivitas hari ini",
-                                            hintStyle:
-                                                createGreyThinTextStyle(14),
-                                            contentPadding:
-                                                const EdgeInsets.symmetric(
-                                              horizontal: 8.0,
-                                              vertical: 4,
+                                      initialZoom: 16,
+                                    ),
+                                    children: [
+                                      TileLayer(
+                                        urlTemplate:
+                                            'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                                        userAgentPackageName:
+                                            'com.example.dpp_mobile',
+                                      ),
+                                      MarkerLayer(
+                                        markers: [
+                                          Marker(
+                                            point: LatLng(
+                                              currentPositionLatitude.value,
+                                              currentPositionLongitude.value,
+                                            ),
+                                            child: const Icon(
+                                              Icons.location_pin,
+                                              color: Colors.red,
+                                              size: 32,
                                             ),
                                           ),
-                                          validator: (value) {
-                                            if (value == null ||
-                                                value.isEmpty) {
-                                              return 'email tidak boleh kosong';
-                                            }
-                                            return null;
-                                          },
-                                        ),
+                                        ],
                                       ),
                                     ],
                                   ),
-                                ],
-                              );
-                            },
+                                ),
+                                Column(
+                                  children: [
+                                    Container(
+                                      padding: const EdgeInsets.all(8.0),
+                                      margin: const EdgeInsets.all(8.0),
+                                      decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(100),
+                                        color: Colors.white,
+                                      ),
+                                      child: Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Container(
+                                            padding: const EdgeInsets.all(8.0),
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(100),
+                                              color:
+                                                  Colors.orange.withAlpha(50),
+                                            ),
+                                            child: const Icon(
+                                              Icons.location_pin,
+                                              color: Colors.orange,
+                                            ),
+                                          ),
+                                          const SizedBox(
+                                            width: 16,
+                                          ),
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                "Lokasi saat ini",
+                                                style: createBlackThinTextStyle(
+                                                    12),
+                                              ),
+                                              const SizedBox(
+                                                height: 4,
+                                              ),
+                                              Text(
+                                                "${snapshot.data!.latitude}, ${snapshot.data!.longitude}",
+                                                style: createBlackTextStyle(14),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    const Spacer(),
+                                  ],
+                                ),
+                              ],
+                            );
+                          },
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 16,
+                      ),
+                      Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(100.0),
+                          color: Colors.white,
+                        ),
+                        child: TextFormField(
+                          controller: descController,
+                          keyboardType: TextInputType.text,
+                          style: createBlackTextStyle(14),
+                          minLines: 4,
+                          maxLines: 4,
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(24),
+                            ),
+                            hintText: "Aktivitas hari ini",
+                            hintStyle: createGreyThinTextStyle(14),
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 16.0,
+                              vertical: 8,
+                            ),
                           ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'apa yang anda kerjakan hari ini?';
+                            }
+                            return null;
+                          },
                         ),
                       ),
                       const SizedBox(
@@ -383,13 +379,56 @@ class _DashboardHomeCheckOutState extends State<DashboardHomeCheckOut> {
                         height: 48,
                         child: ElevatedButton(
                           onPressed: () async {
-                            debugPrint("CHECK OUT STATUS => Loading");
+                            showDialog(
+                              barrierDismissible: false,
+                              context: context,
+                              builder: (BuildContext dialogContext) =>
+                                  AppDialog(
+                                type: "loading",
+                                title: "Memproses",
+                                message: "Mohon tunggu...",
+                                onOkPress: () {},
+                              ),
+                            );
                             bool checkOutSuccess = await checkOut();
                             if (checkOutSuccess) {
-                              debugPrint("CHECK OUT STATUS => Loading");
-                              Navigator.of(context).pop(true);
+                              // dismiss loading dialog
+                              Navigator.of(context).pop();
+                              // show success dialog
+                              showDialog(
+                                barrierDismissible: false,
+                                context: context,
+                                builder: (BuildContext dialogContext) =>
+                                    AppDialog(
+                                  type: "success",
+                                  title: "Check Out Berhasil",
+                                  message: "Kembali ke dashboard...",
+                                  onOkPress: () {},
+                                ),
+                              );
+                              Future.delayed(const Duration(seconds: 2), () {
+                                // dismiss loading dialog
+                                Navigator.of(context).pop();
+                                // back to dashboard
+                                Navigator.of(context).pop(true);
+                              });
                             } else {
-                              debugPrint("CHECK OUT STATUS => Failed");
+                              // dismiss loading dialog
+                              Navigator.of(context).pop();
+                              // show error dialog
+                              showDialog(
+                                barrierDismissible: false,
+                                context: context,
+                                builder: (BuildContext dialogContext) =>
+                                    AppDialog(
+                                  type: "error",
+                                  title: "Check Out Gagal",
+                                  message: "Terjadi kesalahan...",
+                                  onOkPress: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                              );
                             }
                           },
                           style: ElevatedButton.styleFrom(

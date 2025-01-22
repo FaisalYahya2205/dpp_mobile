@@ -4,7 +4,6 @@ import 'package:dpp_mobile/database/database.dart';
 import 'package:dpp_mobile/main.dart';
 import 'package:dpp_mobile/services/odoo_service.dart';
 import 'package:dpp_mobile/widgets/dialogs/app_dialog.dart';
-import 'package:dpp_mobile/widgets/dialogs/loading_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 

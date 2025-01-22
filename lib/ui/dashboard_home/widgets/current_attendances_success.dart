@@ -26,19 +26,15 @@ class CurrentAttendancesSuccess extends StatelessWidget {
             checkInTimeZone,
             checkOutTimeZone;
 
-        // DateTime checkInDateTime =
-        //     DateTime.parse("${attendanceList[index].check_in}Z").toLocal();
         DateTime checkInDateTime =
-            DateTime.parse(DateTime.now().toString()).toLocal();
+            DateTime.parse("${attendanceList[index].check_in}Z").toLocal();
         checkInTimeZone = checkInDateTime.timeZoneName;
         checkInTimeZone = checkInDateTime.timeZoneName;
         checkInDate = DateFormat.yMMMd().format(checkInDateTime);
         checkInTime = "${checkInDateTime.hour}:${checkInDateTime.minute}";
 
-        // DateTime checkOutDateTime =
-        //     DateTime.parse("${attendanceList[index].check_out}Z").toLocal();
         DateTime checkOutDateTime =
-            DateTime.parse(DateTime.now().toString()).toLocal();
+            DateTime.parse("${attendanceList[index].check_out}Z").toLocal();
         checkOutTimeZone = checkOutDateTime.timeZoneName;
         checkOutTimeZone = checkOutDateTime.timeZoneName;
         checkOutDate = DateFormat.yMMMd().format(checkOutDateTime);
@@ -57,82 +53,180 @@ class CurrentAttendancesSuccess extends StatelessWidget {
             );
           },
           child: Container(
-            padding: const EdgeInsets.all(16.0),
             margin: const EdgeInsets.only(bottom: 16.0),
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(16.0),
+              borderRadius: BorderRadius.circular(24.0),
             ),
-            child: Row(
+            child: Column(
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                Flex(
+                  direction: Axis.horizontal,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Row(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(2.0),
-                          decoration: BoxDecoration(
-                            color: AppColors().primaryColor.withAlpha(20),
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
-                          child: Icon(
-                            Iconsax.login_1,
-                            color: AppColors().primaryColor,
-                            size: 24,
-                          ),
+                    Flexible(
+                      flex: 1,
+                      fit: FlexFit.tight,
+                      child: Container(
+                        margin: const EdgeInsets.all(8),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16.0,
+                          vertical: 8.0,
                         ),
-                        const SizedBox(
-                          width: 8.0,
+                        decoration: BoxDecoration(
+                          color: AppColors().primaryColor.withAlpha(20),
+                          borderRadius: BorderRadius.circular(24.0),
                         ),
-                        Text(
-                          "Check In",
-                          style: createBlackMediumTextStyle(16),
+                        child: Text(
+                          checkOutDate,
+                          style: createBlackThinTextStyle(14),
+                          textAlign: TextAlign.center,
                         ),
-                      ],
+                      ),
                     ),
                     const SizedBox(
-                      height: 4,
+                      width: 16.0,
                     ),
-                    Text(
-                      checkInTime,
-                      style: createBlackThinTextStyle(14),
+                    Flexible(
+                      flex: 1,
+                      fit: FlexFit.tight,
+                      child: Container(
+                        margin: const EdgeInsets.all(8.0),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16.0,
+                          vertical: 8.0,
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppColors().primaryColor.withAlpha(20),
+                          borderRadius: BorderRadius.circular(16.0),
+                        ),
+                        child: Text(
+                          checkInDate,
+                          style: createBlackThinTextStyle(14),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
                     ),
                   ],
                 ),
-                const Spacer(),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
+                Flex(
+                  direction: Axis.horizontal,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Row(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(2.0),
-                          decoration: BoxDecoration(
-                            color: AppColors().primaryColor.withAlpha(20),
-                            borderRadius: BorderRadius.circular(8.0),
+                    Flexible(
+                      flex: 1,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(
+                            height: 8.0,
                           ),
-                          child: Icon(
-                            Iconsax.logout_1,
-                            color: AppColors().primaryColor,
-                            size: 24,
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8.0,
+                            ),
+                            child: Row(
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.all(8.0),
+                                  decoration: BoxDecoration(
+                                    color:
+                                        AppColors().primaryColor.withAlpha(20),
+                                    borderRadius: BorderRadius.circular(16.0),
+                                  ),
+                                  child: Icon(
+                                    Iconsax.login_1,
+                                    color: AppColors().primaryColor,
+                                    size: 24,
+                                  ),
+                                ),
+                                const SizedBox(
+                                  width: 16.0,
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Check In",
+                                      style: createBlackThinTextStyle(14),
+                                    ),
+                                    const SizedBox(
+                                      height: 4.0,
+                                    ),
+                                    Text(
+                                      "$checkInTime $checkInTimeZone",
+                                      style: createBlackMediumTextStyle(14),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                        const SizedBox(
-                          width: 8.0,
-                        ),
-                        Text(
-                          "Check Out",
-                          style: createBlackMediumTextStyle(16),
-                        ),
-                      ],
+                          const SizedBox(
+                            height: 8.0,
+                          ),
+                        ],
+                      ),
                     ),
                     const SizedBox(
-                      height: 4,
+                      width: 16.0,
                     ),
-                    Text(
-                      checkOutTime,
-                      style: createBlackThinTextStyle(14),
+                    Flexible(
+                      flex: 1,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(
+                            height: 8.0,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8.0,
+                            ),
+                            child: Row(
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.all(8.0),
+                                  decoration: BoxDecoration(
+                                    color:
+                                        AppColors().primaryColor.withAlpha(20),
+                                    borderRadius: BorderRadius.circular(16.0),
+                                  ),
+                                  child: Icon(
+                                    Iconsax.logout_1,
+                                    color: AppColors().primaryColor,
+                                    size: 24,
+                                  ),
+                                ),
+                                const SizedBox(
+                                  width: 16.0,
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Check Out",
+                                      style: createBlackThinTextStyle(12),
+                                    ),
+                                    const SizedBox(
+                                      height: 4.0,
+                                    ),
+                                    Text(
+                                      "$checkOutTime $checkOutTimeZone",
+                                      style: createBlackMediumTextStyle(14),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 8.0,
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),

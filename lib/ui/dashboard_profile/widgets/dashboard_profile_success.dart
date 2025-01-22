@@ -3,7 +3,6 @@ import 'package:dpp_mobile/main.dart';
 import 'package:dpp_mobile/models/employee.dart';
 import 'package:dpp_mobile/utils/themes/app_colors.dart';
 import 'package:dpp_mobile/utils/themes/text_style.dart';
-import 'package:dpp_mobile/widgets/profile_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconsax/iconsax.dart';
@@ -85,50 +84,50 @@ class DashboardProfileSuccess extends StatelessWidget {
               const SizedBox(
                 height: 48,
               ),
-              profileItem(
-                Iconsax.user_tag,
-                "NRP",
-                employee.nrp!,
+              ProfileItem(
+                icon: Iconsax.user_tag,
+                title: "NRP",
+                value: employee.nrp!,
               ),
               const SizedBox(
                 height: 16,
               ),
-              profileItem(
-                Iconsax.user_tag,
-                "Nama",
-                employee.name!,
+              ProfileItem(
+                icon: Iconsax.user_tag,
+                title: "Nama",
+                value: employee.name!,
               ),
               const SizedBox(
                 height: 16,
               ),
-              profileItem(
-                Iconsax.call,
-                "Work Mobile",
-                employee.work_phone!,
+              ProfileItem(
+                icon: Iconsax.call,
+                title: "Work Mobile",
+                value: employee.work_phone!,
               ),
               const SizedBox(
                 height: 16,
               ),
-              profileItem(
-                Iconsax.sms,
-                "Work Email",
-                employee.work_email!,
+              ProfileItem(
+                icon: Iconsax.sms,
+                title: "Work Email",
+                value: employee.work_email!,
               ),
               const SizedBox(
                 height: 16,
               ),
-              profileItem(
-                Iconsax.building,
-                "Work Location",
-                employee.address_id!,
+              ProfileItem(
+                icon: Iconsax.building,
+                title: "Work Location",
+                value: employee.address_id!,
               ),
               const SizedBox(
                 height: 16,
               ),
-              profileItem(
-                Iconsax.user_octagon,
-                "Manager",
-                employee.parent_id!,
+              ProfileItem(
+                icon: Iconsax.user_octagon,
+                title: "Manager",
+                value: employee.parent_id!,
               ),
               const SizedBox(
                 height: 16,
@@ -136,6 +135,65 @@ class DashboardProfileSuccess extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class ProfileItem extends StatelessWidget {
+  const ProfileItem({
+    super.key,
+    required this.icon,
+    required this.title,
+    required this.value,
+  });
+
+  final IconData icon;
+  final String title;
+  final String value;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 24.0),
+      margin: const EdgeInsets.only(bottom: 16.0),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16.0),
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(8.0),
+            decoration: BoxDecoration(
+              color: AppColors().primaryColor.withAlpha(20),
+              borderRadius: BorderRadius.circular(8.0),
+            ),
+            child: Icon(
+              icon,
+              color: AppColors().primaryColor,
+            ),
+          ),
+          const SizedBox(
+            width: 16.0,
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: createBlackMediumTextStyle(16),
+              ),
+              const SizedBox(
+                height: 4,
+              ),
+              Text(
+                value,
+                style: createBlackThinTextStyle(14),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

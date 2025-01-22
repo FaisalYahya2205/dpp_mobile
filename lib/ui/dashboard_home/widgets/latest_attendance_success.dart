@@ -36,6 +36,13 @@ class LatestAttendanceSuccess extends StatelessWidget {
       checkOutTime = "--:--";
     }
 
+    if (employee.last_check_in != null && employee.last_check_out != null) {
+      checkInDate = "Belum check in";
+      checkInTime = "--:--";
+      checkOutDate = "Belum check out";
+      checkOutTime = "--:--";
+    }
+
     return Flex(
       direction: Axis.horizontal,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
