@@ -31,6 +31,8 @@ class _LoginPageState extends State<LoginPage> {
   bool hidePassword = true;
   bool showUrlDatabase = false;
 
+  DateTime? currentPress;
+
   @override
   void initState() {
     urlTextController.text = dotenv.get("URL");
@@ -53,8 +55,21 @@ class _LoginPageState extends State<LoginPage> {
             });
             return;
           }
-          debugPrint("EXIT");
-          exit(0);
+          final now = DateTime.now();
+          if (currentPress == null ||
+              now.difference(currentPress!) > const Duration(seconds: 2)) {
+            currentPress = now;
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Tekan sekali lagi untuk keluar'),
+                duration: Duration(seconds: 1),
+              ),
+            );
+            return;
+          } else {
+            debugPrint("EXIT");
+            exit(0);
+          }
         },
         child: SingleChildScrollView(
           child: Form(

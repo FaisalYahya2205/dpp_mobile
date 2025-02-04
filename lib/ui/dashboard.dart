@@ -29,6 +29,8 @@ class DashboardPage extends StatefulWidget {
 class _DashboardPageState extends State<DashboardPage> {
   int pageIndex = 0;
 
+  DateTime? currentPress;
+
   final pages = [
     const DashboardHome(),
     const DashboardOvertime(),
@@ -41,8 +43,21 @@ class _DashboardPageState extends State<DashboardPage> {
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (state, value) {
-        debugPrint("DASHBOARD EXIT");
-        exit(0);
+        final now = DateTime.now();
+        if (currentPress == null ||
+            now.difference(currentPress!) > const Duration(seconds: 2)) {
+          currentPress = now;
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Tekan sekali lagi untuk keluar'),
+              duration: Duration(seconds: 1),
+            ),
+          );
+          return;
+        } else {
+          debugPrint("EXIT");
+          exit(0);
+        }
       },
       child: RepositoryProvider(
         create: (context) => OdooRepository(service: OdooService()),
