@@ -1,7 +1,9 @@
+import 'package:dpp_mobile/widgets/dialogs/confirm_dialog.dart';
 import 'package:dpp_mobile/widgets/dialogs/error_dialog.dart';
 import 'package:dpp_mobile/widgets/dialogs/loading_dialog.dart';
 import 'package:dpp_mobile/widgets/dialogs/success_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class AppDialog extends StatelessWidget {
   const AppDialog({
@@ -10,12 +12,16 @@ class AppDialog extends StatelessWidget {
     required this.title,
     required this.message,
     required this.onOkPress,
+    this.okTitle,
+    this.cancelTitle,
   });
 
   final String type;
   final String title;
   final String message;
   final VoidCallback onOkPress;
+  final String? okTitle;
+  final String? cancelTitle;
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +32,18 @@ class AppDialog extends StatelessWidget {
         title: title,
         message: message,
         onOkPress: onOkPress,
+      );
+    } else if (type == "confirm") {
+      return ConfirmDialog(
+        title: title,
+        message: message,
+        onOkPress: onOkPress,
+        onCancelPress: () {
+          context.pop(false);
+          return;
+        },
+        okTitle: okTitle,
+        cancelTitle: cancelTitle,
       );
     }
 

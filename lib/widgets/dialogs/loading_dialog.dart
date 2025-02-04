@@ -21,13 +21,6 @@ class LoadingDialog extends StatelessWidget {
           padding: const EdgeInsets.all(24.0),
           child: Column(
             children: [
-              Text(
-                title,
-                style: createBlackTextStyle(24),
-              ),
-              const SizedBox(
-                height: 16,
-              ),
               SizedBox(
                 height: 48,
                 width: 48,
@@ -39,8 +32,17 @@ class LoadingDialog extends StatelessWidget {
                 height: 16,
               ),
               Text(
+                title,
+                style: createBlackTextStyle(24),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+              Text(
                 message,
                 style: createGreyThinTextStyle(14),
+                textAlign: TextAlign.center,
               ),
             ],
           ),

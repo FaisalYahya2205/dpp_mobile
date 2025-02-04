@@ -1,11 +1,13 @@
+// ignore_for_file: no_leading_underscores_for_local_identifiers
+
 import "package:dpp_mobile/main.dart";
 import "package:dpp_mobile/models/attendance.dart";
 import "package:dpp_mobile/models/employee.dart";
+import "package:dpp_mobile/models/host_address.dart";
 import "package:dpp_mobile/models/result_error.dart";
 import "package:dpp_mobile/models/session.dart";
 import "package:dpp_mobile/models/user.dart";
 import "package:flutter/material.dart";
-import "package:flutter_dotenv/flutter_dotenv.dart";
 import "package:geolocator/geolocator.dart";
 import "package:odoo_rpc/odoo_rpc.dart";
 
@@ -78,10 +80,17 @@ class OdooService {
     return tempListDates;
   }
 
-  Future<bool> authentication(String username, String password) async {
+  Future<bool> authentication(
+    String username,
+    String password,
+    String hostUrl,
+    String databaseName,
+  ) async {
+    client = OdooClient(hostUrl);
     try {
-      OdooSession odooSession = await client!
-          .authenticate(dotenv.get("DATABASE"), username, password);
+      OdooSession odooSession =
+          await client!.authenticate(databaseName, username, password);
+
       final userData = await client!.callKw({
         "model": "res.users",
         "method": "search_read",
@@ -95,18 +104,28 @@ class OdooService {
         },
       });
 
-      await databaseHelper!.truncateQuery("session");
       await databaseHelper!.insertQuery(
         "session",
         Session(
-          id: odooSession.id,
           user_id: odooSession.userId,
           partner_id: userData[0]["partner_id"][0],
+          session_id: odooSession.id,
           user_login: odooSession.userLogin,
           user_name: odooSession.userName,
           password: password,
+          login_state: 1,
         ).toMap(),
       );
+
+      await databaseHelper!.insertQuery(
+        "host_address",
+        HostAddress(
+          user_id: odooSession.userId,
+          host_url: hostUrl,
+          database_name: databaseName,
+        ).toMap(),
+      );
+
       return true;
     } on OdooException catch (e) {
       debugPrint(e.message);
@@ -128,15 +147,22 @@ class OdooService {
           "fields": getEmployeeFields(),
         },
       });
+
+      debugPrint("GET EMPLOYEE => $data");
+
+      if (data.isEmpty) {
+        return Employee.empty;
+      }
+
       Employee employeeData = Employee.empty;
       try {
         employeeData = Employee.fromMap(data[0]);
       } catch (e) {
-        debugPrint("GET EMPLOYEE ERROR => ${e.toString()}");
+        // debugPrint("GET EMPLOYEE ERROR => ${e.toString()}");
       }
       return employeeData;
     } catch (e) {
-      debugPrint("GET EMPLOYEE ERROR => ${e.toString()}");
+      // debugPrint("GET EMPLOYEE ERROR => ${e.toString()}");
       throw ErrorEmptyResponse();
     }
   }
@@ -144,7 +170,11 @@ class OdooService {
   Future<List<Attendance>> getAttendanceList() async {
     try {
       Employee employeeData = await getEmployee();
-      debugPrint("GET ATTENDANCE => ${employeeData.id}");
+
+      if (employeeData.id == 0) {
+        return [];
+      }
+
       List<dynamic> data = await client!.callKw({
         'model': 'hr.attendance',
         'method': 'search_read',
@@ -167,12 +197,12 @@ class OdooService {
           return Attendance.fromMap(item);
         }));
       } catch (e) {
-        debugPrint("GET ATTENDANCE ERROR => ${e.toString()}");
+        // debugPrint("GET ATTENDANCE ERROR => ${e.toString()}");
       }
 
       return attendancesList!;
     } catch (e) {
-      debugPrint("GET ATTENDANCE ERROR => ${e.toString()}");
+      // debugPrint("GET ATTENDANCE ERROR => ${e.toString()}");
       throw ErrorEmptyResponse();
     }
   }
@@ -180,7 +210,11 @@ class OdooService {
   Future<Attendance> getTodayAttendance() async {
     try {
       Employee employeeData = await getEmployee();
-      debugPrint("GET ATTENDANCE => ${employeeData.id}");
+
+      if (employeeData.id == 0) {
+        return Attendance.empty;
+      }
+
       List<dynamic> data = await client!.callKw({
         'model': 'hr.attendance',
         'method': 'search_read',
@@ -210,7 +244,7 @@ class OdooService {
   ) async {
     try {
       Employee employeeData = await getEmployee();
-      debugPrint("GET EMPLOYEE CHECK IN => ${employeeData.toString()}");
+      // debugPrint("GET EMPLOYEE CHECK IN => ${employeeData.toString()}");
       final checkInAttendance = await client!.callKw({
         'model': 'hr.attendance',
         'method': 'create',
@@ -235,10 +269,10 @@ class OdooService {
         ],
         'kwargs': {},
       });
-      debugPrint("POST CHECK IN ATTENDANCE => $checkInAttendance");
+      // debugPrint("POST CHECK IN ATTENDANCE => $checkInAttendance");
       return checkInAttendance;
     } catch (e) {
-      debugPrint("POST CHECK IN ATTENDANCE => ${e.toString()}");
+      // debugPrint("POST CHECK IN ATTENDANCE => ${e.toString()}");
       throw ErrorEmptyResponse();
     }
   }
@@ -252,9 +286,9 @@ class OdooService {
   ) async {
     try {
       Employee employeeData = await getEmployee();
-      debugPrint("GET EMPLOYEE CHECK OUT => ${employeeData.toString()}");
+      // debugPrint("GET EMPLOYEE CHECK OUT => ${employeeData.toString()}");
       Attendance latestAttendance = await getTodayAttendance();
-      debugPrint("GET ATTENDANCE CHECK OUT => ${latestAttendance.toString()}");
+      // debugPrint("GET ATTENDANCE CHECK OUT => ${latestAttendance.toString()}");
       final checkOutAttendance = await client!.callKw({
         'model': 'hr.attendance',
         'method': 'write',
@@ -281,10 +315,10 @@ class OdooService {
         ],
         'kwargs': {},
       });
-      debugPrint("POST CHECK OUT ATTENDANCE => $checkOutAttendance");
+      // debugPrint("POST CHECK OUT ATTENDANCE => $checkOutAttendance");
       return checkOutAttendance;
     } catch (e) {
-      debugPrint("POST CHECK OUT ATTENDANCE => ${e.toString()}");
+      // debugPrint("POST CHECK OUT ATTENDANCE => ${e.toString()}");
       throw ErrorEmptyResponse();
     }
   }

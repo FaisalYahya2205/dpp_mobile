@@ -15,42 +15,58 @@ class DashboardHomeProfileSuccess extends StatelessWidget {
         horizontal: 24.0,
         vertical: 16.0,
       ),
-      child: Row(
-        children: [
-          Container(
-            height: 50,
-            width: 50,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(100),
-              color: Colors.grey.shade200,
+      child: SizedBox(
+        width: MediaQuery.of(context).size.width - 48,
+        child: Row(
+          children: [
+            Container(
+              height: 50,
+              width: 50,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(100),
+                color: Colors.grey.shade200,
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(100),
+                child: Image.network(
+                  "https://dpp.tbdigitalindo.co.id/web/image?model=hr.employee&id=${employee.id!}&field=image_128",
+                  headers: {
+                    'Cookie': 'session_id=${localSession!.first["session_id"]}',
+                  },
+                ),
+              ),
             ),
-            child: Image.network(
-              "https://dpp.tbdigitalindo.co.id/web/image?model=hr.employee&id=${employee.id!}&field=image_128",
-              headers: {
-                'Cookie': 'session_id=${localSession!.first["id"]}',
-              },
+            const SizedBox(
+              width: 16,
             ),
-          ),
-          const SizedBox(
-            width: 16,
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                employee.name!,
-                style: createBlackTextStyle(20),
-              ),
-              const SizedBox(
-                height: 8,
-              ),
-              Text(
-                employee.job_title!,
-                style: createBlackThinTextStyle(14),
-              ),
-            ],
-          ),
-        ],
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  width: MediaQuery.of(context).size.width - (48 + 66),
+                  child: Text(
+                    employee.id! == 0
+                        ? localSession!.first["user_name"]
+                        : employee.name!,
+                    style: createBlackTextStyle(20),
+                    maxLines: 1,
+                    softWrap: false,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                SizedBox(
+                  height: employee.id! == 0 ? 0 : 8,
+                ),
+                employee.id! == 0
+                    ? const SizedBox()
+                    : Text(
+                        employee.job_title!,
+                        style: createBlackThinTextStyle(14),
+                      ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

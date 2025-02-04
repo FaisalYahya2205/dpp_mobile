@@ -17,125 +17,184 @@ class DashboardProfileSuccess extends StatelessWidget {
     final employeeBloc = BlocProvider.of<EmployeeBloc>(context);
     return Scaffold(
       backgroundColor: Colors.white,
-      body: RefreshIndicator(
-        onRefresh: () async => employeeBloc.add(GetEmployee()),
-        child: SingleChildScrollView(
-          physics: const AlwaysScrollableScrollPhysics(
-            parent: BouncingScrollPhysics(),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(
-                height: MediaQuery.of(context).viewPadding.top,
-              ),
-              const SizedBox(
-                height: 48,
-              ),
-              Container(
-                height: 72,
-                width: 72,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(100),
-                  color: AppColors().primaryColor.shade50.withAlpha(50),
+      body: employee.id != 0
+          ? RefreshIndicator(
+              onRefresh: () async => employeeBloc.add(GetEmployee()),
+              child: SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics(
+                  parent: BouncingScrollPhysics(),
                 ),
-                child: Image.network(
-                  "https://dpp.tbdigitalindo.co.id/web/image?model=hr.employee&id=${employee.id}&field=image_128",
-                  headers: {
-                    'Cookie': 'session_id=${localSession!.first["id"]}',
-                  },
-                ),
-              ),
-              const SizedBox(
-                height: 16,
-              ),
-              Text(
-                employee.name!,
-                style: createBlackTextStyle(20),
-              ),
-              const SizedBox(
-                height: 8,
-              ),
-              Text(
-                employee.job_title!,
-                style: createBlackThinTextStyle(14),
-              ),
-              const SizedBox(
-                height: 16,
-              ),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                width: double.infinity,
-                height: 48,
-                child: ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors().primaryColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      height: MediaQuery.of(context).viewPadding.top,
                     ),
-                  ),
-                  child: Text(
-                    "Ubah Profile",
-                    style: createWhiteBoldTextStyle(14),
-                  ),
+                    const SizedBox(
+                      height: 48,
+                    ),
+                    Container(
+                      height: 72,
+                      width: 72,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(100),
+                        color: Colors.grey.shade200,
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(100),
+                        child: Image.network(
+                          "https://dpp.tbdigitalindo.co.id/web/image?model=hr.employee&id=${employee.id!}&field=image_128",
+                          headers: {
+                            'Cookie':
+                                'session_id=${localSession!.first["session_id"]}',
+                          },
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 16,
+                    ),
+                    Text(
+                      employee.name!,
+                      style: createBlackTextStyle(20),
+                    ),
+                    const SizedBox(
+                      height: 8,
+                    ),
+                    Text(
+                      employee.job_title!,
+                      style: createBlackThinTextStyle(14),
+                    ),
+                    const SizedBox(
+                      height: 16,
+                    ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                      width: double.infinity,
+                      height: 48,
+                      child: ElevatedButton(
+                        onPressed: () {},
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors().primaryColor,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        child: Text(
+                          "Ubah Profile",
+                          style: createWhiteBoldTextStyle(14),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 48,
+                    ),
+                    ProfileItem(
+                      icon: Iconsax.user_tag,
+                      title: "NRP",
+                      value: employee.nrp!,
+                    ),
+                    const SizedBox(
+                      height: 16,
+                    ),
+                    ProfileItem(
+                      icon: Iconsax.user_tag,
+                      title: "Nama",
+                      value: employee.name!,
+                    ),
+                    const SizedBox(
+                      height: 16,
+                    ),
+                    ProfileItem(
+                      icon: Iconsax.call,
+                      title: "Work Mobile",
+                      value: employee.work_phone!,
+                    ),
+                    const SizedBox(
+                      height: 16,
+                    ),
+                    ProfileItem(
+                      icon: Iconsax.sms,
+                      title: "Work Email",
+                      value: employee.work_email!,
+                    ),
+                    const SizedBox(
+                      height: 16,
+                    ),
+                    ProfileItem(
+                      icon: Iconsax.building,
+                      title: "Work Location",
+                      value: employee.address_id!,
+                    ),
+                    const SizedBox(
+                      height: 16,
+                    ),
+                    ProfileItem(
+                      icon: Iconsax.user_octagon,
+                      title: "Manager",
+                      value: employee.parent_id!,
+                    ),
+                    const SizedBox(
+                      height: 16,
+                    ),
+                  ],
                 ),
               ),
-              const SizedBox(
-                height: 48,
+            )
+          : RefreshIndicator(
+              onRefresh: () async => employeeBloc.add(GetEmployee()),
+              child: SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics(
+                  parent: BouncingScrollPhysics(),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      height: MediaQuery.of(context).viewPadding.top,
+                    ),
+                    const SizedBox(
+                      height: 48,
+                    ),
+                    Container(
+                      height: 72,
+                      width: 72,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(100),
+                        color: AppColors().primaryColor.shade50.withAlpha(50),
+                      ),
+                      child: Image.network(
+                        "https://dpp.tbdigitalindo.co.id/web/image?model=hr.employee&id=${employee.id}&field=image_128",
+                        headers: {
+                          'Cookie':
+                              'session_id=${localSession!.first["session_id"]}',
+                        },
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 16,
+                    ),
+                    Text(
+                      localSession!.first["user_name"],
+                      style: createBlackTextStyle(20),
+                    ),
+                    const SizedBox(
+                      height: 16,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(24.0),
+                      child: Center(
+                        child: Text(
+                          "Anda belum terdaftar sebagai karyawan.\nBila masih terjadi kendala harap hubungi Admin untuk info lebih lanjut...",
+                          style: createBlackThinTextStyle(14),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    )
+                  ],
+                ),
               ),
-              ProfileItem(
-                icon: Iconsax.user_tag,
-                title: "NRP",
-                value: employee.nrp!,
-              ),
-              const SizedBox(
-                height: 16,
-              ),
-              ProfileItem(
-                icon: Iconsax.user_tag,
-                title: "Nama",
-                value: employee.name!,
-              ),
-              const SizedBox(
-                height: 16,
-              ),
-              ProfileItem(
-                icon: Iconsax.call,
-                title: "Work Mobile",
-                value: employee.work_phone!,
-              ),
-              const SizedBox(
-                height: 16,
-              ),
-              ProfileItem(
-                icon: Iconsax.sms,
-                title: "Work Email",
-                value: employee.work_email!,
-              ),
-              const SizedBox(
-                height: 16,
-              ),
-              ProfileItem(
-                icon: Iconsax.building,
-                title: "Work Location",
-                value: employee.address_id!,
-              ),
-              const SizedBox(
-                height: 16,
-              ),
-              ProfileItem(
-                icon: Iconsax.user_octagon,
-                title: "Manager",
-                value: employee.parent_id!,
-              ),
-              const SizedBox(
-                height: 16,
-              ),
-            ],
-          ),
-        ),
-      ),
+            ),
     );
   }
 }

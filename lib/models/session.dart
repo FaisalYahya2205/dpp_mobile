@@ -2,59 +2,65 @@
 import 'dart:convert';
 
 class Session {
-  String? id;
+  String? session_id;
   int? user_id;
   int? partner_id;
   String? user_login;
   String? user_name;
   String? password;
+  int? login_state;
   
   Session({
-    this.id,
+    this.session_id,
     this.user_id,
     this.partner_id,
     this.user_login,
     this.user_name,
     this.password,
+    this.login_state,
   });
 
   Session copyWith({
-    String? id,
+    String? session_id,
     int? user_id,
     int? partner_id,
     String? user_login,
     String? user_name,
     String? password,
+    int? login_state,
   }) {
     return Session(
-      id: id ?? this.id,
+      session_id: session_id ?? this.session_id,
       user_id: user_id ?? this.user_id,
       partner_id: partner_id ?? this.partner_id,
       user_login: user_login ?? this.user_login,
       user_name: user_name ?? this.user_name,
       password: password ?? this.password,
+      login_state: login_state ?? this.login_state,
     );
   }
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      'id': id,
+      'session_id': session_id,
       'user_id': user_id,
       'partner_id': partner_id,
       'user_login': user_login,
       'user_name': user_name,
       'password': password,
+      'login_state': login_state,
     };
   }
 
   factory Session.fromMap(Map<String, dynamic> map) {
     return Session(
-      id: map['id'] != null ? map['id'] as String : null,
+      session_id: map['session_id'] != null ? map['session_id'] as String : null,
       user_id: map['user_id'] != null ? map['user_id'] as int : null,
       partner_id: map['partner_id'] != null ? map['partner_id'] as int : null,
       user_login: map['user_login'] != null ? map['user_login'] as String : null,
       user_name: map['user_name'] != null ? map['user_name'] as String : null,
       password: map['password'] != null ? map['password'] as String : null,
+      login_state: map['login_state'] != null ? map['login_state'] as int : null,
     );
   }
 
@@ -65,7 +71,7 @@ class Session {
 
   @override
   String toString() {
-    return 'Session(id: $id, user_id: $user_id, partner_id: $partner_id, user_login: $user_login, user_name: $user_name, password: $password)';
+    return 'Session(session_id: $session_id, user_id: $user_id, partner_id: $partner_id, user_login: $user_login, user_name: $user_name, password: $password, login_state: $login_state)';
   }
 
   @override
@@ -73,21 +79,23 @@ class Session {
     if (identical(this, other)) return true;
   
     return 
-      other.id == id &&
+      other.session_id == session_id &&
       other.user_id == user_id &&
       other.partner_id == partner_id &&
       other.user_login == user_login &&
       other.user_name == user_name &&
-      other.password == password;
+      other.password == password &&
+      other.login_state == login_state;
   }
 
   @override
   int get hashCode {
-    return id.hashCode ^
+    return session_id.hashCode ^
       user_id.hashCode ^
       partner_id.hashCode ^
       user_login.hashCode ^
       user_name.hashCode ^
-      password.hashCode;
+      password.hashCode ^
+      login_state.hashCode;
   }
 }

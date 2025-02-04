@@ -48,10 +48,10 @@ void main() async {
         'context': {'bin_size': true},
         'domain': [
           ["employee_id", "=", employeeData.id],
-          ["check_out", "=", false],
+          ["check_in", "!=", false],
+          ["check_out", "!=", false],
         ],
         'fields': getAttendanceFields(),
-        'limit': 1,
       },
     });
     List<Attendance> attendancesList = List<Attendance>.from(

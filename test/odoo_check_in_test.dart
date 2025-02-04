@@ -6,8 +6,9 @@ void main() async {
   await dotenv.load(fileName: ".env");
   final client = OdooClient(dotenv.get("URL"));
   try {
-    await client.authenticate(
-        dotenv.get("DATABASE"), "andiade52@gmail.com", "a");
+    final auth = await client.authenticate(
+        dotenv.get("DATABASE"), "cecep@gmail.com", "a");
+    debugPrint("AUTHENTICATION => ${auth.toString()}");
     final userData = await client.callKw({
       'model': 'res.users',
       'method': 'search_read',
@@ -15,12 +16,13 @@ void main() async {
       'kwargs': {
         'context': {'bin_size': true},
         'domain': [
-          ["email", "=", "andiade52@gmail.com"]
+          ["email", "=", "cecep@gmail.com"]
         ],
         'fields': ['id'],
         'limit': 80,
       },
     });
+    debugPrint("USER DATA => ${userData.toString()}");
     final employeeData = await client.callKw({
       'model': 'hr.employee',
       'method': 'search_read',
@@ -44,6 +46,7 @@ void main() async {
         ],
       },
     });
+    debugPrint("EMPLOYEE DATA => ${employeeData.toString()}");
     final checkInProcess = await client.callKw({
       'model': 'hr.attendance',
       'method': 'create',
@@ -69,7 +72,7 @@ void main() async {
       ],
       'kwargs': {},
     });
-    debugPrint(checkInProcess.toString());
+    debugPrint("CHECK IN PROCESS => ${checkInProcess.toString()}");
   } on OdooException catch (e) {
     debugPrint(e.message);
     client.close();

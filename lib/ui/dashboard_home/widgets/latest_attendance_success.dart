@@ -16,27 +16,45 @@ class LatestAttendanceSuccess extends StatelessWidget {
     String checkInTimeZone = DateTime.now().timeZoneName;
     String checkOutTimeZone = DateTime.now().timeZoneName;
 
-    if (employee.last_check_in != null) {
+    debugPrint("LATEST ATTENDANCE => $employee");
+
+    if (employee.last_check_in != null && employee.last_check_in != "") {
+      debugPrint("EMPLOYEE LAST_CHECK_IN => ${employee.last_check_in}");
       DateTime checkInDateTime =
           DateTime.parse("${employee.last_check_in}Z").toLocal();
       checkInDate = DateFormat.yMMMd().format(checkInDateTime);
-      checkInTime = "${checkInDateTime.hour}:${checkInDateTime.minute}";
+      String checkInHour = checkInDateTime.hour.toString().length == 1
+          ? "0${checkInDateTime.hour}"
+          : checkInDateTime.hour.toString();
+      String checkInMinutes = checkInDateTime.minute.toString().length == 1
+          ? "0${checkInDateTime.minute}"
+          : checkInDateTime.minute.toString();
+      checkInTime = "$checkInHour:$checkInMinutes";
     } else {
       checkInDate = "Belum check in";
       checkInTime = "--:--";
     }
 
-    if (employee.last_check_out != null) {
+    if (employee.last_check_out != null && employee.last_check_out != "") {
       DateTime checkOutDateTime =
           DateTime.parse("${employee.last_check_out}Z").toLocal();
       checkOutDate = DateFormat.yMMMd().format(checkOutDateTime);
-      checkOutTime = "${checkOutDateTime.hour}:${checkOutDateTime.minute}";
+      String checkOutHour = checkOutDateTime.hour.toString().length == 1
+          ? "0${checkOutDateTime.hour}"
+          : checkOutDateTime.hour.toString();
+      String checkOutMinutes = checkOutDateTime.minute.toString().length == 1
+          ? "0${checkOutDateTime.minute}"
+          : checkOutDateTime.minute.toString();
+      checkOutTime = "$checkOutHour:$checkOutMinutes";
     } else {
       checkOutDate = "Belum check out";
       checkOutTime = "--:--";
     }
 
-    if (employee.last_check_in != null && employee.last_check_out != null) {
+    if (employee.last_check_in != null &&
+        employee.last_check_in != "" &&
+        employee.last_check_out != null &&
+        employee.last_check_out != "") {
       checkInDate = "Belum check in";
       checkInTime = "--:--";
       checkOutDate = "Belum check out";

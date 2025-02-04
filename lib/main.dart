@@ -14,6 +14,7 @@ import 'package:odoo_rpc/odoo_rpc.dart';
 OdooClient? client;
 DatabaseHelper? databaseHelper;
 List<Map<String, dynamic>>? localSession;
+List<Map<String, dynamic>>? localHost;
 late List<CameraDescription> cameras;
 
 var subscription;
@@ -30,9 +31,6 @@ void main() async {
   databaseHelper = DatabaseHelper.instance;
   await databaseHelper!.initDb();
   await dotenv.load(fileName: ".env");
-  // init odooRpc
-  final url = dotenv.get("URL");
-  client = OdooClient(url);
 
   SystemChrome.setSystemUIOverlayStyle(
     SystemUiOverlayStyle.dark,
@@ -55,24 +53,6 @@ class MyApp extends StatelessWidget {
         primaryColor: AppColors().primaryColor,
       ),
       debugShowCheckedModeBanner: false,
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(child: Text("data")),
     );
   }
 }

@@ -15,51 +15,51 @@ void main() async {
       'kwargs': {
         'context': {'bin_size': true},
         'domain': [
-          ['key', '=', 'survey_1_id']
+          ['key', '=', 'database.secret']
         ],
         'fields': ['key', 'value'],
       },
     });
     debugPrint(config_param[0].toString());
-    final surveyData = await client.callKw({
-      'model': 'survey.survey',
-      'method': 'search_read',
-      'args': [],
-      'kwargs': {
-        'context': {'bin_size': true},
-        'domain': [
-          ['id', '=', config_param[0]['value']]
-        ],
-        'fields': ['id', 'title'],
-      },
-    });
-    debugPrint(surveyData[0].toString());
-    final surveyQuestion = await client.callKw({
-      'model': 'survey.question',
-      'method': 'search_read',
-      'args': [],
-      'kwargs': {
-        'context': {'bin_size': true},
-        'domain': [
-          ['survey_id', '=', surveyData[0]['id']]
-        ],
-        'fields': ['id', 'sequence', 'title'],
-      },
-    });
-    debugPrint(surveyQuestion.toString());
-    final surveyAnswer = await client.callKw({
-      'model': 'survey.question.answer',
-      'method': 'search_read',
-      'args': [],
-      'kwargs': {
-        'context': {'bin_size': true},
-        'domain': [
-          ['question_id', 'in', [3, 4]]
-        ],
-        'fields': ['id', 'sequence', 'question_id', 'value', 'answer_score'],
-      },
-    });
-    debugPrint(surveyAnswer.toString());
+    // final surveyData = await client.callKw({
+    //   'model': 'survey.survey',
+    //   'method': 'search_read',
+    //   'args': [],
+    //   'kwargs': {
+    //     'context': {'bin_size': true},
+    //     'domain': [
+    //       ['id', '=', config_param[0]['value']]
+    //     ],
+    //     'fields': ['id', 'title'],
+    //   },
+    // });
+    // debugPrint(surveyData[0].toString());
+    // final surveyQuestion = await client.callKw({
+    //   'model': 'survey.question',
+    //   'method': 'search_read',
+    //   'args': [],
+    //   'kwargs': {
+    //     'context': {'bin_size': true},
+    //     'domain': [
+    //       ['survey_id', '=', surveyData[0]['id']]
+    //     ],
+    //     'fields': ['id', 'sequence', 'title'],
+    //   },
+    // });
+    // debugPrint(surveyQuestion.toString());
+    // final surveyAnswer = await client.callKw({
+    //   'model': 'survey.question.answer',
+    //   'method': 'search_read',
+    //   'args': [],
+    //   'kwargs': {
+    //     'context': {'bin_size': true},
+    //     'domain': [
+    //       ['question_id', 'in', [3, 4]]
+    //     ],
+    //     'fields': ['id', 'sequence', 'question_id', 'value', 'answer_score'],
+    //   },
+    // });
+    // debugPrint(surveyAnswer.toString());
     client.close();
   } on OdooException catch (e) {
     debugPrint(e.message);

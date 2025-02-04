@@ -1,9 +1,11 @@
+import 'package:dpp_mobile/bloc/employee_bloc.dart';
 import 'package:dpp_mobile/bloc/list_attendances_bloc.dart';
 import 'package:dpp_mobile/repository/odoo_repository.dart';
 import 'package:dpp_mobile/services/odoo_service.dart';
-import 'package:dpp_mobile/utils/themes/app_colors.dart';
+import 'package:dpp_mobile/ui/attendance_history/widgets/attendance_history_error.dart';
+import 'package:dpp_mobile/ui/attendance_history/widgets/attendance_history_loading.dart';
+import 'package:dpp_mobile/ui/attendance_history/widgets/attendance_history_success.dart';
 import 'package:dpp_mobile/utils/themes/text_style.dart';
-import 'package:dpp_mobile/widgets/attendance_latest_list_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconsax/iconsax.dart';
@@ -21,6 +23,11 @@ class AttendanceHistory extends StatelessWidget {
             create: (context) => AttendanceBloc(
               odooRepository: context.read<OdooRepository>(),
             )..add(GetAttendance()),
+          ),
+          BlocProvider<EmployeeBloc>(
+            create: (context) => EmployeeBloc(
+              odooRepository: context.read<OdooRepository>(),
+            )..add(GetEmployee()),
           ),
         ],
         child: Scaffold(
@@ -43,9 +50,12 @@ class AttendanceHistory extends StatelessWidget {
           ),
           body: Container(
             constraints: const BoxConstraints.expand(),
-            padding: const EdgeInsets.symmetric(horizontal: 24.0),
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: BlocBuilder<AttendanceBloc, AttendanceState>(
               builder: (context, state) {
+                if (state.status.isLoading) {
+                  return const AttendanceHistoryLoading();
+                }
                 if (state.status.isSuccess) {
                   return SingleChildScrollView(
                     physics: const AlwaysScrollableScrollPhysics(
@@ -56,17 +66,8 @@ class AttendanceHistory extends StatelessWidget {
                         const SizedBox(
                           height: 16,
                         ),
-                        ListView.builder(
-                          itemCount: state.attendances.length,
-                          physics: const NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          padding: const EdgeInsets.all(0),
-                          itemBuilder: (context, index) {
-                            return latestAttendanceListItem(
-                              state.attendances[index],
-                              context,
-                            );
-                          },
+                        AttendanceHistorySuccess(
+                          attendanceList: state.attendances,
                         ),
                         const SizedBox(
                           height: 16,
@@ -74,28 +75,8 @@ class AttendanceHistory extends StatelessWidget {
                       ],
                     ),
                   );
-                } else if (state.status.isError) {
-                  return Center(
-                    child: Text(
-                      'Terjadi Kesalahan',
-                      style: createBlackTextStyle(14),
-                    ),
-                  );
-                } else if (state.status.isLoading) {
-                  return Center(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 40.0),
-                      child: SizedBox(
-                        width: 64,
-                        child: LinearProgressIndicator(
-                          color: AppColors().primaryColor,
-                        ),
-                      ),
-                    ),
-                  );
-                } else {
-                  return const SizedBox();
                 }
+                return const AttendanceHistoryError();
               },
             ),
           ),

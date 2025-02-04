@@ -1,5 +1,11 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'dart:io';
+
+import 'package:dpp_mobile/bloc/employee_last_attendance_bloc.dart';
 import 'package:dpp_mobile/bloc/list_attendances_bloc.dart';
 import 'package:dpp_mobile/bloc/employee_bloc.dart';
+import 'package:dpp_mobile/database/database.dart';
 import 'package:dpp_mobile/repository/odoo_repository.dart';
 import 'package:dpp_mobile/services/odoo_service.dart';
 import 'package:dpp_mobile/ui/dashboard_timesheet.dart';
@@ -7,8 +13,10 @@ import 'package:dpp_mobile/ui/dashboard_home/dashboard_home.dart';
 import 'package:dpp_mobile/ui/dashboard_overtime.dart';
 import 'package:dpp_mobile/ui/dashboard_profile/dashboard_profile.dart';
 import 'package:dpp_mobile/widgets/bottom_navigation_bar_item.dart';
+import 'package:dpp_mobile/widgets/dialogs/app_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:iconsax/iconsax.dart';
 
 class DashboardPage extends StatefulWidget {
@@ -30,34 +38,47 @@ class _DashboardPageState extends State<DashboardPage> {
 
   @override
   Widget build(BuildContext context) {
-    return RepositoryProvider(
-      create: (context) => OdooRepository(service: OdooService()),
-      child: MultiBlocProvider(
-        providers: [
-          BlocProvider<EmployeeBloc>(
-            create: (context) => EmployeeBloc(
-              odooRepository: context.read<OdooRepository>(),
-            )..add(GetEmployee()),
-          ),
-          BlocProvider<AttendanceBloc>(
-            create: (context) => AttendanceBloc(
-              odooRepository: context.read<OdooRepository>(),
-            )..add(GetAttendance()),
-          ),
-        ],
-        child: Scaffold(
-          body: Container(
-            color: Colors.white,
-            height: MediaQuery.of(context).size.height,
-            width: double.infinity,
-            child: Stack(
-              alignment: Alignment.bottomCenter,
-              children: [
-                pages[pageIndex],
-              ],
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (state, value) {
+        debugPrint("DASHBOARD EXIT");
+        exit(0);
+      },
+      child: RepositoryProvider(
+        create: (context) => OdooRepository(service: OdooService()),
+        child: MultiBlocProvider(
+          providers: [
+            BlocProvider<EmployeeBloc>(
+              create: (context) => EmployeeBloc(
+                odooRepository: context.read<OdooRepository>(),
+              )..add(GetEmployee()),
             ),
+            BlocProvider<EmployeeLastAttendanceBloc>(
+              create: (context) => EmployeeLastAttendanceBloc(
+                odooRepository: context.read<OdooRepository>(),
+              )..add(GetEmployeeLastAttendance()),
+            ),
+            BlocProvider<AttendanceBloc>(
+              create: (context) => AttendanceBloc(
+                odooRepository: context.read<OdooRepository>(),
+              )..add(GetAttendance()),
+            ),
+          ],
+          child: Scaffold(
+            backgroundColor: Colors.white,
+            body: Container(
+              color: Colors.white,
+              height: MediaQuery.of(context).size.height,
+              width: double.infinity,
+              child: Stack(
+                alignment: Alignment.bottomCenter,
+                children: [
+                  pages[pageIndex],
+                ],
+              ),
+            ),
+            bottomNavigationBar: buildMyNavBar(context),
           ),
-          bottomNavigationBar: buildMyNavBar(context),
         ),
       ),
     );
@@ -94,6 +115,51 @@ class _DashboardPageState extends State<DashboardPage> {
             () => setState(() => pageIndex = 3),
             Iconsax.profile_2user,
             3,
+            pageIndex,
+          ),
+          bottomNavItem(
+            () => showDialog(
+              barrierDismissible: true,
+              context: context,
+              builder: (BuildContext dialogContext) => AppDialog(
+                type: "confirm",
+                title: "Logout?",
+                message:
+                    "Anda harus login kembali jika ingin mengakses aplikasi...",
+                onOkPress: () async {
+                  context.pop(true);
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext dialogContext) => AppDialog(
+                      type: "loading",
+                      title: "Memproses",
+                      message: "Mohon tunggu...",
+                      onOkPress: () {},
+                    ),
+                  );
+                  await DatabaseHelper.instance.logoutQuery("session").then(
+                    (result) {
+                      context.pop(true);
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext dialogContext) => AppDialog(
+                          type: "success",
+                          title: "Logout Berhasil",
+                          message: "Mengalihkan...",
+                          onOkPress: () {},
+                        ),
+                      );
+                      Future.delayed(const Duration(seconds: 2), () {
+                        context.pop();
+                        context.pushReplacement("/login");
+                      });
+                    },
+                  );
+                },
+              ),
+            ),
+            Iconsax.logout,
+            4,
             pageIndex,
           ),
         ],

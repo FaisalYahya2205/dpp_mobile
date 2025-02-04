@@ -7,7 +7,7 @@ void main() async {
   final client = OdooClient(dotenv.get("URL"));
   try {
     final session = await client.authenticate(
-        dotenv.get("DATABASE"), "andiade52@gmail.com", "b");
+        dotenv.get("DATABASE"), "cecep@gmail.com", "a");
     debugPrint("DATA USER => " + session.toString());
     final userData = await client.callKw({
       'model': 'res.users',
@@ -16,7 +16,7 @@ void main() async {
       'kwargs': {
         'context': {'bin_size': true},
         'domain': [
-          ["email", "=", "andiade52@gmail.com"]
+          ["email", "=", "cecep@gmail.com"]
         ],
         'fields': ['id', 'partner_id'],
         'limit': 80,

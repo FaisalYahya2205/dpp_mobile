@@ -31,18 +31,34 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> redirectFunction() async {
-    localSession = await DatabaseHelper.instance.getAllQuery("session");
-    if (localSession!.isEmpty) {
-      Timer(const Duration(seconds: 5), () => context.replace('/login'));
-    } else {
-      try {
-        await OdooService().authentication(
-            localSession!.first['user_login'], localSession!.first['password']);
-      Timer(const Duration(seconds: 5), () => context.replace('/dashboard'));
-      } catch (e) {
-        await DatabaseHelper.instance.truncateQuery("session");
-        Timer(const Duration(seconds: 5), () => context.replace('/login'));
-      }
+    localSession = await DatabaseHelper.instance.getAllQuery(
+      "session",
+      "login_state = ?",
+      [1],
+    );
+    localHost = await DatabaseHelper.instance.getAllQuery(
+      "host_address",
+      "user_id = ?",
+      [localSession!.isEmpty ? "" : localSession!.first["user_id"]],
+    );
+    debugPrint("LOCAL SESSION => $localSession");
+    debugPrint("LOCAL HOST => $localHost");
+    try {
+      await OdooService().authentication(
+        localSession!.first['user_login'],
+        localSession!.first['password'],
+        localHost!.first["host_url"],
+        localHost!.first["database_name"],
+      );
+      Timer(
+        const Duration(seconds: 3),
+        () => context.pushReplacement('/dashboard'),
+      );
+    } catch (e) {
+      Timer(
+        const Duration(seconds: 3),
+        () => context.pushReplacement('/login'),
+      );
     }
   }
 

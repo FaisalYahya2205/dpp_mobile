@@ -21,18 +21,27 @@ class DatabaseHelper {
 
   Future _onCreate(Database db, int version) async {
     await db.execute('''
+      CREATE TABLE host_address (
+        user_id INTEGER UNIQUE,
+        host_url VARCHAR(50),
+        database_name VARCHAR(50)
+      )
+    ''');
+    await db.execute('''
       CREATE TABLE session (
-        id VARCHAR(50) PRIMARY KEY,
-        user_id INTEGER,
-        partner_id INTEGER,
-        user_login VARCHAR(50),
-        user_name VARCHAR(50),
-        password VARCHAR(50)
+        user_id INTEGER PRIMARY KEY UNIQUE,
+        partner_id INTEGER UNIQUE,
+        session_id VARCHAR(50),
+        user_login VARCHAR(50) UNIQUE,
+        user_name VARCHAR(50) UNIQUE,
+        password VARCHAR(50),
+        login_state INTEGER
       )
     ''');
     await db.execute('''
       CREATE TABLE employee (
         id INTEGER PRIMARY KEY,
+        user_id INTEGER,
         name VARCHAR(50),
         nrp VARCHAR(10),
         job_id VARCHAR(50),
@@ -49,9 +58,25 @@ class DatabaseHelper {
     ''');
   }
 
-  Future<List<Map<String, dynamic>>> getAllQuery(String tableName) async {
+  Future<List<Map<String, dynamic>>> getAllQuery(
+      String tableName, String where, List<dynamic> whereAgrs) async {
     Database db = await instance.db;
-    return await db.query(tableName);
+    return await db.query(
+      tableName,
+      where: where,
+      whereArgs: whereAgrs,
+    );
+  }
+
+  Future<int> countQuery(
+      String tableName, String where, List<dynamic> whereAgrs) async {
+    Database db = await instance.db;
+    final result = await db.query(
+      tableName,
+      where: where,
+      whereArgs: whereAgrs,
+    );
+    return result.length;
   }
 
   Future<int> insertQuery(String tableName, Map<String, dynamic> model) async {
@@ -65,11 +90,20 @@ class DatabaseHelper {
 
   Future<int> deleteQuery(String tableName, int id) async {
     Database db = await instance.db;
-    return await db.delete(tableName, where: 'id = ?', whereArgs: [id]);
+    return await db
+        .delete(tableName, where: 'id = ?', whereArgs: [id]);
   }
 
   Future<int> truncateQuery(String tableName) async {
     Database db = await instance.db;
     return await db.delete(tableName);
+  }
+
+  Future<int> logoutQuery(String tableName) async {
+    Database db = await instance.db;
+    return await db.update(
+      tableName,
+      {"login_state": 0},
+    );
   }
 }

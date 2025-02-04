@@ -38,6 +38,7 @@ class ErrorDialog extends StatelessWidget {
               Text(
                 title,
                 style: createBlackTextStyle(24),
+                textAlign: TextAlign.center,
               ),
               const SizedBox(
                 height: 16,
@@ -45,6 +46,7 @@ class ErrorDialog extends StatelessWidget {
               Text(
                 message,
                 style: createGreyThinTextStyle(14),
+                textAlign: TextAlign.center,
               ),
               const SizedBox(
                 height: 24,

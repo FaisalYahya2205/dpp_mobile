@@ -6,15 +6,14 @@ import 'dart:typed_data';
 import 'package:camera/camera.dart';
 import 'package:dpp_mobile/main.dart';
 import 'package:dpp_mobile/services/odoo_service.dart';
-import 'package:dpp_mobile/ui/dashboard_home/widgets/dashboard_home_error.dart';
-import 'package:dpp_mobile/ui/dashboard_home/widgets/dashboard_home_loading.dart';
+import 'package:dpp_mobile/ui/dashboard_check_in/widgets/check_in_maps_error.dart';
+import 'package:dpp_mobile/ui/dashboard_check_in/widgets/check_in_maps_loading.dart';
+import 'package:dpp_mobile/ui/dashboard_check_in/widgets/check_in_maps_success.dart';
 import 'package:dpp_mobile/utils/themes/app_colors.dart';
 import 'package:dpp_mobile/utils/themes/text_style.dart';
 import 'package:dpp_mobile/widgets/dialogs/app_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_map/flutter_map.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:latlong2/latlong.dart';
 
 class DashboardHomeCheckIn extends StatefulWidget {
   const DashboardHomeCheckIn({super.key});
@@ -41,7 +40,7 @@ class _DashboardHomeCheckInState extends State<DashboardHomeCheckIn> {
     currentTime.value = DateTime.now().toUtc().toString().split(".")[0];
 
     _controller = CameraController(
-      cameras.last,
+      cameras.length > 1 ? cameras.last : cameras.first,
       ResolutionPreset.medium,
       enableAudio: false,
     );
@@ -55,7 +54,7 @@ class _DashboardHomeCheckInState extends State<DashboardHomeCheckIn> {
     super.dispose();
   }
 
-  Future<bool> checkIn() async {
+  Future<bool> checkIn(BuildContext context) async {
     bool returnValue = false;
     try {
       final XFile picture = await _controller.takePicture();
@@ -85,7 +84,7 @@ class _DashboardHomeCheckInState extends State<DashboardHomeCheckIn> {
         children: [
           Container(
             decoration: BoxDecoration(
-              color: Colors.grey,
+              color: Colors.grey.shade200,
               borderRadius: BorderRadius.circular(16.0),
             ),
             constraints: const BoxConstraints.expand(),
@@ -217,18 +216,18 @@ class _DashboardHomeCheckInState extends State<DashboardHomeCheckIn> {
                       child: Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(24.0),
-                          color: Colors.grey.shade200,
+                          color: Colors.grey.shade100,
                         ),
                         child: FutureBuilder(
                           future: OdooService().getCurrentPosition(),
                           builder: (context, snapshot) {
                             if (snapshot.connectionState ==
                                 ConnectionState.waiting) {
-                              return const DashboardHomeLoading();
+                              return const CheckInMapsLoading();
                             }
 
                             if (snapshot.hasError) {
-                              return const DashboardHomeError();
+                              return const CheckInMapsError();
                             }
 
                             currentPositionLatitude.value =
@@ -236,101 +235,11 @@ class _DashboardHomeCheckInState extends State<DashboardHomeCheckIn> {
                             currentPositionLongitude.value =
                                 snapshot.data!.longitude;
 
-                            return Stack(
-                              children: [
-                                ClipRRect(
-                                  borderRadius: const BorderRadius.all(
-                                    Radius.circular(24),
-                                  ),
-                                  child: FlutterMap(
-                                    options: MapOptions(
-                                      initialCenter: LatLng(
-                                        currentPositionLatitude.value,
-                                        currentPositionLongitude.value,
-                                      ),
-                                      initialZoom: 16,
-                                    ),
-                                    children: [
-                                      TileLayer(
-                                        urlTemplate:
-                                            'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                                        userAgentPackageName:
-                                            'com.example.dpp_mobile',
-                                      ),
-                                      MarkerLayer(
-                                        markers: [
-                                          Marker(
-                                            point: LatLng(
-                                              currentPositionLatitude.value,
-                                              currentPositionLongitude.value,
-                                            ),
-                                            child: const Icon(
-                                              Icons.location_pin,
-                                              color: Colors.red,
-                                              size: 32,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Column(
-                                  children: [
-                                    Container(
-                                      padding: const EdgeInsets.all(8.0),
-                                      margin: const EdgeInsets.all(8.0),
-                                      decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(100),
-                                        color: Colors.white,
-                                      ),
-                                      child: Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          Container(
-                                            padding: const EdgeInsets.all(8.0),
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(100),
-                                              color: AppColors()
-                                                  .primaryColor
-                                                  .withAlpha(50),
-                                            ),
-                                            child: Icon(
-                                              Icons.location_pin,
-                                              color: AppColors().primaryColor,
-                                            ),
-                                          ),
-                                          const SizedBox(
-                                            width: 16,
-                                          ),
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                "Lokasi saat ini",
-                                                style: createBlackThinTextStyle(
-                                                    12),
-                                              ),
-                                              const SizedBox(
-                                                height: 4,
-                                              ),
-                                              Text(
-                                                "${snapshot.data!.latitude}, ${snapshot.data!.longitude}",
-                                                style: createBlackTextStyle(14),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    const Spacer(),
-                                  ],
-                                ),
-                              ],
+                            return CheckInMapsSuccess(
+                              currentPositionLatitude:
+                                  currentPositionLatitude.value,
+                              currentPositionLongitude:
+                                  currentPositionLongitude.value,
                             );
                           },
                         ),
@@ -354,7 +263,30 @@ class _DashboardHomeCheckInState extends State<DashboardHomeCheckIn> {
                               onOkPress: () {},
                             ),
                           );
-                          bool checkOutSuccess = await checkIn();
+
+                          if (currentPositionLatitude.value == 0 ||
+                              currentPositionLongitude.value == 0) {
+                            // dismiss loading dialog
+                            Navigator.of(context).pop();
+                            // show error dialog
+                            showDialog(
+                              barrierDismissible: false,
+                              context: context,
+                              builder: (BuildContext dialogContext) =>
+                                  AppDialog(
+                                type: "error",
+                                title: "Check In Gagal",
+                                message: "Data lokasi tidak boleh kosong...",
+                                onOkPress: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                            );
+                            return;
+                          }
+
+                          bool checkOutSuccess = await checkIn(context);
+
                           if (checkOutSuccess) {
                             // dismiss loading dialog
                             Navigator.of(context).pop();
@@ -370,6 +302,7 @@ class _DashboardHomeCheckInState extends State<DashboardHomeCheckIn> {
                                 onOkPress: () {},
                               ),
                             );
+
                             Future.delayed(const Duration(seconds: 2), () {
                               // dismiss loading dialog
                               Navigator.of(context).pop();

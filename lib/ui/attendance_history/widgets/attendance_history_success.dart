@@ -6,15 +6,18 @@ import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
 
-class CurrentAttendancesSuccess extends StatelessWidget {
-  const CurrentAttendancesSuccess({super.key, required this.attendanceList});
+class AttendanceHistorySuccess extends StatelessWidget {
+  const AttendanceHistorySuccess({
+    super.key,
+    required this.attendanceList,
+  });
 
   final List<Attendance> attendanceList;
 
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      itemCount: attendanceList.length > 5 ? 5 : attendanceList.length,
+      itemCount: attendanceList.length,
       physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
       padding: const EdgeInsets.all(0),
@@ -25,6 +28,7 @@ class CurrentAttendancesSuccess extends StatelessWidget {
             checkOutTime,
             checkInTimeZone,
             checkOutTimeZone;
+
         DateTime checkInDateTime =
             DateTime.parse("${attendanceList[index].check_in}Z").toLocal();
         checkInTimeZone = checkInDateTime.timeZoneName;
@@ -97,7 +101,7 @@ class CurrentAttendancesSuccess extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(
-                      width: 8.0,
+                      width: 16.0,
                     ),
                     Flexible(
                       flex: 1,
@@ -161,7 +165,7 @@ class CurrentAttendancesSuccess extends StatelessWidget {
                                   children: [
                                     Text(
                                       "Check In",
-                                      style: createBlackThinTextStyle(12),
+                                      style: createBlackThinTextStyle(14),
                                     ),
                                     const SizedBox(
                                       height: 4.0,
@@ -182,7 +186,7 @@ class CurrentAttendancesSuccess extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(
-                      width: 8.0,
+                      width: 16.0,
                     ),
                     Flexible(
                       flex: 1,

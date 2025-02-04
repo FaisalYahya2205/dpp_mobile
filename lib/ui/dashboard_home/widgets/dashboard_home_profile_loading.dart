@@ -28,7 +28,7 @@ class DashboardHomeProfileLoading extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                width: 256,
+                width: MediaQuery.of(context).size.width - (48 + 66),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(100),
                   color: Colors.grey.shade200,

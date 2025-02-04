@@ -6,14 +6,13 @@ import 'dart:typed_data';
 import 'package:camera/camera.dart';
 import 'package:dpp_mobile/main.dart';
 import 'package:dpp_mobile/services/odoo_service.dart';
-import 'package:dpp_mobile/ui/dashboard_home/widgets/dashboard_home_error.dart';
-import 'package:dpp_mobile/ui/dashboard_home/widgets/dashboard_home_loading.dart';
+import 'package:dpp_mobile/ui/dashboard_check_out/widgets/check_out_maps_error.dart';
+import 'package:dpp_mobile/ui/dashboard_check_out/widgets/check_out_maps_loading.dart';
+import 'package:dpp_mobile/ui/dashboard_check_out/widgets/check_out_maps_success.dart';
 import 'package:dpp_mobile/utils/themes/text_style.dart';
 import 'package:dpp_mobile/widgets/dialogs/app_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_map/flutter_map.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:latlong2/latlong.dart';
 
 class DashboardHomeCheckOut extends StatefulWidget {
   const DashboardHomeCheckOut({super.key});
@@ -41,7 +40,7 @@ class _DashboardHomeCheckOutState extends State<DashboardHomeCheckOut> {
     currentTime.value = DateTime.now().toUtc().toString().split(".")[0];
 
     _controller = CameraController(
-      cameras.last,
+      cameras.length > 1 ? cameras.last : cameras.first,
       ResolutionPreset.medium,
       enableAudio: false,
     );
@@ -217,125 +216,37 @@ class _DashboardHomeCheckOutState extends State<DashboardHomeCheckOut> {
                   ),
                   child: Column(
                     children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(24.0),
-                          color: Colors.grey.shade200,
-                        ),
-                        height: MediaQuery.of(context).size.height / 9,
-                        child: FutureBuilder(
-                          future: OdooService().getCurrentPosition(),
-                          builder: (context, snapshot) {
-                            if (snapshot.hasError) {
-                              return const DashboardHomeError();
-                            }
-
-                            if (snapshot.connectionState ==
-                                ConnectionState.waiting) {
-                              return const DashboardHomeLoading();
-                            }
-
-                            currentPositionLatitude.value =
-                                snapshot.data!.latitude;
-                            currentPositionLongitude.value =
-                                snapshot.data!.longitude;
-
-                            return Stack(
-                              children: [
-                                ClipRRect(
-                                  borderRadius: const BorderRadius.all(
-                                    Radius.circular(24),
-                                  ),
-                                  child: FlutterMap(
-                                    options: MapOptions(
-                                      initialCenter: LatLng(
-                                        currentPositionLatitude.value,
-                                        currentPositionLongitude.value,
-                                      ),
-                                      initialZoom: 16,
-                                    ),
-                                    children: [
-                                      TileLayer(
-                                        urlTemplate:
-                                            'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                                        userAgentPackageName:
-                                            'com.example.dpp_mobile',
-                                      ),
-                                      MarkerLayer(
-                                        markers: [
-                                          Marker(
-                                            point: LatLng(
-                                              currentPositionLatitude.value,
-                                              currentPositionLongitude.value,
-                                            ),
-                                            child: const Icon(
-                                              Icons.location_pin,
-                                              color: Colors.red,
-                                              size: 32,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Column(
-                                  children: [
-                                    Container(
-                                      padding: const EdgeInsets.all(8.0),
-                                      margin: const EdgeInsets.all(8.0),
-                                      decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(100),
-                                        color: Colors.white,
-                                      ),
-                                      child: Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          Container(
-                                            padding: const EdgeInsets.all(8.0),
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(100),
-                                              color:
-                                                  Colors.orange.withAlpha(50),
-                                            ),
-                                            child: const Icon(
-                                              Icons.location_pin,
-                                              color: Colors.orange,
-                                            ),
-                                          ),
-                                          const SizedBox(
-                                            width: 16,
-                                          ),
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                "Lokasi saat ini",
-                                                style: createBlackThinTextStyle(
-                                                    12),
-                                              ),
-                                              const SizedBox(
-                                                height: 4,
-                                              ),
-                                              Text(
-                                                "${snapshot.data!.latitude}, ${snapshot.data!.longitude}",
-                                                style: createBlackTextStyle(14),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    const Spacer(),
-                                  ],
-                                ),
-                              ],
-                            );
-                          },
+                      Expanded(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(24.0),
+                            color: Colors.grey.shade200,
+                          ),
+                          child: FutureBuilder(
+                            future: OdooService().getCurrentPosition(),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return const CheckOutMapsLoading();
+                              }
+                        
+                              if (snapshot.hasError) {
+                                return const CheckOutMapsError();
+                              }
+                        
+                              currentPositionLatitude.value =
+                                  snapshot.data!.latitude;
+                              currentPositionLongitude.value =
+                                  snapshot.data!.longitude;
+                        
+                              return CheckOutMapsSuccess(
+                                currentPositionLatitude:
+                                    currentPositionLatitude.value,
+                                currentPositionLongitude:
+                                    currentPositionLongitude.value,
+                              );
+                            },
+                          ),
                         ),
                       ),
                       const SizedBox(
@@ -350,8 +261,8 @@ class _DashboardHomeCheckOutState extends State<DashboardHomeCheckOut> {
                           controller: descController,
                           keyboardType: TextInputType.text,
                           style: createBlackTextStyle(14),
-                          minLines: 4,
-                          maxLines: 4,
+                          minLines: 3,
+                          maxLines: 3,
                           decoration: InputDecoration(
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(24),
@@ -360,7 +271,7 @@ class _DashboardHomeCheckOutState extends State<DashboardHomeCheckOut> {
                             hintStyle: createGreyThinTextStyle(14),
                             contentPadding: const EdgeInsets.symmetric(
                               horizontal: 16.0,
-                              vertical: 8,
+                              vertical: 16,
                             ),
                           ),
                           validator: (value) {
