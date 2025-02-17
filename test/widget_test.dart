@@ -7,12 +7,9 @@
 
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_test/flutter_test.dart';
-
-import 'package:dpp_mobile/main.dart';
 
 void main() {
-  final dateTime = new DateTime.now();
+  // final dateTime = new DateTime.now();
   final formatedDateTime = DateFormat("yyyy-MM-dd HH:mm:ss").parse(DateTime.now().toString());
   debugPrint(formatedDateTime.timeZoneName);
   debugPrint(formatedDateTime.toString());

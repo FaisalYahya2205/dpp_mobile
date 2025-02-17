@@ -77,7 +77,7 @@ class DashboardProfileSuccess extends StatelessWidget {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors().primaryColor,
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
+                            borderRadius: BorderRadius.circular(16),
                           ),
                         ),
                         child: Text(
@@ -216,17 +216,14 @@ class ProfileItem extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 24.0),
       margin: const EdgeInsets.only(bottom: 16.0),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16.0),
-      ),
+      color: Colors.white,
       child: Row(
         children: [
           Container(
             padding: const EdgeInsets.all(8.0),
             decoration: BoxDecoration(
               color: AppColors().primaryColor.withAlpha(20),
-              borderRadius: BorderRadius.circular(8.0),
+              borderRadius: BorderRadius.circular(16.0),
             ),
             child: Icon(
               icon,

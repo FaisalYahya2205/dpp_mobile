@@ -28,7 +28,6 @@ class CurrentAttendancesSuccess extends StatelessWidget {
         DateTime checkInDateTime =
             DateTime.parse("${attendanceList[index].check_in}Z").toLocal();
         checkInTimeZone = checkInDateTime.timeZoneName;
-        checkInTimeZone = checkInDateTime.timeZoneName;
         checkInDate = DateFormat.yMMMd().format(checkInDateTime);
         String checkInHour = checkInDateTime.hour.toString().length == 1
             ? "0${checkInDateTime.hour}"
@@ -40,7 +39,6 @@ class CurrentAttendancesSuccess extends StatelessWidget {
 
         DateTime checkOutDateTime =
             DateTime.parse("${attendanceList[index].check_out}Z").toLocal();
-        checkOutTimeZone = checkOutDateTime.timeZoneName;
         checkOutTimeZone = checkOutDateTime.timeZoneName;
         checkOutDate = DateFormat.yMMMd().format(checkOutDateTime);
         String checkOutHour = checkOutDateTime.hour.toString().length == 1

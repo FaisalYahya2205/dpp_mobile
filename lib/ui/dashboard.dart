@@ -5,12 +5,13 @@ import 'dart:io';
 import 'package:dpp_mobile/bloc/employee_last_attendance_bloc.dart';
 import 'package:dpp_mobile/bloc/list_attendances_bloc.dart';
 import 'package:dpp_mobile/bloc/employee_bloc.dart';
+import 'package:dpp_mobile/bloc/overtime_bloc.dart';
 import 'package:dpp_mobile/database/database.dart';
 import 'package:dpp_mobile/repository/odoo_repository.dart';
 import 'package:dpp_mobile/services/odoo_service.dart';
 import 'package:dpp_mobile/ui/dashboard_timesheet.dart';
 import 'package:dpp_mobile/ui/dashboard_home/dashboard_home.dart';
-import 'package:dpp_mobile/ui/dashboard_overtime.dart';
+import 'package:dpp_mobile/ui/dashboard_overtime/dashboard_overtime.dart';
 import 'package:dpp_mobile/ui/dashboard_profile/dashboard_profile.dart';
 import 'package:dpp_mobile/widgets/bottom_navigation_bar_item.dart';
 import 'package:dpp_mobile/widgets/dialogs/app_dialog.dart';
@@ -59,8 +60,12 @@ class _DashboardPageState extends State<DashboardPage> {
           exit(0);
         }
       },
-      child: RepositoryProvider(
-        create: (context) => OdooRepository(service: OdooService()),
+      child: MultiRepositoryProvider(
+        providers: [
+          RepositoryProvider(
+            create: (context) => OdooRepository(service: OdooService()),
+          )
+        ],
         child: MultiBlocProvider(
           providers: [
             BlocProvider<EmployeeBloc>(
@@ -77,6 +82,11 @@ class _DashboardPageState extends State<DashboardPage> {
               create: (context) => AttendanceBloc(
                 odooRepository: context.read<OdooRepository>(),
               )..add(GetAttendance()),
+            ),
+            BlocProvider<OvertimeBloc>(
+              create: (context) => OvertimeBloc(
+                odooRepository: context.read<OdooRepository>(),
+              )..add(GetOvertimeList(overtimeState: "draft")),
             ),
           ],
           child: Scaffold(

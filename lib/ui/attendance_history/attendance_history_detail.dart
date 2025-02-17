@@ -42,6 +42,7 @@ class _AttendaceHistoryDetailState extends State<AttendaceHistoryDetail> {
           appBar: AppBar(
             backgroundColor: Colors.white,
             elevation: 0,
+            centerTitle: true,
             leading: GestureDetector(
               onTap: () {
                 Navigator.of(context).pop();
@@ -113,15 +114,17 @@ class _AttendaceHistoryDetailState extends State<AttendaceHistoryDetail> {
                           width: 96,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(100),
-                            color:
-                                AppColors().primaryColor.shade50.withAlpha(50),
+                            color: Colors.grey.shade200,
                           ),
-                          child: Image.network(
-                            "https://dpp.tbdigitalindo.co.id/web/image?model=hr.employee&id=${state.employee.id}&field=image_128",
-                            headers: {
-                              'Cookie':
-                                  'session_id=${localSession!.first["session_id"]}',
-                            },
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(100),
+                            child: Image.network(
+                              "https://dpp.tbdigitalindo.co.id/web/image?model=hr.employee&id=${state.employee.id!}&field=image_128",
+                              headers: {
+                                'Cookie':
+                                    'session_id=${localSession!.first["session_id"]}',
+                              },
+                            ),
                           ),
                         ),
                         const SizedBox(

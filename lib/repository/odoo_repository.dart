@@ -1,5 +1,6 @@
 import 'package:dpp_mobile/models/attendance.dart';
 import 'package:dpp_mobile/models/employee.dart';
+import 'package:dpp_mobile/models/overtime.dart';
 import 'package:dpp_mobile/services/odoo_service.dart';
 
 class OdooRepository {
@@ -13,4 +14,7 @@ class OdooRepository {
       service.getAttendanceList();
   Future<Attendance> getTodayAttendance(String date) async =>
       service.getTodayAttendance();
+
+  Future<List<Overtime>> getOvertimeList(String status) async =>
+      service.getOvertimeList(status);
 }

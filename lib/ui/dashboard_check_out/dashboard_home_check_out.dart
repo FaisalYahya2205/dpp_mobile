@@ -40,7 +40,7 @@ class _DashboardHomeCheckOutState extends State<DashboardHomeCheckOut> {
     currentTime.value = DateTime.now().toUtc().toString().split(".")[0];
 
     _controller = CameraController(
-      cameras.length > 1 ? cameras.last : cameras.first,
+      cameras.length > 1 ? cameras[1] : cameras[0],
       ResolutionPreset.medium,
       enableAudio: false,
     );
@@ -112,7 +112,7 @@ class _DashboardHomeCheckOutState extends State<DashboardHomeCheckOut> {
               children: [
                 Padding(
                   padding: EdgeInsets.only(
-                    top: MediaQuery.of(context).viewPadding.top,
+                    top: MediaQuery.of(context).viewPadding.top + 16,
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,

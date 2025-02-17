@@ -1,4 +1,3 @@
-import 'package:dpp_mobile/main.dart';
 import 'package:dpp_mobile/models/attendance.dart';
 import 'package:dpp_mobile/models/employee.dart';
 import 'package:flutter/material.dart';

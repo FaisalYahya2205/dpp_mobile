@@ -4,6 +4,7 @@ import "package:dpp_mobile/main.dart";
 import "package:dpp_mobile/models/attendance.dart";
 import "package:dpp_mobile/models/employee.dart";
 import "package:dpp_mobile/models/host_address.dart";
+import "package:dpp_mobile/models/overtime.dart";
 import "package:dpp_mobile/models/result_error.dart";
 import "package:dpp_mobile/models/session.dart";
 import "package:dpp_mobile/models/user.dart";
@@ -38,46 +39,6 @@ class OdooService {
     }
 
     return await Geolocator.getCurrentPosition();
-  }
-
-  Future<List<Map<String, dynamic>>> generateDateList() async {
-    List<Map<String, dynamic>> tempListDates = [];
-    for (var i = 3; i >= 0; i--) {
-      DateTime dateSubtract = DateTime.now().subtract(Duration(days: i));
-      String dayName = "";
-      switch (dateSubtract.weekday) {
-        case 1:
-          dayName = "Senin";
-          break;
-        case 2:
-          dayName = "Selasa";
-          break;
-        case 3:
-          dayName = "Rabu";
-          break;
-        case 4:
-          dayName = "Kamis";
-          break;
-        case 5:
-          dayName = "Jum'at";
-          break;
-        case 6:
-          dayName = "Sabtu";
-          break;
-        case 7:
-          dayName = "Minggu";
-          break;
-        default:
-          dayName = "";
-      }
-      var dateObject = {
-        "day": dateSubtract.day,
-        "dayName": dayName,
-        "dateTime": dateSubtract.toIso8601String().split("T")[0],
-      };
-      tempListDates.add(dateObject);
-    }
-    return tempListDates;
   }
 
   Future<bool> authentication(
@@ -319,6 +280,98 @@ class OdooService {
       return checkOutAttendance;
     } catch (e) {
       // debugPrint("POST CHECK OUT ATTENDANCE => ${e.toString()}");
+      throw ErrorEmptyResponse();
+    }
+  }
+
+  Future<List<Overtime>> getOvertimeList(String status) async {
+    try {
+      Employee employeeData = await getEmployee();
+
+      if (employeeData.id == 0) {
+        return [];
+      }
+
+      List<dynamic> data = await client!.callKw({
+        'model': 'hr.overtime',
+        'method': 'search_read',
+        'args': [],
+        'kwargs': {
+          'context': {'bin_size': true},
+          'domain': [
+            ["employee_id", "=", employeeData.id],
+            ["state", "=", status],
+          ],
+          'fields': getOvertimeFields(),
+        },
+      });
+
+      List<Overtime>? overtimesList;
+
+      try {
+        for (var overtime in data) {
+          if (overtime['overtime_type_id'] != false) {
+            List<dynamic> overtimeType = await client!.callKw({
+              'model': 'overtime.type',
+              'method': 'search_read',
+              'args': [],
+              'kwargs': {
+                'context': {'bin_size': true},
+                'domain': [
+                  ['id', '=', overtime['overtime_type_id'][0]],
+                ],
+                'fields': ['id', 'name'],
+              },
+            });
+
+            overtime['overtime_type_id'] = overtimeType[0];
+          }
+        }
+        overtimesList = List<Overtime>.from(data.map((item) {
+          return Overtime.fromMap(item);
+        }));
+      } catch (e) {
+        debugPrint("GET OVERTIMES ERROR => ${e.toString()}");
+      }
+
+      return overtimesList!;
+    } catch (e) {
+      debugPrint("GET OVERTIMES ERROR => ${e.toString()}");
+      throw ErrorEmptyResponse();
+    }
+  }
+
+  Future<int> postOvertimeRequest(
+    String dateFrom,
+    String dateTo,
+    String attchdCopy,
+    String desc,
+  ) async {
+    try {
+      Employee employeeData = await getEmployee();
+
+      if (employeeData.id == 0) {
+        return 0;
+      }
+
+      final requestResponse = await client!.callKw({
+        'model': 'hr.overtime',
+        'method': 'create',
+        'args': [
+          {
+            'employee_id': employeeData.id,
+            'date_from': dateFrom,
+            'date_to': dateTo,
+            'attchd_copy': attchdCopy,
+            'desc': desc,
+          },
+        ],
+        'kwargs': {},
+      });
+
+      return requestResponse;
+    } on OdooException catch (e) {
+      debugPrint("GET OVERTIMES ERROR => ${e.message}");
       throw ErrorEmptyResponse();
     }
   }
