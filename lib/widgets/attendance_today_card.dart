@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 Widget todayAttendanceCard(
   String title,
   String time,
-  String status,
+  String date,
   IconData icon,
 ) =>
     Flexible(
@@ -14,23 +14,25 @@ Widget todayAttendanceCard(
         width: double.infinity,
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(16.0),
+          borderRadius: BorderRadius.circular(24.0),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(
-              height: 16.0,
+              height: 8.0,
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 8.0,
+              ),
               child: Row(
                 children: [
                   Container(
                     padding: const EdgeInsets.all(8.0),
                     decoration: BoxDecoration(
                       color: AppColors().primaryColor.withAlpha(20),
-                      borderRadius: BorderRadius.circular(8.0),
+                      borderRadius: BorderRadius.circular(100.0),
                     ),
                     child: Icon(
                       icon,
@@ -63,7 +65,7 @@ Widget todayAttendanceCard(
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Text(
-                status,
+                date,
                 style: createBlackThinTextStyle(14),
               ),
             ),

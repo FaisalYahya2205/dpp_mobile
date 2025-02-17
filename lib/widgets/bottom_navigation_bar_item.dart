@@ -18,7 +18,7 @@ Widget bottomNavItem(
             end: const Alignment(0, 0.1),
             colors: [
               pageIndex == currentPageIndex
-                  ? AppColors().primaryColor.shade50.withOpacity(0.5)
+                  ? AppColors().primaryColor.shade50.withAlpha(100)
                   : Colors.white,
               Colors.white,
             ],
@@ -29,7 +29,9 @@ Widget bottomNavItem(
           icon,
           color: pageIndex == currentPageIndex
               ? AppColors().primaryColor
-              : Colors.grey,
+              : pageIndex == 4
+                  ? Colors.red
+                  : Colors.grey,
         ),
       ),
     );

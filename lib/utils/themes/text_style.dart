@@ -144,3 +144,111 @@ TextStyle createWhiteThinTextStyle(double fontSize) {
     color: Colors.white,
   );
 }
+
+TextStyle createGreenTextStyle(double fontSize) {
+  return TextStyle(
+    fontSize: fontSize,
+    fontWeight: FontWeight.normal,
+    fontFamily: 'Lexend',
+    color: Colors.green,
+  );
+}
+
+TextStyle createGreenBoldTextStyle(double fontSize) {
+  return TextStyle(
+    fontSize: fontSize,
+    fontWeight: FontWeight.bold,
+    fontFamily: 'Lexend',
+    color: Colors.green
+  );
+}
+
+TextStyle createGreenMediumTextStyle(double fontSize) {
+  return TextStyle(
+    fontSize: fontSize,
+    fontWeight: FontWeight.w500,
+    fontFamily: 'Lexend',
+    color: Colors.green,
+  );
+}
+
+TextStyle createGreenThinTextStyle(double fontSize) {
+  return TextStyle(
+    fontSize: fontSize,
+    fontWeight: FontWeight.w300,
+    fontFamily: 'Lexend',
+    color: Colors.green,
+  );
+}
+
+TextStyle createYellowTextStyle(double fontSize) {
+  return TextStyle(
+    fontSize: fontSize,
+    fontWeight: FontWeight.normal,
+    fontFamily: 'Lexend',
+    color: Colors.orange,
+  );
+}
+
+TextStyle createYellowBoldTextStyle(double fontSize) {
+  return TextStyle(
+    fontSize: fontSize,
+    fontWeight: FontWeight.bold,
+    fontFamily: 'Lexend',
+    color: Colors.orange
+  );
+}
+
+TextStyle createYellowMediumTextStyle(double fontSize) {
+  return TextStyle(
+    fontSize: fontSize,
+    fontWeight: FontWeight.w500,
+    fontFamily: 'Lexend',
+    color: Colors.orange,
+  );
+}
+
+TextStyle createYellowThinTextStyle(double fontSize) {
+  return TextStyle(
+    fontSize: fontSize,
+    fontWeight: FontWeight.w300,
+    fontFamily: 'Lexend',
+    color: Colors.green,
+  );
+}
+
+TextStyle createRedTextStyle(double fontSize) {
+  return TextStyle(
+    fontSize: fontSize,
+    fontWeight: FontWeight.normal,
+    fontFamily: 'Lexend',
+    color: Colors.red,
+  );
+}
+
+TextStyle createRedBoldTextStyle(double fontSize) {
+  return TextStyle(
+    fontSize: fontSize,
+    fontWeight: FontWeight.bold,
+    fontFamily: 'Lexend',
+    color: Colors.red
+  );
+}
+
+TextStyle createRedMediumTextStyle(double fontSize) {
+  return TextStyle(
+    fontSize: fontSize,
+    fontWeight: FontWeight.w500,
+    fontFamily: 'Lexend',
+    color: Colors.red,
+  );
+}
+
+TextStyle createRedThinTextStyle(double fontSize) {
+  return TextStyle(
+    fontSize: fontSize,
+    fontWeight: FontWeight.w300,
+    fontFamily: 'Lexend',
+    color: Colors.red,
+  );
+}
