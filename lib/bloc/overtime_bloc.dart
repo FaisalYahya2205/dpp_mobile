@@ -1,5 +1,5 @@
 import 'package:dpp_mobile/models/overtime.dart';
-import 'package:dpp_mobile/repository/odoo_repository.dart';
+import 'package:dpp_mobile/repository/overtime_repository.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -52,19 +52,20 @@ class GetOvertimeList extends OvertimeEvent {
 
 class OvertimeBloc extends Bloc<OvertimeEvent, OvertimeState> {
   OvertimeBloc({
-    required this.odooRepository,
+    required this.overtimeRepository,
   }) : super(OvertimeState()) {
     on<GetOvertimeList>(_mapGetOvertimeListEventToState);
   }
 
-  final OdooRepository odooRepository;
+  final OvertimeRepository overtimeRepository;
 
   void _mapGetOvertimeListEventToState(
       GetOvertimeList event, Emitter<OvertimeState> emit) async {
     try {
       emit(state.copyWith(status: OvertimeStatus.loading));
-      final overtime =
-          await odooRepository.getOvertimeList(event.overtimeState);
+      Map<String, dynamic> result =
+          await overtimeRepository.getOvertimeList(event.overtimeState);
+      List<Overtime> overtime = result["data"];
       emit(
         state.copyWith(
           status: OvertimeStatus.success,

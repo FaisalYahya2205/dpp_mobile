@@ -3,12 +3,18 @@
 import 'dart:io';
 
 import 'package:dpp_mobile/bloc/employee_last_attendance_bloc.dart';
-import 'package:dpp_mobile/bloc/list_attendances_bloc.dart';
+import 'package:dpp_mobile/bloc/attendance_bloc.dart';
 import 'package:dpp_mobile/bloc/employee_bloc.dart';
 import 'package:dpp_mobile/bloc/overtime_bloc.dart';
 import 'package:dpp_mobile/database/database.dart';
-import 'package:dpp_mobile/repository/odoo_repository.dart';
-import 'package:dpp_mobile/services/odoo_service.dart';
+import 'package:dpp_mobile/repository/attendance_repository.dart';
+import 'package:dpp_mobile/repository/employee_repository.dart';
+import 'package:dpp_mobile/repository/overtime_repository.dart';
+import 'package:dpp_mobile/repository/timesheet_repository.dart';
+import 'package:dpp_mobile/services/attendance_service.dart';
+import 'package:dpp_mobile/services/employee_service.dart';
+import 'package:dpp_mobile/services/overtime_service.dart';
+import 'package:dpp_mobile/services/timesheet_service.dart';
 import 'package:dpp_mobile/ui/dashboard_timesheet.dart';
 import 'package:dpp_mobile/ui/dashboard_home/dashboard_home.dart';
 import 'package:dpp_mobile/ui/dashboard_overtime/dashboard_overtime.dart';
@@ -63,29 +69,38 @@ class _DashboardPageState extends State<DashboardPage> {
       child: MultiRepositoryProvider(
         providers: [
           RepositoryProvider(
-            create: (context) => OdooRepository(service: OdooService()),
-          )
+            create: (context) => EmployeeRepository(service: EmployeeService()),
+          ),
+          RepositoryProvider(
+            create: (context) => AttendanceRepository(service: AttendanceService()),
+          ),
+          RepositoryProvider(
+            create: (context) => OvertimeRepository(service: OvertimeService()),
+          ),
+          RepositoryProvider(
+            create: (context) => TimesheetRepository(service: TimesheetService()),
+          ),
         ],
         child: MultiBlocProvider(
           providers: [
             BlocProvider<EmployeeBloc>(
               create: (context) => EmployeeBloc(
-                odooRepository: context.read<OdooRepository>(),
+                employeeRepository: context.read<EmployeeRepository>(),
               )..add(GetEmployee()),
             ),
             BlocProvider<EmployeeLastAttendanceBloc>(
               create: (context) => EmployeeLastAttendanceBloc(
-                odooRepository: context.read<OdooRepository>(),
+                employeeRepository: context.read<EmployeeRepository>(),
               )..add(GetEmployeeLastAttendance()),
             ),
             BlocProvider<AttendanceBloc>(
               create: (context) => AttendanceBloc(
-                odooRepository: context.read<OdooRepository>(),
+                attendanceRepository: context.read<AttendanceRepository>(),
               )..add(GetAttendance()),
             ),
             BlocProvider<OvertimeBloc>(
               create: (context) => OvertimeBloc(
-                odooRepository: context.read<OdooRepository>(),
+                overtimeRepository: context.read<OvertimeRepository>(),
               )..add(GetOvertimeList(overtimeState: "draft")),
             ),
           ],

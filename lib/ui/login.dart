@@ -4,7 +4,7 @@ import 'dart:io';
 
 import 'package:dpp_mobile/database/database.dart';
 import 'package:dpp_mobile/main.dart';
-import 'package:dpp_mobile/services/odoo_service.dart';
+import 'package:dpp_mobile/services/authentication_service.dart';
 import 'package:dpp_mobile/widgets/dialogs/app_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -282,14 +282,14 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                         );
 
-                        bool auth = await OdooService().authentication(
+                        Map<String, dynamic> auth = await AuthenticationService().authentication(
                           emailTextController.text,
                           passwordTextController.text,
                           result["hostUrl"],
                           result["databaseName"],
                         );
 
-                        if (auth) {
+                        if (auth["success"]) {
                           Navigator.of(context).pop();
                           showDialog(
                             barrierDismissible: false,
@@ -324,7 +324,7 @@ class _LoginPageState extends State<LoginPage> {
                             builder: (BuildContext dialogContext) => AppDialog(
                               type: "error",
                               title: "Login Gagal!",
-                              message: "Cek kembali data anda...",
+                              message: auth["errorMessage"],
                               onOkPress: () => Navigator.of(context).pop(),
                             ),
                           );

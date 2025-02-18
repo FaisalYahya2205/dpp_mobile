@@ -5,7 +5,8 @@ import 'dart:typed_data';
 
 import 'package:camera/camera.dart';
 import 'package:dpp_mobile/main.dart';
-import 'package:dpp_mobile/services/odoo_service.dart';
+import 'package:dpp_mobile/services/attendance_service.dart';
+import 'package:dpp_mobile/services/location_service.dart';
 import 'package:dpp_mobile/ui/dashboard_check_out/widgets/check_out_maps_error.dart';
 import 'package:dpp_mobile/ui/dashboard_check_out/widgets/check_out_maps_loading.dart';
 import 'package:dpp_mobile/ui/dashboard_check_out/widgets/check_out_maps_success.dart';
@@ -61,7 +62,7 @@ class _DashboardHomeCheckOutState extends State<DashboardHomeCheckOut> {
       final Uint8List bytes = await picture.readAsBytes();
       String base64 = base64Encode(bytes);
 
-      final odooResponse = await OdooService().postCheckOutAttendance(
+      final odooResponse = await AttendanceService().postCheckOutAttendance(
         currentTime.value,
         currentPositionLatitude.value,
         currentPositionLongitude.value,
@@ -69,7 +70,7 @@ class _DashboardHomeCheckOutState extends State<DashboardHomeCheckOut> {
         descController.text,
       );
 
-      if (odooResponse) {
+      if (odooResponse["success"]) {
         returnValue = true;
       }
     } catch (e) {
@@ -223,7 +224,7 @@ class _DashboardHomeCheckOutState extends State<DashboardHomeCheckOut> {
                             color: Colors.grey.shade200,
                           ),
                           child: FutureBuilder(
-                            future: OdooService().getCurrentPosition(),
+                            future: LocationService().getCurrentPosition(),
                             builder: (context, snapshot) {
                               if (snapshot.connectionState ==
                                   ConnectionState.waiting) {

@@ -1,7 +1,8 @@
 import 'package:dpp_mobile/bloc/employee_bloc.dart';
-import 'package:dpp_mobile/bloc/list_attendances_bloc.dart';
-import 'package:dpp_mobile/repository/odoo_repository.dart';
-import 'package:dpp_mobile/services/odoo_service.dart';
+import 'package:dpp_mobile/bloc/attendance_bloc.dart';
+import 'package:dpp_mobile/repository/attendance_repository.dart';
+import 'package:dpp_mobile/repository/employee_repository.dart';
+import 'package:dpp_mobile/services/attendance_service.dart';
 import 'package:dpp_mobile/ui/attendance_history/widgets/attendance_history_error.dart';
 import 'package:dpp_mobile/ui/attendance_history/widgets/attendance_history_loading.dart';
 import 'package:dpp_mobile/ui/attendance_history/widgets/attendance_history_success.dart';
@@ -16,17 +17,17 @@ class AttendanceHistory extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RepositoryProvider(
-      create: (context) => OdooRepository(service: OdooService()),
+      create: (context) => AttendanceRepository(service: AttendanceService()),
       child: MultiBlocProvider(
         providers: [
           BlocProvider<AttendanceBloc>(
             create: (context) => AttendanceBloc(
-              odooRepository: context.read<OdooRepository>(),
+              attendanceRepository: context.read<AttendanceRepository>(),
             )..add(GetAttendance()),
           ),
           BlocProvider<EmployeeBloc>(
             create: (context) => EmployeeBloc(
-              odooRepository: context.read<OdooRepository>(),
+              employeeRepository: context.read<EmployeeRepository>(),
             )..add(GetEmployee()),
           ),
         ],

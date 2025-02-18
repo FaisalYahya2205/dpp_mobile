@@ -5,7 +5,8 @@ import 'dart:typed_data';
 
 import 'package:camera/camera.dart';
 import 'package:dpp_mobile/main.dart';
-import 'package:dpp_mobile/services/odoo_service.dart';
+import 'package:dpp_mobile/services/attendance_service.dart';
+import 'package:dpp_mobile/services/location_service.dart';
 import 'package:dpp_mobile/ui/dashboard_check_in/widgets/check_in_maps_error.dart';
 import 'package:dpp_mobile/ui/dashboard_check_in/widgets/check_in_maps_loading.dart';
 import 'package:dpp_mobile/ui/dashboard_check_in/widgets/check_in_maps_success.dart';
@@ -61,7 +62,7 @@ class _DashboardHomeCheckInState extends State<DashboardHomeCheckIn> {
       final Uint8List bytes = await picture.readAsBytes();
       String base64 = base64Encode(bytes);
 
-      final odooResponse = await OdooService().postCheckInAttendance(
+      final odooResponse = await AttendanceService().postCheckInAttendance(
           currentTime.value,
           currentPositionLatitude.value,
           currentPositionLongitude.value,
@@ -219,7 +220,7 @@ class _DashboardHomeCheckInState extends State<DashboardHomeCheckIn> {
                           color: Colors.grey.shade100,
                         ),
                         child: FutureBuilder(
-                          future: OdooService().getCurrentPosition(),
+                          future: LocationService().getCurrentPosition(),
                           builder: (context, snapshot) {
                             if (snapshot.connectionState ==
                                 ConnectionState.waiting) {

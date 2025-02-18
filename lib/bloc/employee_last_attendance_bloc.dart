@@ -1,5 +1,5 @@
 import 'package:dpp_mobile/models/employee.dart';
-import 'package:dpp_mobile/repository/odoo_repository.dart';
+import 'package:dpp_mobile/repository/employee_repository.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -48,19 +48,20 @@ class GetEmployeeLastAttendance extends EmployeeLastAttendanceEvent {
 class EmployeeLastAttendanceBloc
     extends Bloc<EmployeeLastAttendanceEvent, EmployeeLastAttendanceState> {
   EmployeeLastAttendanceBloc({
-    required this.odooRepository,
+    required this.employeeRepository,
   }) : super(EmployeeLastAttendanceState()) {
     on<GetEmployeeLastAttendance>(_mapGetEmployeeLastAttendanceEventToState);
   }
 
-  final OdooRepository odooRepository;
+  final EmployeeRepository employeeRepository;
 
   void _mapGetEmployeeLastAttendanceEventToState(
       GetEmployeeLastAttendance event,
       Emitter<EmployeeLastAttendanceState> emit) async {
     try {
       emit(state.copyWith(status: EmployeeLastAttendanceStatus.loading));
-      final employee = await odooRepository.getEmployee();
+      Map<String, dynamic> result = await employeeRepository.getEmployee();
+      Employee employee = result["data"];
       emit(
         state.copyWith(
           status: EmployeeLastAttendanceStatus.success,

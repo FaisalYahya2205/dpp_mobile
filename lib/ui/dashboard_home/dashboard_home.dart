@@ -1,7 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:dpp_mobile/bloc/employee_last_attendance_bloc.dart';
-import 'package:dpp_mobile/bloc/list_attendances_bloc.dart';
+import 'package:dpp_mobile/bloc/attendance_bloc.dart';
 import 'package:dpp_mobile/bloc/employee_bloc.dart';
 import 'package:dpp_mobile/ui/attendance_history/attendance_history.dart';
 import 'package:dpp_mobile/ui/dashboard_check_in/dashboard_home_check_in.dart';

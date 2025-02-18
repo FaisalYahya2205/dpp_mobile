@@ -1,7 +1,8 @@
 import 'package:dpp_mobile/bloc/employee_bloc.dart';
 import 'package:dpp_mobile/models/overtime.dart';
-import 'package:dpp_mobile/repository/odoo_repository.dart';
-import 'package:dpp_mobile/services/odoo_service.dart';
+import 'package:dpp_mobile/repository/employee_repository.dart';
+import 'package:dpp_mobile/repository/overtime_repository.dart';
+import 'package:dpp_mobile/services/overtime_service.dart';
 import 'package:dpp_mobile/utils/themes/app_colors.dart';
 import 'package:dpp_mobile/utils/themes/text_style.dart';
 import 'package:flutter/material.dart';
@@ -19,12 +20,12 @@ class DetailOvertime extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RepositoryProvider(
-      create: (context) => OdooRepository(service: OdooService()),
+      create: (context) => OvertimeRepository(service: OvertimeService()),
       child: MultiBlocProvider(
         providers: [
           BlocProvider<EmployeeBloc>(
             create: (context) => EmployeeBloc(
-              odooRepository: context.read<OdooRepository>(),
+              employeeRepository: context.read<EmployeeRepository>(),
             )..add(GetEmployee()),
           ),
         ],

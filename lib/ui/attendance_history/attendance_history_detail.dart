@@ -3,10 +3,9 @@
 import 'package:dpp_mobile/bloc/employee_bloc.dart';
 import 'package:dpp_mobile/main.dart';
 import 'package:dpp_mobile/models/attendance.dart';
-import 'package:dpp_mobile/repository/odoo_repository.dart';
-import 'package:dpp_mobile/services/odoo_service.dart';
-import 'package:dpp_mobile/ui/dashboard_profile/widgets/dashboard_profile_error.dart';
-import 'package:dpp_mobile/ui/dashboard_profile/widgets/dashboard_profile_loading.dart';
+import 'package:dpp_mobile/repository/attendance_repository.dart';
+import 'package:dpp_mobile/repository/employee_repository.dart';
+import 'package:dpp_mobile/services/attendance_service.dart';
 import 'package:dpp_mobile/utils/themes/app_colors.dart';
 import 'package:dpp_mobile/utils/themes/text_style.dart';
 import 'package:dpp_mobile/widgets/dialogs/app_dialog.dart';
@@ -29,12 +28,12 @@ class _AttendaceHistoryDetailState extends State<AttendaceHistoryDetail> {
   @override
   Widget build(BuildContext context) {
     return RepositoryProvider(
-      create: (context) => OdooRepository(service: OdooService()),
+      create: (context) => AttendanceRepository(service: AttendanceService()),
       child: MultiBlocProvider(
         providers: [
           BlocProvider<EmployeeBloc>(
             create: (context) => EmployeeBloc(
-              odooRepository: context.read<OdooRepository>(),
+              employeeRepository: context.read<EmployeeRepository>(),
             )..add(GetEmployee()),
           ),
         ],

@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:dpp_mobile/database/database.dart';
 import 'package:dpp_mobile/main.dart';
-import 'package:dpp_mobile/services/odoo_service.dart';
+import 'package:dpp_mobile/services/authentication_service.dart';
 import 'package:dpp_mobile/utils/themes/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -44,7 +44,7 @@ class _SplashScreenState extends State<SplashScreen> {
     debugPrint("LOCAL SESSION => $localSession");
     debugPrint("LOCAL HOST => $localHost");
     try {
-      await OdooService().authentication(
+      await AuthenticationService().authentication(
         localSession!.first['user_login'],
         localSession!.first['password'],
         localHost!.first["host_url"],

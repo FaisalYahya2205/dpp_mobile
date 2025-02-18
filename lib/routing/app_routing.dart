@@ -1,4 +1,7 @@
+import 'package:dpp_mobile/models/attendance.dart';
 import 'package:dpp_mobile/models/overtime.dart';
+import 'package:dpp_mobile/ui/attendance_history/attendance_history.dart';
+import 'package:dpp_mobile/ui/attendance_history/attendance_history_detail.dart';
 import 'package:dpp_mobile/ui/dashboard.dart';
 import 'package:dpp_mobile/ui/dashboard_overtime/add_edit_overtime.dart';
 import 'package:dpp_mobile/ui/dashboard_overtime/detail_overtime.dart';
@@ -28,6 +31,22 @@ final GoRouter appRouter = GoRouter(
           name: 'dashboard',
           builder: (BuildContext context, GoRouterState state) {
             return const DashboardPage();
+          },
+        ),
+        GoRoute(
+          path: '/attendance_history',
+          name: 'attendance_history',
+          builder: (BuildContext context, GoRouterState state) {
+            return const AttendanceHistory();
+          },
+        ),
+        GoRoute(
+          path: '/attendance_history_detail',
+          name: 'attendance_history_detail',
+          builder: (BuildContext context, GoRouterState state) {
+            return AttendaceHistoryDetail(
+              attendanceItem: state.extra as Attendance,
+            );
           },
         ),
         GoRoute(

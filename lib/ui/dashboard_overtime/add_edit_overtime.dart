@@ -1,7 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'package:dpp_mobile/models/employee.dart';
-import 'package:dpp_mobile/services/odoo_service.dart';
+import 'package:dpp_mobile/services/employee_service.dart';
+import 'package:dpp_mobile/services/overtime_service.dart';
 import 'package:dpp_mobile/utils/themes/app_colors.dart';
 import 'package:dpp_mobile/utils/themes/text_style.dart';
 import 'package:dpp_mobile/widgets/dialogs/app_dialog.dart';
@@ -28,7 +28,7 @@ class _AddEditOvertimeState extends State<AddEditOvertime> {
   Future<bool> requestOvertime(BuildContext context) async {
     bool returnValue = false;
     try {
-      final odooResponse = await OdooService().postOvertimeRequest(
+      final odooResponse = await OvertimeService().postOvertimeRequest(
         DateTime.parse(dateFromTextController.text)
             .toUtc()
             .toString()
@@ -75,8 +75,8 @@ class _AddEditOvertimeState extends State<AddEditOvertime> {
         ),
       ),
       body: FutureBuilder(
-        future: OdooService().getEmployee(),
-        builder: (BuildContext context, AsyncSnapshot<Employee> snapshot) {
+        future: EmployeeService().getEmployee(),
+        builder: (BuildContext context, AsyncSnapshot<Map<String, dynamic>> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(
               child: SizedBox(
@@ -94,7 +94,7 @@ class _AddEditOvertimeState extends State<AddEditOvertime> {
               ),
             );
           } else {
-            employeeTextController.text = snapshot.data!.name!;
+            employeeTextController.text = snapshot.data!["data"].name!;
             return SingleChildScrollView(
               child: Form(
                 key: _formKey,
