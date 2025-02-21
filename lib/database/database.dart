@@ -1,3 +1,7 @@
+import 'package:dpp_mobile/database/table_queries/attendance_query.dart';
+import 'package:dpp_mobile/database/table_queries/employee_query.dart';
+import 'package:dpp_mobile/database/table_queries/host_query.dart';
+import 'package:dpp_mobile/database/table_queries/session_query.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -20,42 +24,10 @@ class DatabaseHelper {
   }
 
   Future _onCreate(Database db, int version) async {
-    await db.execute('''
-      CREATE TABLE host_address (
-        user_id INTEGER UNIQUE,
-        host_url VARCHAR(50),
-        database_name VARCHAR(50)
-      )
-    ''');
-    await db.execute('''
-      CREATE TABLE session (
-        user_id INTEGER PRIMARY KEY UNIQUE,
-        partner_id INTEGER UNIQUE,
-        session_id VARCHAR(50),
-        user_login VARCHAR(50) UNIQUE,
-        user_name VARCHAR(50) UNIQUE,
-        password VARCHAR(50),
-        login_state INTEGER
-      )
-    ''');
-    await db.execute('''
-      CREATE TABLE employee (
-        id INTEGER PRIMARY KEY,
-        user_id INTEGER,
-        name VARCHAR(50),
-        nrp VARCHAR(10),
-        job_id VARCHAR(50),
-        job_title VARCHAR(50),
-        work_email VARCHAR(100),
-        work_phone VARCHAR(15),
-        address_id VARCHAR(50),
-        coach_id VARCHAR(50),
-        __last_update VARCHAR(50),
-        image_128 TEXT,
-        image_1920 TEXT,
-        tz VARCHAR(100)
-      )
-    ''');
+    await db.execute(hostCreateTable);
+    await db.execute(sessionCreateTable);
+    await db.execute(employeeCreateTable);
+    await db.execute(attendanceCreateTable);
   }
 
   Future<List<Map<String, dynamic>>> getAllQuery(

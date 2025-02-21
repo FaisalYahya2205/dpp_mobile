@@ -43,6 +43,15 @@ class _SplashScreenState extends State<SplashScreen> {
     );
     debugPrint("LOCAL SESSION => $localSession");
     debugPrint("LOCAL HOST => $localHost");
+
+    if (localSession!.isEmpty) {
+      Timer(
+        const Duration(seconds: 3),
+        () => context.pushReplacement('/login'),
+      );
+      return;
+    }
+
     try {
       await AuthenticationService().authentication(
         localSession!.first['user_login'],
@@ -50,6 +59,7 @@ class _SplashScreenState extends State<SplashScreen> {
         localHost!.first["host_url"],
         localHost!.first["database_name"],
       );
+
       Timer(
         const Duration(seconds: 3),
         () => context.pushReplacement('/dashboard'),

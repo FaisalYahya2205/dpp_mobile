@@ -1,14 +1,13 @@
 import 'package:dpp_mobile/bloc/employee_bloc.dart';
 import 'package:dpp_mobile/bloc/overtime_bloc.dart';
 import 'package:dpp_mobile/ui/dashboard_overtime/add_edit_overtime.dart';
-import 'package:dpp_mobile/ui/dashboard_overtime/dashboard_home_overtime_error.dart';
-import 'package:dpp_mobile/ui/dashboard_overtime/dashboard_home_overtime_loading.dart';
-import 'package:dpp_mobile/ui/dashboard_overtime/dashboard_home_overtime_success.dart';
+import 'package:dpp_mobile/ui/dashboard_overtime/widgets/dashboard_home_overtime_error.dart';
+import 'package:dpp_mobile/ui/dashboard_overtime/widgets/dashboard_home_overtime_loading.dart';
+import 'package:dpp_mobile/ui/dashboard_overtime/widgets/dashboard_home_overtime_success.dart';
 import 'package:dpp_mobile/utils/themes/app_colors.dart';
 import 'package:dpp_mobile/utils/themes/text_style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:iconsax/iconsax.dart';
 
 class DashboardOvertime extends StatefulWidget {
@@ -29,7 +28,6 @@ class _DashboardOvertimeState extends State<DashboardOvertime> {
   }
 
   void refreshData() {
-    FocusScope.of(context).unfocus();
     BlocProvider.of<EmployeeBloc>(context).add(
       GetEmployee(),
     );

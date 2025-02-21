@@ -16,6 +16,7 @@ DatabaseHelper? databaseHelper;
 List<Map<String, dynamic>>? localSession;
 List<Map<String, dynamic>>? localHost;
 late List<CameraDescription> cameras;
+late bool offlineMode;
 
 var subscription;
 var loginSubscription;

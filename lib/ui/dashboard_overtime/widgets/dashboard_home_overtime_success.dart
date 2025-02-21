@@ -59,6 +59,7 @@ class DashboardHomeOvertimeSuccess extends StatelessWidget {
 
         return GestureDetector(
           onTap: () {
+            debugPrint("OVERTIME DETAIL => ${overtimes[index].toString()}");
             context.push(
               "/detail_overtime",
               extra: overtimes[index],

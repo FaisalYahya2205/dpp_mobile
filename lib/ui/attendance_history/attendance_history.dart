@@ -1,5 +1,5 @@
 import 'package:dpp_mobile/bloc/employee_bloc.dart';
-import 'package:dpp_mobile/bloc/attendance_bloc.dart';
+import 'package:dpp_mobile/bloc/attendance/attendance_bloc.dart';
 import 'package:dpp_mobile/repository/attendance_repository.dart';
 import 'package:dpp_mobile/repository/employee_repository.dart';
 import 'package:dpp_mobile/services/attendance_service.dart';

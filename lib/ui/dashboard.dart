@@ -3,7 +3,7 @@
 import 'dart:io';
 
 import 'package:dpp_mobile/bloc/employee_last_attendance_bloc.dart';
-import 'package:dpp_mobile/bloc/attendance_bloc.dart';
+import 'package:dpp_mobile/bloc/attendance/attendance_bloc.dart';
 import 'package:dpp_mobile/bloc/employee_bloc.dart';
 import 'package:dpp_mobile/bloc/overtime_bloc.dart';
 import 'package:dpp_mobile/database/database.dart';

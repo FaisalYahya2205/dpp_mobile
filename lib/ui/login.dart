@@ -223,17 +223,37 @@ class _LoginPageState extends State<LoginPage> {
                 SizedBox(
                   height: showUrlDatabase ? 16 : 0,
                 ),
-                Container(
-                  alignment: Alignment.centerRight,
-                  padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                  child: GestureDetector(
-                    onTap: () => context.push("/forget_password"),
-                    child: Text(
-                      "Lupa Password",
-                      textAlign: TextAlign.end,
-                      style: createPrimaryTextStyle(14),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      alignment: Alignment.centerRight,
+                      padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                      child: GestureDetector(
+                        onTap: () {},
+                        child: Text(
+                          "Riwayat Login",
+                          textAlign: TextAlign.end,
+                          style: createPrimaryTextStyle(14),
+                        ),
+                      ),
                     ),
-                  ),
+                    const SizedBox(
+                      width: 24,
+                    ),
+                    Container(
+                      alignment: Alignment.centerRight,
+                      padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                      child: GestureDetector(
+                        onTap: () => context.push("/forget_password"),
+                        child: Text(
+                          "Lupa Password",
+                          textAlign: TextAlign.end,
+                          style: createPrimaryTextStyle(14),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
                 const SizedBox(
                   height: 32,
@@ -282,7 +302,8 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                         );
 
-                        Map<String, dynamic> auth = await AuthenticationService().authentication(
+                        Map<String, dynamic> auth =
+                            await AuthenticationService().authentication(
                           emailTextController.text,
                           passwordTextController.text,
                           result["hostUrl"],

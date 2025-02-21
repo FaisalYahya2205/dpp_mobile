@@ -125,7 +125,7 @@ class AttendanceService {
       Map<String, dynamic> getEmployee = await EmployeeService().getEmployee();
       Employee employeeData = getEmployee["data"];
 
-      final checkInAttendance = await client!.callKw({
+      int checkInAttendance = await client!.callKw({
         'model': 'hr.attendance',
         'method': 'create',
         'args': [
@@ -150,7 +150,11 @@ class AttendanceService {
         'kwargs': {},
       });
       // debugPrint("POST CHECK IN ATTENDANCE => $checkInAttendance");
-      return checkInAttendance;
+      return {
+        "success": true,
+        "errorMessage": "",
+        "data": checkInAttendance,
+      };
     } on OdooException catch (e) {
       debugPrint(e.toString());
       String message = e.message.split("message: ")[2].split(",")[0];
@@ -178,7 +182,7 @@ class AttendanceService {
       Map<String, dynamic> latestAttendance = await getTodayAttendance();
       Attendance attendance = latestAttendance["data"];
 
-      final checkOutAttendance = await client!.callKw({
+      bool checkOutAttendance = await client!.callKw({
         'model': 'hr.attendance',
         'method': 'write',
         'args': [
@@ -205,7 +209,11 @@ class AttendanceService {
         'kwargs': {},
       });
       // debugPrint("POST CHECK OUT ATTENDANCE => $checkOutAttendance");
-      return checkOutAttendance;
+      return {
+        "success": true,
+        "errorMessage": "",
+        "data": checkOutAttendance,
+      };
     } on OdooException catch (e) {
       debugPrint(e.toString());
       String message = e.message.split("message: ")[2].split(",")[0];
