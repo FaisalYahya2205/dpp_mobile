@@ -9,7 +9,7 @@ class DashboardTimesheet extends StatelessWidget {
     return Scaffold(
       body: Center(
         child: Text(
-          "Timesheet Page",
+          "Timesheet",
           style: createBlackTextStyle(32),
         ),
       ),
