@@ -126,16 +126,18 @@ class DashboardHomeOvertimeSuccess extends StatelessWidget {
                         decoration: BoxDecoration(
                           color: overtimes[index].state! == "approved"
                               ? Colors.green.shade100
-                              : overtimes[index].state! == "waiting"
+                              : overtimes[index].state! == "f_approve"
                                   ? Colors.yellow.shade100
                                   : Colors.grey.shade100,
                           borderRadius: BorderRadius.circular(16.0),
                         ),
                         child: Text(
-                          "${overtimes[index].state![0].toUpperCase()}${overtimes[index].state!.substring(1)}",
+                          overtimes[index].state! == "f_approve"
+                              ? "Waiting"
+                              : "${overtimes[index].state![0].toUpperCase()}${overtimes[index].state!.substring(1)}",
                           style: overtimes[index].state! == "approved"
                               ? createGreenMediumTextStyle(12)
-                              : overtimes[index].state! == "waiting"
+                              : overtimes[index].state! == "f_approve"
                                   ? createYellowMediumTextStyle(12)
                                   : createGreyMediumTextStyle(12),
                           textAlign: TextAlign.center,

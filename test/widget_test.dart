@@ -13,6 +13,7 @@ void main() {
   final formatedDateTime = DateFormat("yyyy-MM-dd HH:mm:ss").parse(DateTime.now().toString());
   debugPrint(formatedDateTime.timeZoneName);
   debugPrint(formatedDateTime.toString());
+  debugPrint("FAISAL YAHYA");
   // testWidgets('Counter increments smoke test', (WidgetTester tester) async {
   //   // Build our app and trigger a frame.
   //   await tester.pumpWidget(const MyApp());

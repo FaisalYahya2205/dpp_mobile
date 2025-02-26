@@ -89,16 +89,18 @@ class DetailOvertime extends StatelessWidget {
                           decoration: BoxDecoration(
                             color: overtime.state! == "approved"
                                 ? Colors.green.shade100
-                                : overtime.state! == "waiting"
+                                : overtime.state! == "f_approve"
                                     ? Colors.yellow.shade100
                                     : Colors.grey.shade100,
                             borderRadius: BorderRadius.circular(16.0),
                           ),
                           child: Text(
-                            "${overtime.state![0].toUpperCase()}${overtime.state!.substring(1)}",
+                            overtime.state! == "f_approve"
+                                ? "Waiting"
+                                : "${overtime.state![0].toUpperCase()}${overtime.state!.substring(1)}",
                             style: overtime.state! == "approved"
                                 ? createGreenMediumTextStyle(12)
-                                : overtime.state! == "waiting"
+                                : overtime.state! == "f_approve"
                                     ? createYellowMediumTextStyle(12)
                                     : createGreyMediumTextStyle(12),
                             textAlign: TextAlign.center,
@@ -328,7 +330,7 @@ class DetailOvertime extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                "Tarif Jam",
+                                "TUL",
                                 style: createBlackTextStyle(14),
                               ),
                               const SizedBox(

@@ -56,15 +56,15 @@ void main() async {
     // });
     // debugPrint("CREATE OVERTIME => ${overtimeCreateProcess.toString()}");
 
-    // final overtimeUpdateProcess = await client.callKw({
-    //   'model': 'hr.overtime',
-    //   'method': 'request_validation',
-    //   'args': [
-    //     [89487]
-    //   ],
-    //   'kwargs': {},
-    // });
-    // debugPrint("UPDATE OVERTIME => ${overtimeUpdateProcess.toString()}");
+    final overtimeUpdateProcess = await client.callKw({
+      'model': 'hr.overtime',
+      'method': 'request_validation',
+      'args': [
+        [89505]
+      ],
+      'kwargs': {},
+    });
+    debugPrint("UPDATE OVERTIME => ${overtimeUpdateProcess.toString()}");
 
     // List<dynamic> overtimeType = await client.callKw({
     //   'model': 'overtime.type',

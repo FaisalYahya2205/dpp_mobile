@@ -22,6 +22,8 @@ class OvertimeService {
         };
       }
 
+      debugPrint("GET OVERTIME STATUS => $status");
+
       List<dynamic> data = await client!.callKw({
         'model': 'hr.overtime',
         'method': 'search_read',

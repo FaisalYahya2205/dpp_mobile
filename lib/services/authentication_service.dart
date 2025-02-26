@@ -17,11 +17,11 @@ class AuthenticationService {
     String hostUrl,
     String databaseName,
   ) async {
-    try {
-      debugPrint("AUTH => init Client $hostUrl");
-      client = OdooClient(hostUrl);
-      debugPrint("AUTH => ${client.toString()}");
+    debugPrint("AUTH => init Client $hostUrl");
+    client = OdooClient(hostUrl);
+    debugPrint("AUTH => ${client.toString()}");
 
+    try {
       debugPrint("AUTH => init Session");
       OdooSession odooSession =
           await client!.authenticate(databaseName, username, password);

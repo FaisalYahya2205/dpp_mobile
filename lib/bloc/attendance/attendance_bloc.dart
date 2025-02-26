@@ -11,8 +11,8 @@ class AttendanceBloc extends Bloc<AttendanceEvent, AttendanceState> {
     required this.attendanceRepository,
   }) : super(AttendanceState()) {
     on<GetAttendance>(_mapGetAttendanceEventToState);
-    // on<CheckInAttendance>(_mapCheckInAttendanceEventToState);
-    // on<CheckOutAttendance>(_mapCheckOutAttendanceEventToState);
+    on<CheckInAttendance>(_mapCheckInAttendanceEventToState);
+    on<CheckOutAttendance>(_mapCheckOutAttendanceEventToState);
   }
 
   final AttendanceRepository attendanceRepository;
@@ -36,49 +36,48 @@ class AttendanceBloc extends Bloc<AttendanceEvent, AttendanceState> {
     }
   }
 
-  // void _mapCheckInAttendanceEventToState(
-  //     CheckInAttendance event, Emitter<CheckInState> emit) async {
-  //   try {
-  //     emit(state.copyWith(status: AttendanceStatus.loading));
-  //     Map<String, dynamic> result = await attendanceRepository.checkIn(
-  //       event.checkIn,
-  //       event.latitude,
-  //       event.longitude,
-  //       event.checkInImage,
-  //     );
-  //     List<Attendance> attendance = result["data"];
+  void _mapCheckInAttendanceEventToState(
+      CheckInAttendance event, Emitter<AttendanceState> emit) async {
+    try {
+      emit(state.copyWith(status: AttendanceStatus.loading));
+      Map<String, dynamic> result = await attendanceRepository.checkIn(
+        event.checkIn,
+        event.latitude,
+        event.longitude,
+        event.checkInImage,
+      );
 
-  //     emit(
-  //       state.copyWith(
-  //         status: AttendanceStatus.success,
-  //         attendances: attendance,
-  //       ),
-  //     );
-  //   } catch (error) {
-  //     emit(state.copyWith(status: AttendanceStatus.error));
-  //   }
-  // }
+      emit(
+        state.copyWith(
+          status: AttendanceStatus.success,
+          checkInResponse: result["data"],
+        ),
+      );
+    } catch (error) {
+      emit(state.copyWith(status: AttendanceStatus.error));
+    }
+  }
 
-  // void _mapCheckOutAttendanceEventToState(
-  //     CheckOutAttendance event, Emitter<CheckOutState> emit) async {
-  //   try {
-  //     emit(state.copyWith(status: AttendanceStatus.loading));
-  //     Map<String, dynamic> result = await attendanceRepository.checkOut(
-  //       event.checkOut,
-  //       event.latitude,
-  //       event.longitude,
-  //       event.checkOutImage,
-  //       event.desc,
-  //     );
+  void _mapCheckOutAttendanceEventToState(
+      CheckOutAttendance event, Emitter<AttendanceState> emit) async {
+    try {
+      emit(state.copyWith(status: AttendanceStatus.loading));
+      Map<String, dynamic> result = await attendanceRepository.checkOut(
+        event.checkOut,
+        event.latitude,
+        event.longitude,
+        event.checkOutImage,
+        event.desc,
+      );
 
-  //     emit(
-  //       state.copyWith(
-  //         status: AttendanceStatus.success,
-  //         checkInResponse: result["data"],
-  //       ),
-  //     );
-  //   } catch (error) {
-  //     emit(state.copyWith(status: AttendanceStatus.error));
-  //   }
-  // }
+      emit(
+        state.copyWith(
+          status: AttendanceStatus.success,
+          checkOutResponse: result["data"],
+        ),
+      );
+    } catch (error) {
+      emit(state.copyWith(status: AttendanceStatus.error));
+    }
+  }
 }

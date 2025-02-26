@@ -175,7 +175,7 @@ class _DashboardOvertimeState extends State<DashboardOvertime> {
                   child: GestureDetector(
                     onTap: () {
                       setState(() {
-                        selectedState = "f_approved";
+                        selectedState = "f_approve";
                       });
                       BlocProvider.of<OvertimeBloc>(context).add(
                         GetOvertimeList(overtimeState: selectedState),
@@ -185,14 +185,14 @@ class _DashboardOvertimeState extends State<DashboardOvertime> {
                     child: Container(
                       padding: const EdgeInsets.all(16.0),
                       decoration: BoxDecoration(
-                        color: selectedState == "f_approved"
+                        color: selectedState == "f_approve"
                             ? AppColors().primaryColor
                             : Colors.grey.shade200,
                         borderRadius: BorderRadius.circular(16.0),
                       ),
                       child: Text(
                         "Waiting",
-                        style: selectedState == "f_approved"
+                        style: selectedState == "f_approve"
                             ? createWhiteThinTextStyle(14)
                             : createBlackThinTextStyle(14),
                         textAlign: TextAlign.center,

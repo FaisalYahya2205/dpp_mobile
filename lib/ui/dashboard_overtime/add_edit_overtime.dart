@@ -41,7 +41,7 @@ class _AddEditOvertimeState extends State<AddEditOvertime> {
         descTextController.text,
       );
 
-      if (odooResponse.runtimeType == int && odooResponse != 0) {
+      if (odooResponse.runtimeType == int && odooResponse["data"] != 0) {
         returnValue = true;
       }
     } catch (e) {

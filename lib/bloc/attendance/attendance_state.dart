@@ -18,65 +18,34 @@ class AttendanceState extends Equatable {
   AttendanceState({
     this.status = AttendanceStatus.initial,
     List<Attendance>? attendances,
-  }) : attendances = attendances ?? Attendance.emptyList;
+    int? checkInResponse,
+    bool? checkOutResponse,
+  })  : attendances = attendances ?? Attendance.emptyList,
+        checkInResponse = checkInResponse ?? 0,
+        checkOutResponse = checkOutResponse ?? false;
 
   final List<Attendance> attendances;
-  final AttendanceStatus status;
-
-  @override
-  List<Object?> get props => [status, attendances];
-
-  AttendanceState copyWith({
-    List<Attendance>? attendances,
-    AttendanceStatus? status,
-  }) {
-    return AttendanceState(
-      attendances: attendances,
-      status: status ?? this.status,
-    );
-  }
-}
-
-class CheckInState extends Equatable {
-  const CheckInState({
-    this.status = AttendanceStatus.initial,
-    int? checkInResponse,
-  }) : checkInResponse = checkInResponse ?? 0;
-
   final int checkInResponse;
-  final AttendanceStatus status;
-
-  @override
-  List<Object?> get props => [status, checkInResponse];
-
-  CheckInState copyWith({
-    int? checkInResponse,
-    AttendanceStatus? status,
-  }) {
-    return CheckInState(
-      checkInResponse: checkInResponse,
-      status: status ?? this.status,
-    );
-  }
-}
-
-class CheckOutState extends Equatable {
-  const CheckOutState({
-    this.status = AttendanceStatus.initial,
-    bool? checkOutResponse,
-  }) : checkOutResponse = checkOutResponse ?? false;
-
   final bool checkOutResponse;
   final AttendanceStatus status;
 
   @override
-  List<Object?> get props => [status, checkOutResponse];
+  List<Object?> get props => [
+        status,
+        attendances,
+        checkInResponse,
+        checkOutResponse,
+      ];
 
-  CheckOutState copyWith({
+  AttendanceState copyWith({
+    List<Attendance>? attendances,
+    int? checkInResponse,
     bool? checkOutResponse,
     AttendanceStatus? status,
   }) {
-    return CheckOutState(
+    return AttendanceState(
+      attendances: attendances,
+      checkInResponse: checkInResponse,
       checkOutResponse: checkOutResponse,
       status: status ?? this.status,
     );
