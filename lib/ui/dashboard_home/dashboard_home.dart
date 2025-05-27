@@ -28,13 +28,13 @@ class DashboardHome extends StatelessWidget {
   Widget build(BuildContext context) {
     void refreshData() {
       BlocProvider.of<AttendanceBloc>(context).add(
-        GetAttendance(),
+        const GetAttendance(),
       );
       BlocProvider.of<EmployeeBloc>(context).add(
-        GetEmployee(),
+        const GetEmployee(),
       );
       BlocProvider.of<EmployeeLastAttendanceBloc>(context).add(
-        GetEmployeeLastAttendance(),
+        const GetEmployeeLastAttendance(),
       );
     }
 
@@ -188,6 +188,14 @@ class DashboardHome extends StatelessWidget {
                                                   },
                                                 ),
                                               );
+                                              // Navigator.of(context).push(
+                                              //   MaterialPageRoute(
+                                              //     builder:
+                                              //         (BuildContext context) {
+                                              //       return const DashboardHomeCheckInSurvey();
+                                              //     },
+                                              //   ),
+                                              // );
                                             },
                                             child: Text(
                                               "Lihat Lainnya",
@@ -238,8 +246,8 @@ class DashboardHome extends StatelessWidget {
               if (state.status.isSuccess && state.employee.id != 0) {
                 bool isCheckIn = true;
 
-                if (state.employee.last_check_in != null &&
-                    state.employee.last_check_out == null) {
+                if (state.employee.lastCheckIn != null &&
+                    state.employee.lastCheckOut == null) {
                   isCheckIn = false;
                 }
 

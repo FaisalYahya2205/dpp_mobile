@@ -14,7 +14,7 @@ class DashboardProfileError extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       body: RefreshIndicator(
-        onRefresh: () async => employeeBloc.add(GetEmployee()),
+        onRefresh: () async => employeeBloc.add(const GetEmployee()),
         child: SingleChildScrollView(
           physics: const AlwaysScrollableScrollPhysics(
             parent: BouncingScrollPhysics(),

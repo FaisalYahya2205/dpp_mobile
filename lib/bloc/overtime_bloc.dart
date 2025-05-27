@@ -13,39 +13,46 @@ extension OvertimeStatusX on OvertimeStatus {
 }
 
 class OvertimeState extends Equatable {
-  OvertimeState({
+  const OvertimeState({
     this.status = OvertimeStatus.initial,
-    List<Overtime>? overtimes,
-  }) : overtimes = overtimes ?? Overtime.emptyList;
+    this.overtimes = Overtime.emptyList,
+    this.errorMessage = '',
+  });
 
   final List<Overtime> overtimes;
   final OvertimeStatus status;
+  final String errorMessage;
 
   @override
-  List<Object?> get props => [status, overtimes];
+  List<Object?> get props => [status, overtimes, errorMessage];
 
   OvertimeState copyWith({
     List<Overtime>? overtimes,
     OvertimeStatus? status,
+    String? errorMessage,
   }) {
     return OvertimeState(
-      overtimes: overtimes,
+      overtimes: overtimes ?? this.overtimes,
       status: status ?? this.status,
+      errorMessage: errorMessage ?? this.errorMessage,
     );
   }
 }
 
-class OvertimeEvent extends Equatable {
+abstract class OvertimeEvent extends Equatable {
+  const OvertimeEvent();
+
   @override
   List<Object?> get props => [];
 }
 
 class GetOvertimeList extends OvertimeEvent {
-  GetOvertimeList({
+  const GetOvertimeList({
     required this.overtimeState,
   });
 
   final String overtimeState;
+
   @override
   List<Object?> get props => [overtimeState];
 }
@@ -53,27 +60,39 @@ class GetOvertimeList extends OvertimeEvent {
 class OvertimeBloc extends Bloc<OvertimeEvent, OvertimeState> {
   OvertimeBloc({
     required this.overtimeRepository,
-  }) : super(OvertimeState()) {
+  }) : super(const OvertimeState()) {
     on<GetOvertimeList>(_mapGetOvertimeListEventToState);
   }
 
   final OvertimeRepository overtimeRepository;
 
-  void _mapGetOvertimeListEventToState(
-      GetOvertimeList event, Emitter<OvertimeState> emit) async {
+  Future<void> _mapGetOvertimeListEventToState(
+    GetOvertimeList event,
+    Emitter<OvertimeState> emit,
+  ) async {
     try {
       emit(state.copyWith(status: OvertimeStatus.loading));
-      Map<String, dynamic> result =
-          await overtimeRepository.getOvertimeList(event.overtimeState);
-      List<Overtime> overtime = result["data"];
-      emit(
-        state.copyWith(
+      
+      final result = await overtimeRepository.getOvertimeList(event.overtimeState);
+      
+      if (result["success"] == true) {
+        final overtimes = result["data"] as List<Overtime>;
+        emit(state.copyWith(
           status: OvertimeStatus.success,
-          overtimes: overtime,
-        ),
-      );
+          overtimes: overtimes,
+          errorMessage: '',
+        ));
+      } else {
+        emit(state.copyWith(
+          status: OvertimeStatus.error,
+          errorMessage: result["errorMessage"] as String,
+        ));
+      }
     } catch (error) {
-      emit(state.copyWith(status: OvertimeStatus.error));
+      emit(state.copyWith(
+        status: OvertimeStatus.error,
+        errorMessage: 'Failed to fetch overtime list',
+      ));
     }
   }
 }

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dpp_mobile/models/attendance.dart';
 import 'package:dpp_mobile/models/employee.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +11,7 @@ void main() async {
   final client = OdooClient(dotenv.get("URL"));
   try {
     await client.authenticate(
-        dotenv.get("DATABASE"), "andiade52@gmail.com", "a");
+        dotenv.get("DATABASE"), "cecep@gmail.com", "a");
 
     final userData = await client.callKw({
       'model': 'res.users',
@@ -18,12 +20,14 @@ void main() async {
       'kwargs': {
         'context': {'bin_size': true},
         'domain': [
-          ["email", "=", "andiade52@gmail.com"]
+          ["email", "=", "cecep@gmail.com"]
         ],
         'fields': ['id', 'partner_id'],
         'limit': 80,
       },
     });
+
+    debugPrint(userData.toString());
 
     List<dynamic> employee = await client.callKw({
       "model": "hr.employee",
@@ -37,9 +41,9 @@ void main() async {
         "fields": getEmployeeFields(),
       },
     });
-    Employee employeeData = Employee.fromMap(employee[0]);
+    Employee employeeData = Employee.fromJson(json.encode(employee[0]));
 
-    List<dynamic> data = await client.callKw({
+    final data = await client.callKw({
       'model': 'hr.attendance',
       'method': 'search_read',
       'args': [],
@@ -51,10 +55,14 @@ void main() async {
           ["check_out", "!=", false],
         ],
         'fields': getAttendanceFields(),
+        'limit': 1
       },
     });
+
+    debugPrint(data.toString());
+    
     List<Attendance> attendancesList = List<Attendance>.from(
-      data.map((item) => Attendance.fromMap(item)),
+      data.map((item) => Attendance.fromJson(json.encode(item))),
     );
     debugPrint(attendancesList.toString());
   } catch (e) {

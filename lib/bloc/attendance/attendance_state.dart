@@ -15,19 +15,19 @@ extension AttendanceStatusX on AttendanceStatus {
 }
 
 class AttendanceState extends Equatable {
-  AttendanceState({
+  const AttendanceState({
     this.status = AttendanceStatus.initial,
-    List<Attendance>? attendances,
-    int? checkInResponse,
-    bool? checkOutResponse,
-  })  : attendances = attendances ?? Attendance.emptyList,
-        checkInResponse = checkInResponse ?? 0,
-        checkOutResponse = checkOutResponse ?? false;
+    this.attendances = Attendance.emptyList,
+    this.checkInResponse = 0,
+    this.checkOutResponse = false,
+    this.errorMessage = '',
+  });
 
   final List<Attendance> attendances;
   final int checkInResponse;
   final bool checkOutResponse;
   final AttendanceStatus status;
+  final String errorMessage;
 
   @override
   List<Object?> get props => [
@@ -35,6 +35,7 @@ class AttendanceState extends Equatable {
         attendances,
         checkInResponse,
         checkOutResponse,
+        errorMessage,
       ];
 
   AttendanceState copyWith({
@@ -42,12 +43,14 @@ class AttendanceState extends Equatable {
     int? checkInResponse,
     bool? checkOutResponse,
     AttendanceStatus? status,
+    String? errorMessage,
   }) {
     return AttendanceState(
-      attendances: attendances,
-      checkInResponse: checkInResponse,
-      checkOutResponse: checkOutResponse,
+      attendances: attendances ?? this.attendances,
+      checkInResponse: checkInResponse ?? this.checkInResponse,
+      checkOutResponse: checkOutResponse ?? this.checkOutResponse,
       status: status ?? this.status,
+      errorMessage: errorMessage ?? this.errorMessage,
     );
   }
 }

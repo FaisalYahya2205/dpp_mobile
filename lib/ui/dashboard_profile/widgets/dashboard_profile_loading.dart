@@ -14,7 +14,7 @@ class DashboardProfileLoading extends StatelessWidget {
       body: Container(
         constraints: const BoxConstraints.expand(),
         child: RefreshIndicator(
-          onRefresh: () async => employeeBloc.add(GetEmployee()),
+          onRefresh: () async => employeeBloc.add(const GetEmployee()),
           child: SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(
               parent: BouncingScrollPhysics(),

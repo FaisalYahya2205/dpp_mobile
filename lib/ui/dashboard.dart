@@ -25,6 +25,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:translator/translator.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -69,16 +70,16 @@ class _DashboardPageState extends State<DashboardPage> {
       child: MultiRepositoryProvider(
         providers: [
           RepositoryProvider(
-            create: (context) => EmployeeRepository(service: EmployeeService()),
+            create: (context) => EmployeeRepository(service: EmployeeService(translator: GoogleTranslator())),
           ),
           RepositoryProvider(
             create: (context) => AttendanceRepository(service: AttendanceService()),
           ),
           RepositoryProvider(
-            create: (context) => OvertimeRepository(service: OvertimeService()),
+            create: (context) => OvertimeRepository(service: OvertimeService(translator: GoogleTranslator())),
           ),
           RepositoryProvider(
-            create: (context) => TimesheetRepository(service: TimesheetService()),
+            create: (context) => TimesheetRepository(service: TimesheetService(translator: GoogleTranslator())),
           ),
         ],
         child: MultiBlocProvider(
@@ -86,22 +87,22 @@ class _DashboardPageState extends State<DashboardPage> {
             BlocProvider<EmployeeBloc>(
               create: (context) => EmployeeBloc(
                 employeeRepository: context.read<EmployeeRepository>(),
-              )..add(GetEmployee()),
+              )..add(const GetEmployee()),
             ),
             BlocProvider<EmployeeLastAttendanceBloc>(
               create: (context) => EmployeeLastAttendanceBloc(
                 employeeRepository: context.read<EmployeeRepository>(),
-              )..add(GetEmployeeLastAttendance()),
+              )..add(const GetEmployeeLastAttendance()),
             ),
             BlocProvider<AttendanceBloc>(
               create: (context) => AttendanceBloc(
                 attendanceRepository: context.read<AttendanceRepository>(),
-              )..add(GetAttendance()),
+              )..add(const GetAttendance()),
             ),
             BlocProvider<OvertimeBloc>(
               create: (context) => OvertimeBloc(
                 overtimeRepository: context.read<OvertimeRepository>(),
-              )..add(GetOvertimeList(overtimeState: "draft")),
+              )..add(const GetOvertimeList(overtimeState: "draft")),
             ),
           ],
           child: Scaffold(

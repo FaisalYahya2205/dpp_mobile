@@ -31,9 +31,9 @@ class DashboardHomeOvertimeSuccess extends StatelessWidget {
       padding: const EdgeInsets.all(0),
       itemBuilder: (context, index) {
         DateTime dateTimeFrom =
-            DateTime.parse("${overtimes[index].date_from}Z").toLocal();
+            DateTime.parse("${overtimes[index].dateFrom}Z").toLocal();
         DateTime dateTimeTo =
-            DateTime.parse("${overtimes[index].date_to}Z").toLocal();
+            DateTime.parse("${overtimes[index].dateTo}Z").toLocal();
         String timeZone = dateTimeFrom.timeZoneName;
 
         String startDate = DateFormat.yMMMd().format(dateTimeFrom);
@@ -263,7 +263,7 @@ class DashboardHomeOvertimeSuccess extends StatelessWidget {
                                       ),
                                       Text(
                                         overtimes[index]
-                                            .days_no_tmp!
+                                            .daysNoTmp!
                                             .toStringAsFixed(2),
                                         style: createBlackMediumTextStyle(14),
                                       ),
@@ -281,7 +281,7 @@ class DashboardHomeOvertimeSuccess extends StatelessWidget {
                     ],
                   ),
                 ),
-                overtimes[index].next_review != null
+                overtimes[index].nextReview != null
                     ? Container(
                         margin: const EdgeInsets.all(8.0),
                         padding: const EdgeInsets.symmetric(
@@ -294,7 +294,7 @@ class DashboardHomeOvertimeSuccess extends StatelessWidget {
                           borderRadius: BorderRadius.circular(16.0),
                         ),
                         child: Text(
-                          overtimes[index].next_review!,
+                          overtimes[index].nextReview!,
                           style: createGreyMediumTextStyle(12),
                           textAlign: TextAlign.center,
                         ),

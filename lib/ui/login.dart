@@ -9,6 +9,7 @@ import 'package:dpp_mobile/widgets/dialogs/app_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:translator/translator.dart';
 
 import 'package:dpp_mobile/utils/themes/text_style.dart';
 import 'package:dpp_mobile/utils/themes/app_colors.dart';
@@ -283,14 +284,6 @@ class _LoginPageState extends State<LoginPage> {
                           return;
                         }
 
-                        Map<String, dynamic> result = await checkDifferentHost(
-                          context,
-                          emailTextController.text,
-                          urlTextController.text,
-                          databaseTextController.text,
-                          showUrlDatabase,
-                        );
-
                         showDialog(
                           barrierDismissible: false,
                           context: context,
@@ -302,8 +295,16 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                         );
 
+                        Map<String, dynamic> result = await checkDifferentHost(
+                          context,
+                          emailTextController.text,
+                          urlTextController.text,
+                          databaseTextController.text,
+                          showUrlDatabase,
+                        );
+
                         Map<String, dynamic> auth =
-                            await AuthenticationService().authentication(
+                            await AuthenticationService(translator: GoogleTranslator()).authentication(
                           emailTextController.text,
                           passwordTextController.text,
                           result["hostUrl"],

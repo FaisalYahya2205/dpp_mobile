@@ -58,10 +58,10 @@ Widget latestAttendanceListItem(
                   height: 4,
                 ),
                 Text(
-                  attendanceListItem.check_in == null
+                  attendanceListItem.checkIn == null
                       ? "-"
                       : DateTime.parse(
-                          "${attendanceListItem.check_in.toString()}Z",
+                          "${attendanceListItem.checkIn.toString()}Z",
                         ).toLocal().toString(),
                   style: createBlackThinTextStyle(14),
                 ),
@@ -98,9 +98,9 @@ Widget latestAttendanceListItem(
                   height: 4,
                 ),
                 Text(
-                  attendanceListItem.check_out == null
+                  attendanceListItem.checkOut == null
                       ? "-"
-                      : attendanceListItem.check_out.toString(),
+                      : attendanceListItem.checkOut.toString(),
                   style: createBlackThinTextStyle(14),
                 ),
               ],

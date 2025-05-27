@@ -1,6 +1,11 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first, non_constant_identifier_names
 import 'dart:convert';
+import 'package:json_annotation/json_annotation.dart';
+import 'package:flutter/foundation.dart';
 
+part 'attendance.g.dart';
+
+/// List of field names used in the Attendance model
 List<String> getAttendanceFields() => [
       'id',
       'employee_id',
@@ -22,200 +27,217 @@ List<String> getAttendanceFields() => [
       'check_out_image',
       'desc',
       'worked_hours',
+      'sign_in_survey_id',
+      'sign_out_survey_id',
+      'sign_in_survey_line_ids',
+      'sign_out_survey_line_ids',
     ];
 
+/// Model class representing attendance records
+@JsonSerializable(fieldRename: FieldRename.snake)
 class Attendance {
-  int? id;
-  int? employee_id;
-  String? schedule_in;
-  String? check_in;
-  String? geo_check_in;
-  bool? geo_access_check_in;
-  bool? geospatial_access_check_in;
-  String? map_url_check_in;
-  bool? ismobile_check_in;
-  String? check_in_image;
-  String? schedule_out;
-  String? check_out;
-  String? geo_check_out;
-  bool? geo_access_check_out;
-  bool? geospatial_access_check_out;
-  String? map_url_check_out;
-  bool? ismobile_check_out;
-  String? check_out_image;
-  String? desc;
-  double? worked_hours;
+  final int? id;
+  final int? employeeId;
+  final String? scheduleIn;
+  final String? checkIn;
+  final String? geoCheckIn;
+  final bool? geoAccessCheckIn;
+  final bool? geospatialAccessCheckIn;
+  final String? mapUrlCheckIn;
+  final bool? ismobileCheckIn;
+  final String? checkInImage;
+  final String? scheduleOut;
+  final String? checkOut;
+  final String? geoCheckOut;
+  final bool? geoAccessCheckOut;
+  final bool? geospatialAccessCheckOut;
+  final String? mapUrlCheckOut;
+  final bool? ismobileCheckOut;
+  final String? checkOutImage;
+  final String? desc;
+  final double? workedHours;
+  final String? signInSurveyId;
+  final String? signOutSurveyId;
+  final List<dynamic>? signInSurveyLineIds;
+  final List<dynamic>? signOutSurveyLineIds;
 
-  Attendance({
+  const Attendance({
     this.id,
-    this.employee_id,
-    this.schedule_in,
-    this.check_in,
-    this.geo_check_in,
-    this.geo_access_check_in,
-    this.geospatial_access_check_in,
-    this.map_url_check_in,
-    this.ismobile_check_in,
-    this.check_in_image,
-    this.schedule_out,
-    this.check_out,
-    this.geo_check_out,
-    this.geo_access_check_out,
-    this.geospatial_access_check_out,
-    this.map_url_check_out,
-    this.ismobile_check_out,
-    this.check_out_image,
+    this.employeeId,
+    this.scheduleIn,
+    this.checkIn,
+    this.geoCheckIn,
+    this.geoAccessCheckIn,
+    this.geospatialAccessCheckIn,
+    this.mapUrlCheckIn,
+    this.ismobileCheckIn,
+    this.checkInImage,
+    this.scheduleOut,
+    this.checkOut,
+    this.geoCheckOut,
+    this.geoAccessCheckOut,
+    this.geospatialAccessCheckOut,
+    this.mapUrlCheckOut,
+    this.ismobileCheckOut,
+    this.checkOutImage,
     this.desc,
-    this.worked_hours,
+    this.workedHours,
+    this.signInSurveyId,
+    this.signOutSurveyId,
+    this.signInSurveyLineIds,
+    this.signOutSurveyLineIds,
   });
 
-  static final List<Attendance> emptyList = [];
-
-  static final empty = Attendance(
+  static const empty = Attendance(
     id: 0,
-    employee_id: 0,
-    schedule_in: "",
-    check_in: "",
-    geo_check_in: "",
-    geo_access_check_in: false,
-    geospatial_access_check_in: false,
-    map_url_check_in: "",
-    ismobile_check_in: false,
-    check_in_image: "",
-    schedule_out: "",
-    check_out: "",
-    geo_check_out: "",
-    geo_access_check_out: false,
-    geospatial_access_check_out: false,
-    map_url_check_out: "",
-    ismobile_check_out: false,
-    check_out_image: "",
+    employeeId: 0,
+    scheduleIn: "",
+    checkIn: "",
+    geoCheckIn: "",
+    geoAccessCheckIn: false,
+    geospatialAccessCheckIn: false,
+    mapUrlCheckIn: "",
+    ismobileCheckIn: false,
+    checkInImage: "",
+    scheduleOut: "",
+    checkOut: "",
+    geoCheckOut: "",
+    geoAccessCheckOut: false,
+    geospatialAccessCheckOut: false,
+    mapUrlCheckOut: "",
+    ismobileCheckOut: false,
+    checkOutImage: "",
     desc: "",
-    worked_hours: 0,
+    workedHours: 0,
+    signInSurveyId: "",
+    signOutSurveyId: "",
+    signInSurveyLineIds: [],
+    signOutSurveyLineIds: [],
   );
+
+  static const List<Attendance> emptyList = [];
 
   Attendance copyWith({
     int? id,
-    int? employee_id,
-    String? schedule_in,
-    String? check_in,
-    String? geo_check_in,
-    bool? geo_access_check_in,
-    bool? geospatial_access_check_in,
-    String? map_url_check_in,
-    bool? ismobile_check_in,
-    String? check_in_image,
-    String? schedule_out,
-    String? check_out,
-    String? geo_check_out,
-    bool? geo_access_check_out,
-    bool? geospatial_access_check_out,
-    String? map_url_check_out,
-    bool? ismobile_check_out,
-    String? check_out_image,
+    int? employeeId,
+    String? scheduleIn,
+    String? checkIn,
+    String? geoCheckIn,
+    bool? geoAccessCheckIn,
+    bool? geospatialAccessCheckIn,
+    String? mapUrlCheckIn,
+    bool? ismobileCheckIn,
+    String? checkInImage,
+    String? scheduleOut,
+    String? checkOut,
+    String? geoCheckOut,
+    bool? geoAccessCheckOut,
+    bool? geospatialAccessCheckOut,
+    String? mapUrlCheckOut,
+    bool? ismobileCheckOut,
+    String? checkOutImage,
     String? desc,
-    double? worked_hours,
+    double? workedHours,
+    String? signInSurveyId,
+    String? signOutSurveyId,
+    List<dynamic>? signInSurveyLineIds,
+    List<dynamic>? signOutSurveyLineIds,
   }) {
     return Attendance(
       id: id ?? this.id,
-      employee_id: employee_id ?? this.employee_id,
-      schedule_in: schedule_in ?? this.schedule_in,
-      check_in: check_in ?? this.check_in,
-      geo_check_in: geo_check_in ?? this.geo_check_in,
-      geo_access_check_in: geo_access_check_in ?? this.geo_access_check_in,
-      geospatial_access_check_in:
-          geospatial_access_check_in ?? this.geospatial_access_check_in,
-      map_url_check_in: map_url_check_in ?? this.map_url_check_in,
-      ismobile_check_in: ismobile_check_in ?? this.ismobile_check_in,
-      check_in_image: check_in_image ?? this.check_in_image,
-      schedule_out: schedule_out ?? this.schedule_out,
-      check_out: check_out ?? this.check_out,
-      geo_check_out: geo_check_out ?? this.geo_check_out,
-      geo_access_check_out: geo_access_check_out ?? this.geo_access_check_out,
-      geospatial_access_check_out:
-          geospatial_access_check_out ?? this.geospatial_access_check_out,
-      map_url_check_out: map_url_check_out ?? this.map_url_check_out,
-      ismobile_check_out: ismobile_check_out ?? this.ismobile_check_out,
-      check_out_image: check_out_image ?? this.check_out_image,
+      employeeId: employeeId ?? this.employeeId,
+      scheduleIn: scheduleIn ?? this.scheduleIn,
+      checkIn: checkIn ?? this.checkIn,
+      geoCheckIn: geoCheckIn ?? this.geoCheckIn,
+      geoAccessCheckIn: geoAccessCheckIn ?? this.geoAccessCheckIn,
+      geospatialAccessCheckIn: geospatialAccessCheckIn ?? this.geospatialAccessCheckIn,
+      mapUrlCheckIn: mapUrlCheckIn ?? this.mapUrlCheckIn,
+      ismobileCheckIn: ismobileCheckIn ?? this.ismobileCheckIn,
+      checkInImage: checkInImage ?? this.checkInImage,
+      scheduleOut: scheduleOut ?? this.scheduleOut,
+      checkOut: checkOut ?? this.checkOut,
+      geoCheckOut: geoCheckOut ?? this.geoCheckOut,
+      geoAccessCheckOut: geoAccessCheckOut ?? this.geoAccessCheckOut,
+      geospatialAccessCheckOut: geospatialAccessCheckOut ?? this.geospatialAccessCheckOut,
+      mapUrlCheckOut: mapUrlCheckOut ?? this.mapUrlCheckOut,
+      ismobileCheckOut: ismobileCheckOut ?? this.ismobileCheckOut,
+      checkOutImage: checkOutImage ?? this.checkOutImage,
       desc: desc ?? this.desc,
-      worked_hours: worked_hours ?? this.worked_hours,
+      workedHours: workedHours ?? this.workedHours,
+      signInSurveyId: signInSurveyId ?? this.signInSurveyId,
+      signOutSurveyId: signOutSurveyId ?? this.signOutSurveyId,
+      signInSurveyLineIds: signInSurveyLineIds ?? this.signInSurveyLineIds,
+      signOutSurveyLineIds: signOutSurveyLineIds ?? this.signOutSurveyLineIds,
     );
   }
 
-  Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      'id': id,
-      'employee_id': employee_id,
-      'schedule_in': schedule_in,
-      'check_in': check_in,
-      'geo_check_in': geo_check_in,
-      'geo_access_check_in': geo_access_check_in,
-      'geospatial_access_check_in': geospatial_access_check_in,
-      'map_url_check_in': map_url_check_in,
-      'ismobile_check_in': ismobile_check_in,
-      'check_in_image': check_in_image,
-      'schedule_out': schedule_out,
-      'check_out': check_out,
-      'geo_check_out': geo_check_out,
-      'geo_access_check_out': geo_access_check_out,
-      'geospatial_access_check_out': geospatial_access_check_out,
-      'map_url_check_out': map_url_check_out,
-      'ismobile_check_out': ismobile_check_out,
-      'check_out_image': check_out_image,
-      'desc': desc,
-      'worked_hours': worked_hours,
-    };
-  }
+  factory Attendance.fromJson(String source) => 
+      _$AttendanceFromJson(json.decode(source) as Map<String, dynamic>);
 
-  factory Attendance.fromMap(Map<String, dynamic> map) {
-    return Attendance(
-      id: map['id'] != false ? map['id'] as int : null,
-      employee_id:
-          map['employee_id'] != false ? map['employee_id'][0] as int : null,
-      schedule_in:
-          map['schedule_in'] != false ? map['schedule_in'] as String : null,
-      check_in: map['check_in'] != false ? map['check_in'] as String : null,
-      geo_check_in:
-          map['geo_check_in'] != false ? map['geo_check_in'] as String : null,
-      geo_access_check_in: map['geo_access_check_in'] != false ? true : false,
-      geospatial_access_check_in:
-          map['geospatial_access_check_in'] != false ? true : false,
-      map_url_check_in: map['map_url_check_in'] != false
-          ? map['map_url_check_in'] as String
-          : null,
-      ismobile_check_in: map['ismobile_check_in'] != false ? true : false,
-      check_in_image: map['check_in_image'] != false
-          ? map['check_in_image'] as String
-          : null,
-      schedule_out:
-          map['schedule_out'] != false ? map['schedule_out'] as String : null,
-      check_out: map['check_out'] != false ? map['check_out'] as String : null,
-      geo_check_out:
-          map['geo_check_out'] != false ? map['geo_check_out'] as String : null,
-      geo_access_check_out:
-          map['geo_access_check_out'] != false ? true : false,
-      geospatial_access_check_out:
-          map['geospatial_access_check_out'] != false ? true : false,
-      map_url_check_out: map['map_url_check_out'] != false
-          ? map['map_url_check_out'] as String
-          : null,
-      ismobile_check_out: map['ismobile_check_out'] != false ? true : false,
-      check_out_image: map['check_out_image'] != false
-          ? map['check_out_image'] as String
-          : null,
-      desc: map['desc'] != false ? map['desc'] as String : null,
-      worked_hours:
-          map['worked_hours'] != false ? map['worked_hours'] as double : null,
-    );
-  }
-
-  String toJson() => json.encode(toMap());
-
-  factory Attendance.fromJson(String source) =>
-      Attendance.fromMap(json.decode(source) as Map<String, dynamic>);
+  String toJson() => json.encode(_$AttendanceToJson(this));
 
   @override
   String toString() {
-    return 'Attendance(id: $id, employee_id: $employee_id, schedule_in: $schedule_in, check_in: $check_in, geo_check_in: $geo_check_in, geo_access_check_in: $geo_access_check_in, geospatial_access_check_in: $geospatial_access_check_in, map_url_check_in: $map_url_check_in, ismobile_check_in: $ismobile_check_in, check_in_image: $check_in_image, schedule_out: $schedule_out, check_out: $check_out, geo_check_out: $geo_check_out, geo_access_check_out: $geo_access_check_out, geospatial_access_check_out: $geospatial_access_check_out, map_url_check_out: $map_url_check_out, ismobile_check_out: $ismobile_check_out, check_out_image: $check_out_image, desc: $desc, worked_hours: $worked_hours)';
+    return 'Attendance(id: $id, employeeId: $employeeId, scheduleIn: $scheduleIn, checkIn: $checkIn, geoCheckIn: $geoCheckIn, geoAccessCheckIn: $geoAccessCheckIn, geospatialAccessCheckIn: $geospatialAccessCheckIn, mapUrlCheckIn: $mapUrlCheckIn, ismobileCheckIn: $ismobileCheckIn, checkInImage: $checkInImage, scheduleOut: $scheduleOut, checkOut: $checkOut, geoCheckOut: $geoCheckOut, geoAccessCheckOut: $geoAccessCheckOut, geospatialAccessCheckOut: $geospatialAccessCheckOut, mapUrlCheckOut: $mapUrlCheckOut, ismobileCheckOut: $ismobileCheckOut, checkOutImage: $checkOutImage, desc: $desc, workedHours: $workedHours, signInSurveyId: $signInSurveyId, signOutSurveyId: $signOutSurveyId, signInSurveyLineIds: $signInSurveyLineIds, signOutSurveyLineIds: $signOutSurveyLineIds)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is Attendance &&
+        other.id == id &&
+        other.employeeId == employeeId &&
+        other.scheduleIn == scheduleIn &&
+        other.checkIn == checkIn &&
+        other.geoCheckIn == geoCheckIn &&
+        other.geoAccessCheckIn == geoAccessCheckIn &&
+        other.geospatialAccessCheckIn == geospatialAccessCheckIn &&
+        other.mapUrlCheckIn == mapUrlCheckIn &&
+        other.ismobileCheckIn == ismobileCheckIn &&
+        other.checkInImage == checkInImage &&
+        other.scheduleOut == scheduleOut &&
+        other.checkOut == checkOut &&
+        other.geoCheckOut == geoCheckOut &&
+        other.geoAccessCheckOut == geoAccessCheckOut &&
+        other.geospatialAccessCheckOut == geospatialAccessCheckOut &&
+        other.mapUrlCheckOut == mapUrlCheckOut &&
+        other.ismobileCheckOut == ismobileCheckOut &&
+        other.checkOutImage == checkOutImage &&
+        other.desc == desc &&
+        other.workedHours == workedHours &&
+        other.signInSurveyId == signInSurveyId &&
+        other.signOutSurveyId == signOutSurveyId &&
+        listEquals(other.signInSurveyLineIds, signInSurveyLineIds) &&
+        listEquals(other.signOutSurveyLineIds, signOutSurveyLineIds);
+  }
+
+  @override
+  int get hashCode {
+    return Object.hashAll([
+      id,
+      employeeId,
+      scheduleIn,
+      checkIn,
+      geoCheckIn,
+      geoAccessCheckIn,
+      geospatialAccessCheckIn,
+      mapUrlCheckIn,
+      ismobileCheckIn,
+      checkInImage,
+      scheduleOut,
+      checkOut,
+      geoCheckOut,
+      geoAccessCheckOut,
+      geospatialAccessCheckOut,
+      mapUrlCheckOut,
+      ismobileCheckOut,
+      checkOutImage,
+      desc,
+      workedHours,
+      signInSurveyId,
+      signOutSurveyId,
+      Object.hashAll(signInSurveyLineIds ?? []),
+      Object.hashAll(signOutSurveyLineIds ?? []),
+    ]);
   }
 }

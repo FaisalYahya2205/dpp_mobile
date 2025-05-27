@@ -22,7 +22,7 @@ void main() async {
         'limit': 80,
       },
     });
-    debugPrint("DATA USER => " + userData[0].toString());
+    debugPrint("DATA USER => ${userData[0]}");
     final employeeData = await client.callKw({
       'model': 'hr.employee',
       'method': 'search_read',

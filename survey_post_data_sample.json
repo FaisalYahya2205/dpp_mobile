@@ -1,0 +1,49 @@
+{
+  "survey_user_input": { "survey_id": 4, "partner_id": 120, "state": "done" },
+  "survey_user_input_lines": [
+    {
+      "user_input_id": 1745916742090,
+      "survey_id": 4,
+      "question_id": 3,
+      "question_sequence": 1,
+      "answer_type": "suggestion",
+      "suggested_answer_id": 7,
+      "value_text_box": "4-5 jam",
+      "answer_score": 2.0,
+      "matrix_row_id": 3
+    },
+    {
+      "user_input_id": 1745916742090,
+      "survey_id": 4,
+      "question_id": 4,
+      "question_sequence": 2,
+      "answer_type": "suggestion",
+      "suggested_answer_id": 10,
+      "value_text_box": "Tidak ada keluhan",
+      "answer_score": 1.0,
+      "matrix_row_id": 4
+    },
+    {
+      "user_input_id": 1745916742090,
+      "survey_id": 4,
+      "question_id": 5,
+      "question_sequence": 3,
+      "answer_type": "suggestion",
+      "suggested_answer_id": 15,
+      "value_text_box": "Ya, obat tanpa resep (obat bebas)",
+      "answer_score": 2.0,
+      "matrix_row_id": 5
+    },
+    {
+      "user_input_id": 1745916742090,
+      "survey_id": 4,
+      "question_id": 6,
+      "question_sequence": 4,
+      "answer_type": "suggestion",
+      "suggested_answer_id": 17,
+      "value_text_box": "saya sudah makan dalam 1-2 jam terakhir",
+      "answer_score": 1.0,
+      "matrix_row_id": 6
+    }
+  ]
+}

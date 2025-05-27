@@ -5,6 +5,7 @@ import 'package:dpp_mobile/utils/themes/app_colors.dart';
 import 'package:dpp_mobile/utils/themes/text_style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:iconsax/iconsax.dart';
 
 class DashboardProfileSuccess extends StatelessWidget {
@@ -19,7 +20,7 @@ class DashboardProfileSuccess extends StatelessWidget {
       backgroundColor: Colors.white,
       body: employee.id != 0
           ? RefreshIndicator(
-              onRefresh: () async => employeeBloc.add(GetEmployee()),
+              onRefresh: () async => employeeBloc.add(const GetEmployee()),
               child: SingleChildScrollView(
                 physics: const AlwaysScrollableScrollPhysics(
                   parent: BouncingScrollPhysics(),
@@ -43,7 +44,7 @@ class DashboardProfileSuccess extends StatelessWidget {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(100),
                         child: Image.network(
-                          "https://dpp.tbdigitalindo.co.id/web/image?model=hr.employee&id=${employee.id!}&field=image_128",
+                          "${dotenv.env['URL']}/web/image?model=hr.employee&id=${employee.id!}&field=image_128",
                           headers: {
                             'Cookie':
                                 'session_id=${localSession!.first["session_id"]}',
@@ -62,7 +63,7 @@ class DashboardProfileSuccess extends StatelessWidget {
                       height: 8,
                     ),
                     Text(
-                      employee.job_title!,
+                      employee.jobTitle!,
                       style: createBlackThinTextStyle(14),
                     ),
                     const SizedBox(
@@ -108,7 +109,7 @@ class DashboardProfileSuccess extends StatelessWidget {
                     ProfileItem(
                       icon: Iconsax.call,
                       title: "Work Mobile",
-                      value: employee.work_phone!,
+                      value: employee.workPhone!,
                     ),
                     const SizedBox(
                       height: 16,
@@ -116,7 +117,7 @@ class DashboardProfileSuccess extends StatelessWidget {
                     ProfileItem(
                       icon: Iconsax.sms,
                       title: "Work Email",
-                      value: employee.work_email!,
+                      value: employee.workEmail!,
                     ),
                     const SizedBox(
                       height: 16,
@@ -124,7 +125,7 @@ class DashboardProfileSuccess extends StatelessWidget {
                     ProfileItem(
                       icon: Iconsax.building,
                       title: "Work Location",
-                      value: employee.address_id!,
+                      value: employee.addressId!,
                     ),
                     const SizedBox(
                       height: 16,
@@ -132,7 +133,7 @@ class DashboardProfileSuccess extends StatelessWidget {
                     ProfileItem(
                       icon: Iconsax.user_octagon,
                       title: "Manager",
-                      value: employee.parent_id!,
+                      value: employee.parentId!,
                     ),
                     const SizedBox(
                       height: 16,
@@ -142,7 +143,7 @@ class DashboardProfileSuccess extends StatelessWidget {
               ),
             )
           : RefreshIndicator(
-              onRefresh: () async => employeeBloc.add(GetEmployee()),
+              onRefresh: () async => employeeBloc.add(const GetEmployee()),
               child: SingleChildScrollView(
                 physics: const AlwaysScrollableScrollPhysics(
                   parent: BouncingScrollPhysics(),

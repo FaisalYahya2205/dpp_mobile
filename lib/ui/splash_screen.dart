@@ -6,6 +6,7 @@ import 'package:dpp_mobile/utils/themes/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:translator/translator.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -53,7 +54,7 @@ class _SplashScreenState extends State<SplashScreen> {
     }
 
     try {
-      await AuthenticationService().authentication(
+      await AuthenticationService(translator: GoogleTranslator()).authentication(
         localSession!.first['user_login'],
         localSession!.first['password'],
         localHost!.first["host_url"],

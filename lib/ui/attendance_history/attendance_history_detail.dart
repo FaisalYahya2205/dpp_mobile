@@ -6,13 +6,16 @@ import 'package:dpp_mobile/models/attendance.dart';
 import 'package:dpp_mobile/repository/attendance_repository.dart';
 import 'package:dpp_mobile/repository/employee_repository.dart';
 import 'package:dpp_mobile/services/attendance_service.dart';
+import 'package:dpp_mobile/services/employee_service.dart';
 import 'package:dpp_mobile/utils/themes/app_colors.dart';
 import 'package:dpp_mobile/utils/themes/text_style.dart';
 import 'package:dpp_mobile/widgets/dialogs/app_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
+import 'package:translator/translator.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class AttendaceHistoryDetail extends StatefulWidget {
@@ -27,14 +30,22 @@ class AttendaceHistoryDetail extends StatefulWidget {
 class _AttendaceHistoryDetailState extends State<AttendaceHistoryDetail> {
   @override
   Widget build(BuildContext context) {
-    return RepositoryProvider(
-      create: (context) => AttendanceRepository(service: AttendanceService()),
+    return MultiRepositoryProvider(
+      providers: [
+        RepositoryProvider<AttendanceRepository>(
+          create: (context) =>
+              AttendanceRepository(service: AttendanceService()),
+        ),
+        RepositoryProvider<EmployeeRepository>(
+          create: (context) => EmployeeRepository(service: EmployeeService(translator: GoogleTranslator())),
+        ),
+      ],
       child: MultiBlocProvider(
         providers: [
           BlocProvider<EmployeeBloc>(
             create: (context) => EmployeeBloc(
               employeeRepository: context.read<EmployeeRepository>(),
-            )..add(GetEmployee()),
+            )..add(const GetEmployee()),
           ),
         ],
         child: Scaffold(
@@ -62,7 +73,7 @@ class _AttendaceHistoryDetailState extends State<AttendaceHistoryDetail> {
             child: SingleChildScrollView(
               child: BlocBuilder<EmployeeBloc, EmployeeState>(
                 builder: (context, state) {
-                  if (state.status.isSuccess) {
+                  if (state.status.isSuccess && state.employee.id != null) {
                     String? checkInDate,
                         checkOutDate,
                         checkInTime,
@@ -70,37 +81,39 @@ class _AttendaceHistoryDetailState extends State<AttendaceHistoryDetail> {
                         checkInTimeZone,
                         checkOutTimeZone;
 
-                    DateTime checkInDateTime =
-                        DateTime.parse("${widget.attendanceItem.check_in}Z")
-                            .toLocal();
-                    checkInTimeZone = checkInDateTime.timeZoneName;
-                    checkInTimeZone = checkInDateTime.timeZoneName;
-                    checkInDate = DateFormat.yMMMd().format(checkInDateTime);
-                    String checkInHour =
-                        checkInDateTime.hour.toString().length == 1
-                            ? "0${checkInDateTime.hour}"
-                            : checkInDateTime.hour.toString();
-                    String checkInMinutes =
-                        checkInDateTime.minute.toString().length == 1
-                            ? "0${checkInDateTime.minute}"
-                            : checkInDateTime.minute.toString();
-                    checkInTime = "$checkInHour:$checkInMinutes";
+                    if (widget.attendanceItem.checkIn != null) {
+                      DateTime checkInDateTime =
+                          DateTime.parse("${widget.attendanceItem.checkIn}Z")
+                              .toLocal();
+                      checkInTimeZone = checkInDateTime.timeZoneName;
+                      checkInDate = DateFormat.yMMMd().format(checkInDateTime);
+                      String checkInHour =
+                          checkInDateTime.hour.toString().length == 1
+                              ? "0${checkInDateTime.hour}"
+                              : checkInDateTime.hour.toString();
+                      String checkInMinutes =
+                          checkInDateTime.minute.toString().length == 1
+                              ? "0${checkInDateTime.minute}"
+                              : checkInDateTime.minute.toString();
+                      checkInTime = "$checkInHour:$checkInMinutes";
+                    }
 
-                    DateTime checkOutDateTime =
-                        DateTime.parse("${widget.attendanceItem.check_out}Z")
-                            .toLocal();
-                    checkOutTimeZone = checkOutDateTime.timeZoneName;
-                    checkOutTimeZone = checkOutDateTime.timeZoneName;
-                    checkOutDate = DateFormat.yMMMd().format(checkOutDateTime);
-                    String checkOutHour =
-                        checkOutDateTime.hour.toString().length == 1
-                            ? "0${checkOutDateTime.hour}"
-                            : checkOutDateTime.hour.toString();
-                    String checkOutMinutes =
-                        checkOutDateTime.minute.toString().length == 1
-                            ? "0${checkOutDateTime.minute}"
-                            : checkOutDateTime.minute.toString();
-                    checkOutTime = "$checkOutHour:$checkOutMinutes";
+                    if (widget.attendanceItem.checkOut != null) {
+                      DateTime checkOutDateTime =
+                          DateTime.parse("${widget.attendanceItem.checkOut}Z")
+                              .toLocal();
+                      checkOutTimeZone = checkOutDateTime.timeZoneName;
+                      checkOutDate = DateFormat.yMMMd().format(checkOutDateTime);
+                      String checkOutHour =
+                          checkOutDateTime.hour.toString().length == 1
+                              ? "0${checkOutDateTime.hour}"
+                              : checkOutDateTime.hour.toString();
+                      String checkOutMinutes =
+                          checkOutDateTime.minute.toString().length == 1
+                              ? "0${checkOutDateTime.minute}"
+                              : checkOutDateTime.minute.toString();
+                      checkOutTime = "$checkOutHour:$checkOutMinutes";
+                    }
 
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -118,10 +131,10 @@ class _AttendaceHistoryDetailState extends State<AttendaceHistoryDetail> {
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(100),
                             child: Image.network(
-                              "https://dpp.tbdigitalindo.co.id/web/image?model=hr.employee&id=${state.employee.id!}&field=image_128",
+                              "${dotenv.env['URL']}/web/image?model=hr.employee&id=${state.employee.id!}&field=image_128",
                               headers: {
                                 'Cookie':
-                                    'session_id=${localSession!.first["session_id"]}',
+                                    'session_id=${localSession?.first["session_id"] ?? ""}',
                               },
                             ),
                           ),
@@ -130,14 +143,14 @@ class _AttendaceHistoryDetailState extends State<AttendaceHistoryDetail> {
                           height: 32,
                         ),
                         Text(
-                          state.employee.name!,
+                          state.employee.name ?? '',
                           style: createBlackTextStyle(20),
                         ),
                         const SizedBox(
                           height: 8,
                         ),
                         Text(
-                          state.employee.job_title!,
+                          state.employee.jobTitle ?? '',
                           style: createBlackThinTextStyle(14),
                         ),
                         const SizedBox(
@@ -174,7 +187,7 @@ class _AttendaceHistoryDetailState extends State<AttendaceHistoryDetail> {
                                             BorderRadius.circular(24.0),
                                       ),
                                       child: Text(
-                                        checkInDate,
+                                        checkInDate ?? '-',
                                         style: createBlackThinTextStyle(14),
                                         textAlign: TextAlign.center,
                                       ),
@@ -200,7 +213,7 @@ class _AttendaceHistoryDetailState extends State<AttendaceHistoryDetail> {
                                             BorderRadius.circular(16.0),
                                       ),
                                       child: Text(
-                                        checkOutDate,
+                                        checkOutDate ?? '-',
                                         style: createBlackThinTextStyle(14),
                                         textAlign: TextAlign.center,
                                       ),
@@ -264,7 +277,9 @@ class _AttendaceHistoryDetailState extends State<AttendaceHistoryDetail> {
                                                     height: 4.0,
                                                   ),
                                                   Text(
-                                                    "$checkInTime $checkInTimeZone",
+                                                    checkInTime != null && checkInTimeZone != null
+                                                        ? "$checkInTime $checkInTimeZone"
+                                                        : '-',
                                                     style:
                                                         createBlackMediumTextStyle(
                                                             14),
@@ -333,7 +348,9 @@ class _AttendaceHistoryDetailState extends State<AttendaceHistoryDetail> {
                                                     height: 4.0,
                                                   ),
                                                   Text(
-                                                    "$checkOutTime $checkOutTimeZone",
+                                                    checkOutTime != null && checkOutTimeZone != null
+                                                        ? "$checkOutTime $checkOutTimeZone"
+                                                        : '-',
                                                     style:
                                                         createBlackMediumTextStyle(
                                                             14),
@@ -357,125 +374,132 @@ class _AttendaceHistoryDetailState extends State<AttendaceHistoryDetail> {
                         const SizedBox(
                           height: 32.0,
                         ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        if (widget.attendanceItem.mapUrlCheckIn != null)
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  "Lokasi Check In",
+                                  style: createBlackBoldTextStyle(14),
+                                ),
+                                const SizedBox(
+                                  width: 8.0,
+                                ),
+                                GestureDetector(
+                                  onTap: () async {
+                                    final mapsUrl = Uri.parse(widget
+                                        .attendanceItem.mapUrlCheckIn!
+                                        .split('"')[1]);
+                                    if (!await launchUrl(mapsUrl)) {
+                                      showDialog(
+                                        barrierDismissible: false,
+                                        context: context,
+                                        builder: (BuildContext dialogContext) =>
+                                            AppDialog(
+                                          type: "error",
+                                          title: "Gagal Membuka URL!",
+                                          message: "Url salah atau tidak valid",
+                                          onOkPress: () =>
+                                              Navigator.of(context).pop(),
+                                        ),
+                                      );
+                                    }
+                                  },
+                                  child: Text(
+                                    "Buka Maps",
+                                    style: createPrimaryMediumTextStyle(14),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        const SizedBox(
+                          height: 32.0,
+                        ),
+                        if (widget.attendanceItem.mapUrlCheckOut != null)
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  "Lokasi Check Out",
+                                  style: createBlackBoldTextStyle(14),
+                                ),
+                                const SizedBox(
+                                  width: 8.0,
+                                ),
+                                GestureDetector(
+                                  onTap: () async {
+                                    final mapsUrl = Uri.parse(widget
+                                        .attendanceItem.mapUrlCheckOut!
+                                        .split('"')[1]);
+                                    if (!await launchUrl(mapsUrl)) {
+                                      showDialog(
+                                        barrierDismissible: false,
+                                        context: context,
+                                        builder: (BuildContext dialogContext) =>
+                                            AppDialog(
+                                          type: "error",
+                                          title: "Gagal Membuka URL!",
+                                          message: "Url salah atau tidak valid",
+                                          onOkPress: () =>
+                                              Navigator.of(context).pop(),
+                                        ),
+                                      );
+                                    }
+                                  },
+                                  child: Text(
+                                    "Buka Maps",
+                                    style: createPrimaryMediumTextStyle(14),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        const SizedBox(
+                          height: 32.0,
+                        ),
+                        if (widget.attendanceItem.desc != null)
+                          Column(
                             children: [
-                              Text(
-                                "Lokasi Check In",
-                                style: createBlackBoldTextStyle(14),
-                              ),
-                              const SizedBox(
-                                width: 8.0,
-                              ),
-                              GestureDetector(
-                                onTap: () async {
-                                  final mapsUrl = Uri.parse(widget
-                                      .attendanceItem.map_url_check_in!
-                                      .split('"')[1]);
-                                  if (!await launchUrl(mapsUrl)) {
-                                    showDialog(
-                                      barrierDismissible: false,
-                                      context: context,
-                                      builder: (BuildContext dialogContext) =>
-                                          AppDialog(
-                                        type: "error",
-                                        title: "Gagal Membuka URL!",
-                                        message: "Url salah atau tidak valid",
-                                        onOkPress: () =>
-                                            Navigator.of(context).pop(),
-                                      ),
-                                    );
-                                  }
-                                },
-                                child: Text(
-                                  "Buka Maps",
-                                  style: createPrimaryMediumTextStyle(14),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      "Detail Aktivitas Hari Ini",
+                                      style: createBlackBoldTextStyle(14),
+                                    ),
+                                    const Spacer(),
+                                  ],
                                 ),
                               ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 32.0,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                "Lokasi Check Out",
-                                style: createBlackBoldTextStyle(14),
-                              ),
                               const SizedBox(
-                                width: 8.0,
+                                height: 16.0,
                               ),
-                              GestureDetector(
-                                onTap: () async {
-                                  final mapsUrl = Uri.parse(widget
-                                      .attendanceItem.map_url_check_out!
-                                      .split('"')[1]);
-                                  if (!await launchUrl(mapsUrl)) {
-                                    showDialog(
-                                      barrierDismissible: false,
-                                      context: context,
-                                      builder: (BuildContext dialogContext) =>
-                                          AppDialog(
-                                        type: "error",
-                                        title: "Gagal Membuka URL!",
-                                        message: "Url salah atau tidak valid",
-                                        onOkPress: () =>
-                                            Navigator.of(context).pop(),
-                                      ),
-                                    );
-                                  }
-                                },
+                              Container(
+                                width: MediaQuery.of(context).size.width - 48,
+                                padding: const EdgeInsets.all(16.0),
+                                margin: const EdgeInsets.symmetric(horizontal: 24.0),
+                                decoration: BoxDecoration(
+                                  color: Colors.grey.shade200,
+                                  borderRadius:
+                                      const BorderRadius.all(Radius.circular(16.0)),
+                                ),
                                 child: Text(
-                                  "Buka Maps",
-                                  style: createPrimaryMediumTextStyle(14),
+                                  widget.attendanceItem.desc!,
+                                  style: createBlackThinTextStyle(14),
                                 ),
                               ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 32.0,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                "Detail Aktivitas Hari Ini",
-                                style: createBlackBoldTextStyle(14),
+                              const SizedBox(
+                                height: 32.0,
                               ),
-                              const Spacer(),
                             ],
                           ),
-                        ),
-                        const SizedBox(
-                          height: 16.0,
-                        ),
-                        Container(
-                          width: MediaQuery.of(context).size.width - 48,
-                          padding: const EdgeInsets.all(16.0),
-                          margin: const EdgeInsets.symmetric(horizontal: 24.0),
-                          decoration: BoxDecoration(
-                            color: Colors.grey.shade200,
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(16.0)),
-                          ),
-                          child: Text(
-                            widget.attendanceItem.desc!,
-                            style: createBlackThinTextStyle(14),
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 32.0,
-                        ),
                       ],
                     );
                   }

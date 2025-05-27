@@ -29,7 +29,7 @@ class _DashboardOvertimeState extends State<DashboardOvertime> {
 
   void refreshData() {
     BlocProvider.of<EmployeeBloc>(context).add(
-      GetEmployee(),
+      const GetEmployee(),
     );
     BlocProvider.of<OvertimeBloc>(context).add(
       GetOvertimeList(overtimeState: selectedState),

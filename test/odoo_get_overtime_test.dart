@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:dpp_mobile/models/employee.dart';
 import 'package:dpp_mobile/models/overtime.dart';
 import 'package:flutter/material.dart';
@@ -38,7 +39,7 @@ void main() async {
         "fields": getEmployeeFields(),
       },
     });
-    Employee employeeData = Employee.fromMap(employee[0]);
+    Employee employeeData = Employee.fromJson(json.encode(employee[0]));
 
     // final overtimeCreateProcess = await client.callKw({
     //   'model': 'hr.overtime',
@@ -112,7 +113,7 @@ void main() async {
     }
 
     List<Overtime> overtimeList = List<Overtime>.from(
-      data.map((item) => Overtime.fromMap(item)),
+      data.map((item) => Overtime.fromJson(json.encode(item))),
     );
 
     debugPrint(overtimeList.toString());

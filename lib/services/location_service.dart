@@ -2,31 +2,46 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 
 class LocationService {
-  Future<Position> getCurrentPosition() async {
-    bool serviceEnabled;
-    LocationPermission permission;
+  const LocationService();
 
-    // Test if location services are enabled.
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+  static const _locationServicesDisabled = 'Location services are disabled.';
+  static const _locationPermissionsDenied = 'Location permissions are denied';
+  static const _locationPermissionsPermanentlyDenied = 
+    'Location permissions are permanently denied, we cannot request permissions.';
+
+  Future<Position> getCurrentPosition() async {
+    final serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      return Future.error('Location services are disabled.');
+      throw const LocationException(_locationServicesDisabled);
     }
 
-    debugPrint("LOCATION SERVICE IS ENABLED");
+    debugPrint('LOCATION SERVICE IS ENABLED');
 
-    permission = await Geolocator.checkPermission();
+    var permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
-        return Future.error('Location permissions are denied');
+        throw const LocationException(_locationPermissionsDenied);
       }
     }
 
     if (permission == LocationPermission.deniedForever) {
-      return Future.error(
-          'Location permissions are permanently denied, we cannot request permissions.');
+      throw const LocationException(_locationPermissionsPermanentlyDenied);
     }
 
-    return await Geolocator.getCurrentPosition();
+    try {
+      return await Geolocator.getCurrentPosition();
+    } catch (e) {
+      debugPrint('Error getting current position: $e');
+      throw const LocationException('Failed to get current position');
+    }
   }
+}
+
+class LocationException implements Exception {
+  const LocationException(this.message);
+  final String message;
+
+  @override
+  String toString() => message;
 }

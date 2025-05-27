@@ -8,6 +8,7 @@ import 'package:dpp_mobile/utils/themes/text_style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:translator/translator.dart';
 
 class DetailOvertime extends StatelessWidget {
   const DetailOvertime({
@@ -20,13 +21,13 @@ class DetailOvertime extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RepositoryProvider(
-      create: (context) => OvertimeRepository(service: OvertimeService()),
+      create: (context) => OvertimeRepository(service: OvertimeService(translator: GoogleTranslator())),
       child: MultiBlocProvider(
         providers: [
           BlocProvider<EmployeeBloc>(
             create: (context) => EmployeeBloc(
               employeeRepository: context.read<EmployeeRepository>(),
-            )..add(GetEmployee()),
+            )..add(const GetEmployee()),
           ),
         ],
         child: Scaffold(
@@ -49,7 +50,7 @@ class DetailOvertime extends StatelessWidget {
               style: createBlackTextStyle(18),
             ),
             actions: [
-              overtime.state == "draft" && overtime.next_review == null
+              overtime.state == "draft" && overtime.nextReview == null
                   ? TextButton(
                       onPressed: () {},
                       child: Text(
@@ -112,7 +113,7 @@ class DetailOvertime extends StatelessWidget {
                   const SizedBox(
                     height: 16,
                   ),
-                  overtime.next_review != null
+                  overtime.nextReview != null
                       ? Container(
                           margin: const EdgeInsets.symmetric(horizontal: 24.0),
                           padding: const EdgeInsets.all(16.0),
@@ -143,14 +144,14 @@ class DetailOvertime extends StatelessWidget {
                                 height: 8,
                               ),
                               Text(
-                                overtime.next_review!,
+                                overtime.nextReview!,
                                 style: createGreyTextStyle(14),
                               ),
                             ],
                           ),
                         )
                       : const SizedBox(),
-                  overtime.next_review != null
+                  overtime.nextReview != null
                       ? const SizedBox(
                           height: 16,
                         )
@@ -170,7 +171,7 @@ class DetailOvertime extends StatelessWidget {
                               elevation: 0,
                             ),
                             child: Text(
-                              overtime.next_review != null
+                              overtime.nextReview != null
                                   ? "Ulangi Validasi"
                                   : "Minta Validasi",
                               style: createWhiteBoldTextStyle(14),
@@ -194,7 +195,7 @@ class DetailOvertime extends StatelessWidget {
                           height: 8,
                         ),
                         Text(
-                          overtime.employee_id![1],
+                          overtime.employeeId![1],
                           style: createBlackThinTextStyle(14),
                         ),
                       ],
@@ -216,7 +217,7 @@ class DetailOvertime extends StatelessWidget {
                           height: 8,
                         ),
                         Text(
-                          overtime.department_id![1],
+                          overtime.departmentId![1],
                           style: createBlackThinTextStyle(14),
                         ),
                       ],
@@ -238,7 +239,7 @@ class DetailOvertime extends StatelessWidget {
                           height: 8,
                         ),
                         Text(
-                          overtime.job_id![1],
+                          overtime.jobId![1],
                           style: createBlackThinTextStyle(14),
                         ),
                       ],
@@ -260,7 +261,7 @@ class DetailOvertime extends StatelessWidget {
                           height: 8,
                         ),
                         Text(
-                          DateTime.parse("${overtime.date_from!}Z")
+                          DateTime.parse("${overtime.dateFrom!}Z")
                               .toUtc()
                               .toLocal()
                               .toString()
@@ -286,7 +287,7 @@ class DetailOvertime extends StatelessWidget {
                           height: 8,
                         ),
                         Text(
-                          DateTime.parse("${overtime.date_to!}Z")
+                          DateTime.parse("${overtime.dateTo!}Z")
                               .toUtc()
                               .toLocal()
                               .toString()
@@ -312,7 +313,7 @@ class DetailOvertime extends StatelessWidget {
                           height: 8,
                         ),
                         Text(
-                          overtime.days_no_tmp!.toStringAsFixed(2),
+                          overtime.daysNoTmp!.toStringAsFixed(2),
                           style: createBlackThinTextStyle(14),
                         ),
                       ],
@@ -337,7 +338,7 @@ class DetailOvertime extends StatelessWidget {
                                 height: 8,
                               ),
                               Text(
-                                overtime.rate_hours!.toString(),
+                                overtime.rateHours!.toString(),
                                 style: createBlackThinTextStyle(14),
                               ),
                             ],
@@ -363,7 +364,7 @@ class DetailOvertime extends StatelessWidget {
                                 height: 8,
                               ),
                               Text(
-                                overtime.overtime_type_id!["name"],
+                                overtime.overtimeTypeId!["name"],
                                 style: createBlackThinTextStyle(14),
                               ),
                             ],
@@ -389,7 +390,7 @@ class DetailOvertime extends StatelessWidget {
                                 height: 8,
                               ),
                               Text(
-                                overtime.employee_id![1],
+                                overtime.employeeId![1],
                                 style: createBlackThinTextStyle(14),
                               ),
                             ],

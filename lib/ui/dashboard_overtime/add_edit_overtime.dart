@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart'
     as picker;
 import 'package:iconsax/iconsax.dart';
+import 'package:translator/translator.dart';
 
 class AddEditOvertime extends StatefulWidget {
   const AddEditOvertime({super.key});
@@ -28,7 +29,7 @@ class _AddEditOvertimeState extends State<AddEditOvertime> {
   Future<bool> requestOvertime(BuildContext context) async {
     bool returnValue = false;
     try {
-      final odooResponse = await OvertimeService().postOvertimeRequest(
+      final odooResponse = await OvertimeService(translator: GoogleTranslator()).postOvertimeRequest(
         DateTime.parse(dateFromTextController.text)
             .toUtc()
             .toString()
@@ -75,7 +76,7 @@ class _AddEditOvertimeState extends State<AddEditOvertime> {
         ),
       ),
       body: FutureBuilder(
-        future: EmployeeService().getEmployee(),
+        future: EmployeeService(translator: GoogleTranslator()).getEmployee(),
         builder: (BuildContext context, AsyncSnapshot<Map<String, dynamic>> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(

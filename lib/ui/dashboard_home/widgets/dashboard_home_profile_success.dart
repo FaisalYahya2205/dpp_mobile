@@ -2,6 +2,7 @@ import 'package:dpp_mobile/main.dart';
 import 'package:dpp_mobile/models/employee.dart';
 import 'package:dpp_mobile/utils/themes/text_style.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class DashboardHomeProfileSuccess extends StatelessWidget {
   const DashboardHomeProfileSuccess({super.key, required this.employee});
@@ -29,7 +30,7 @@ class DashboardHomeProfileSuccess extends StatelessWidget {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(100),
                 child: Image.network(
-                  "https://dpp.tbdigitalindo.co.id/web/image?model=hr.employee&id=${employee.id!}&field=image_128",
+                  "${dotenv.env['URL']}/web/image?model=hr.employee&id=${employee.id!}&field=image_128",
                   headers: {
                     'Cookie': 'session_id=${localSession!.first["session_id"]}',
                   },
@@ -60,7 +61,7 @@ class DashboardHomeProfileSuccess extends StatelessWidget {
                 employee.id! == 0
                     ? const SizedBox()
                     : Text(
-                        employee.job_title!,
+                        employee.jobTitle!,
                         style: createBlackThinTextStyle(14),
                       ),
               ],

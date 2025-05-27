@@ -1,63 +1,52 @@
 // ignore_for_file: non_constant_identifier_names
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
+import 'package:json_annotation/json_annotation.dart';
 
+part 'host_address.g.dart';
+
+/// Model class representing a host address configuration
+@JsonSerializable(fieldRename: FieldRename.snake)
 class HostAddress {
-  int? user_id;
-  String? host_url;
-  String? database_name;
+  final int? userId;
+  final String? hostUrl;
+  final String? databaseName;
 
-  HostAddress({
-    this.user_id,
-    this.host_url,
-    this.database_name,
+  const HostAddress({
+    this.userId,
+    this.hostUrl,
+    this.databaseName,
   });
 
   HostAddress copyWith({
-    int? user_id,
-    String? host_url,
-    String? database_name,
+    int? userId,
+    String? hostUrl,
+    String? databaseName,
   }) {
     return HostAddress(
-      user_id: user_id ?? this.user_id,
-      host_url: host_url ?? this.host_url,
-      database_name: database_name ?? this.database_name,
+      userId: userId ?? this.userId,
+      hostUrl: hostUrl ?? this.hostUrl,
+      databaseName: databaseName ?? this.databaseName,
     );
   }
 
-  Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      'user_id': user_id,
-      'host_url': host_url,
-      'database_name': database_name,
-    };
-  }
+  factory HostAddress.fromJson(String source) => 
+      _$HostAddressFromJson(json.decode(source) as Map<String, dynamic>);
 
-  factory HostAddress.fromMap(Map<String, dynamic> map) {
-    return HostAddress(
-      user_id: map['user_id'] != null ? map['user_id'] as int : null,
-      host_url: map['host_url'] != null ? map['host_url'] as String : null,
-      database_name: map['database_name'] != null ? map['database_name'] as String : null,
-    );
-  }
-
-  String toJson() => json.encode(toMap());
-
-  factory HostAddress.fromJson(String source) => HostAddress.fromMap(json.decode(source) as Map<String, dynamic>);
+  String toJson() => json.encode(_$HostAddressToJson(this));
 
   @override
-  String toString() => 'HostAddress(user_id: $user_id, host_url: $host_url, database_name: $database_name)';
+  String toString() => 'HostAddress(userId: $userId, hostUrl: $hostUrl, databaseName: $databaseName)';
 
   @override
-  bool operator ==(covariant HostAddress other) {
+  bool operator ==(Object other) {
     if (identical(this, other)) return true;
-  
-    return 
-      other.user_id == user_id &&
-      other.host_url == host_url &&
-      other.database_name == database_name;
+    return other is HostAddress &&
+        other.userId == userId &&
+        other.hostUrl == hostUrl &&
+        other.databaseName == databaseName;
   }
 
   @override
-  int get hashCode => user_id.hashCode ^ host_url.hashCode ^ database_name.hashCode;
+  int get hashCode => Object.hashAll([userId, hostUrl, databaseName]);
 }

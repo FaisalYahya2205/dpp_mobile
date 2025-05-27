@@ -18,10 +18,10 @@ class LatestAttendanceSuccess extends StatelessWidget {
 
     debugPrint("LATEST ATTENDANCE => $employee");
 
-    if (employee.last_check_in != null && employee.last_check_in != "") {
-      debugPrint("EMPLOYEE LAST_CHECK_IN => ${employee.last_check_in}");
+    if (employee.lastCheckIn != null && employee.lastCheckIn != "") {
+      debugPrint("EMPLOYEE LAST_CHECK_IN => ${employee.lastCheckIn}");
       DateTime checkInDateTime =
-          DateTime.parse("${employee.last_check_in}Z").toLocal();
+          DateTime.parse("${employee.lastCheckIn}Z").toLocal();
       checkInDate = DateFormat.yMMMd().format(checkInDateTime);
       String checkInHour = checkInDateTime.hour.toString().length == 1
           ? "0${checkInDateTime.hour}"
@@ -35,9 +35,9 @@ class LatestAttendanceSuccess extends StatelessWidget {
       checkInTime = "--:--";
     }
 
-    if (employee.last_check_out != null && employee.last_check_out != "") {
+    if (employee.lastCheckOut != null && employee.lastCheckOut != "") {
       DateTime checkOutDateTime =
-          DateTime.parse("${employee.last_check_out}Z").toLocal();
+          DateTime.parse("${employee.lastCheckOut}Z").toLocal();
       checkOutDate = DateFormat.yMMMd().format(checkOutDateTime);
       String checkOutHour = checkOutDateTime.hour.toString().length == 1
           ? "0${checkOutDateTime.hour}"
@@ -51,10 +51,10 @@ class LatestAttendanceSuccess extends StatelessWidget {
       checkOutTime = "--:--";
     }
 
-    if (employee.last_check_in != null &&
-        employee.last_check_in != "" &&
-        employee.last_check_out != null &&
-        employee.last_check_out != "") {
+    if (employee.lastCheckIn != null &&
+        employee.lastCheckIn != "" &&
+        employee.lastCheckOut != null &&
+        employee.lastCheckOut != "") {
       checkInDate = "Belum check in";
       checkInTime = "--:--";
       checkOutDate = "Belum check out";

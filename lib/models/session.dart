@@ -1,101 +1,83 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first, non_constant_identifier_names
 import 'dart:convert';
+import 'package:json_annotation/json_annotation.dart';
 
+part 'session.g.dart';
+
+/// Model class representing a user session
+@JsonSerializable(fieldRename: FieldRename.snake)
 class Session {
-  String? session_id;
-  int? user_id;
-  int? partner_id;
-  String? user_login;
-  String? user_name;
-  String? password;
-  int? login_state;
+  final String? sessionId;
+  final int? userId;
+  final int? partnerId;
+  final String? userLogin;
+  final String? userName;
+  final String? password;
+  final int? loginState;
   
-  Session({
-    this.session_id,
-    this.user_id,
-    this.partner_id,
-    this.user_login,
-    this.user_name,
+  const Session({
+    this.sessionId,
+    this.userId,
+    this.partnerId,
+    this.userLogin,
+    this.userName,
     this.password,
-    this.login_state,
+    this.loginState,
   });
 
   Session copyWith({
-    String? session_id,
-    int? user_id,
-    int? partner_id,
-    String? user_login,
-    String? user_name,
+    String? sessionId,
+    int? userId,
+    int? partnerId,
+    String? userLogin,
+    String? userName,
     String? password,
-    int? login_state,
+    int? loginState,
   }) {
     return Session(
-      session_id: session_id ?? this.session_id,
-      user_id: user_id ?? this.user_id,
-      partner_id: partner_id ?? this.partner_id,
-      user_login: user_login ?? this.user_login,
-      user_name: user_name ?? this.user_name,
+      sessionId: sessionId ?? this.sessionId,
+      userId: userId ?? this.userId,
+      partnerId: partnerId ?? this.partnerId,
+      userLogin: userLogin ?? this.userLogin,
+      userName: userName ?? this.userName,
       password: password ?? this.password,
-      login_state: login_state ?? this.login_state,
+      loginState: loginState ?? this.loginState,
     );
   }
 
-  Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      'session_id': session_id,
-      'user_id': user_id,
-      'partner_id': partner_id,
-      'user_login': user_login,
-      'user_name': user_name,
-      'password': password,
-      'login_state': login_state,
-    };
-  }
+  factory Session.fromJson(String source) => 
+      _$SessionFromJson(json.decode(source) as Map<String, dynamic>);
 
-  factory Session.fromMap(Map<String, dynamic> map) {
-    return Session(
-      session_id: map['session_id'] != null ? map['session_id'] as String : null,
-      user_id: map['user_id'] != null ? map['user_id'] as int : null,
-      partner_id: map['partner_id'] != null ? map['partner_id'] as int : null,
-      user_login: map['user_login'] != null ? map['user_login'] as String : null,
-      user_name: map['user_name'] != null ? map['user_name'] as String : null,
-      password: map['password'] != null ? map['password'] as String : null,
-      login_state: map['login_state'] != null ? map['login_state'] as int : null,
-    );
-  }
-
-  String toJson() => json.encode(toMap());
-
-  factory Session.fromJson(String source) =>
-      Session.fromMap(json.decode(source) as Map<String, dynamic>);
+  String toJson() => json.encode(_$SessionToJson(this));
 
   @override
   String toString() {
-    return 'Session(session_id: $session_id, user_id: $user_id, partner_id: $partner_id, user_login: $user_login, user_name: $user_name, password: $password, login_state: $login_state)';
+    return 'Session(sessionId: $sessionId, userId: $userId, partnerId: $partnerId, userLogin: $userLogin, userName: $userName, password: $password, loginState: $loginState)';
   }
 
   @override
-  bool operator ==(covariant Session other) {
+  bool operator ==(Object other) {
     if (identical(this, other)) return true;
-  
-    return 
-      other.session_id == session_id &&
-      other.user_id == user_id &&
-      other.partner_id == partner_id &&
-      other.user_login == user_login &&
-      other.user_name == user_name &&
-      other.password == password &&
-      other.login_state == login_state;
+    return other is Session &&
+        other.sessionId == sessionId &&
+        other.userId == userId &&
+        other.partnerId == partnerId &&
+        other.userLogin == userLogin &&
+        other.userName == userName &&
+        other.password == password &&
+        other.loginState == loginState;
   }
 
   @override
   int get hashCode {
-    return session_id.hashCode ^
-      user_id.hashCode ^
-      partner_id.hashCode ^
-      user_login.hashCode ^
-      user_name.hashCode ^
-      password.hashCode ^
-      login_state.hashCode;
+    return Object.hashAll([
+      sessionId,
+      userId,
+      partnerId,
+      userLogin,
+      userName,
+      password,
+      loginState,
+    ]);
   }
 }

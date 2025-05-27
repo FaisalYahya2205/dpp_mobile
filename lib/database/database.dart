@@ -20,7 +20,12 @@ class DatabaseHelper {
     String databasesPath = await getDatabasesPath();
     String path = join(databasesPath, 'dpp.db');
 
-    return await openDatabase(path, version: 1, onCreate: _onCreate);
+    return await openDatabase(
+      path,
+      version: 2, // Increment version to trigger onUpgrade
+      onCreate: _onCreate,
+      onUpgrade: _onUpgrade,
+    );
   }
 
   Future _onCreate(Database db, int version) async {
@@ -30,10 +35,21 @@ class DatabaseHelper {
     await db.execute(attendanceCreateTable);
   }
 
+  Future _onUpgrade(Database db, int oldVersion, int newVersion) async {
+    if (oldVersion < 2) {
+      // Add login_state column if it doesn't exist
+      try {
+        await db.execute('ALTER TABLE session ADD COLUMN login_state INTEGER DEFAULT 0');
+      } catch (e) {
+        // Column might already exist, ignore error
+      }
+    }
+  }
+
   Future<List<Map<String, dynamic>>> getAllQuery(
       String tableName, String where, List<dynamic> whereAgrs) async {
     Database db = await instance.db;
-    return await db.query(
+    return await db.query(  
       tableName,
       where: where,
       whereArgs: whereAgrs,

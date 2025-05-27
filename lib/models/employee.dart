@@ -1,8 +1,10 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first, non_constant_identifier_names
 import 'dart:convert';
-
 import 'package:json_annotation/json_annotation.dart';
 
+part 'employee.g.dart';
+
+/// List of field names used in the Employee model
 List<String> getEmployeeFields() => [
       'id',
       'name',
@@ -21,186 +23,146 @@ List<String> getEmployeeFields() => [
       'last_check_out',
     ];
 
+/// Model class representing an employee
 @JsonSerializable(fieldRename: FieldRename.snake)
 class Employee {
-  int? id;
-  String? name;
-  String? nrp;
-  int? job_id;
-  String? job_title;
-  String? work_email;
-  String? work_phone;
-  String? address_id;
-  String? parent_id;
-  String? last_update;
-  String? image_128;
-  String? image_1920;
-  String? tz;
-  String? last_check_in;
-  String? last_check_out;
+  final int? id;
+  final String? name;
+  final String? nrp;
+  final int? jobId;
+  final String? jobTitle;
+  final String? workEmail;
+  final String? workPhone;
+  final String? addressId;
+  final String? parentId;
+  final String? lastUpdate;
+  final String? image128;
+  final String? image1920;
+  final String? tz;
+  final String? lastCheckIn;
+  final String? lastCheckOut;
 
-  Employee({
+  const Employee({
     this.id,
     this.name,
     this.nrp,
-    this.job_id,
-    this.job_title,
-    this.work_email,
-    this.work_phone,
-    this.address_id,
-    this.parent_id,
-    this.last_update,
-    this.image_128,
-    this.image_1920,
+    this.jobId,
+    this.jobTitle,
+    this.workEmail,
+    this.workPhone,
+    this.addressId,
+    this.parentId,
+    this.lastUpdate,
+    this.image128,
+    this.image1920,
     this.tz,
-    this.last_check_in,
-    this.last_check_out,
+    this.lastCheckIn,
+    this.lastCheckOut,
   });
 
-  static final empty = Employee(
+  static const empty = Employee(
     id: 0,
     name: "",
     nrp: "",
-    job_id: 0,
-    job_title: "",
-    work_email: "",
-    work_phone: "",
-    address_id: "",
-    parent_id: "",
-    last_update: "",
-    image_128: "",
-    image_1920: "",
+    jobId: 0,
+    jobTitle: "",
+    workEmail: "",
+    workPhone: "",
+    addressId: "",
+    parentId: "",
+    lastUpdate: "",
+    image128: "",
+    image1920: "",
     tz: "",
-    last_check_in: "",
-    last_check_out: "",
+    lastCheckIn: "",
+    lastCheckOut: "",
   );
 
   Employee copyWith({
     int? id,
     String? name,
     String? nrp,
-    int? job_id,
-    String? job_title,
-    String? work_email,
-    String? work_phone,
-    String? address_id,
-    String? parent_id,
-    String? last_update,
-    String? image_128,
-    String? image_1920,
+    int? jobId,
+    String? jobTitle,
+    String? workEmail,
+    String? workPhone,
+    String? addressId,
+    String? parentId,
+    String? lastUpdate,
+    String? image128,
+    String? image1920,
     String? tz,
-    String? last_check_in,
-    String? last_check_out,
+    String? lastCheckIn,
+    String? lastCheckOut,
   }) {
     return Employee(
       id: id ?? this.id,
       name: name ?? this.name,
       nrp: nrp ?? this.nrp,
-      job_id: job_id ?? this.job_id,
-      job_title: job_title ?? this.job_title,
-      work_email: work_email ?? this.work_email,
-      work_phone: work_phone ?? this.work_phone,
-      address_id: address_id ?? this.address_id,
-      parent_id: parent_id ?? this.parent_id,
-      last_update: last_update ?? this.last_update,
-      image_128: image_128 ?? this.image_128,
-      image_1920: image_1920 ?? this.image_1920,
+      jobId: jobId ?? this.jobId,
+      jobTitle: jobTitle ?? this.jobTitle,
+      workEmail: workEmail ?? this.workEmail,
+      workPhone: workPhone ?? this.workPhone,
+      addressId: addressId ?? this.addressId,
+      parentId: parentId ?? this.parentId,
+      lastUpdate: lastUpdate ?? this.lastUpdate,
+      image128: image128 ?? this.image128,
+      image1920: image1920 ?? this.image1920,
       tz: tz ?? this.tz,
-      last_check_in: last_check_in ?? this.last_check_in,
-      last_check_out: last_check_out ?? this.last_check_out,
+      lastCheckIn: lastCheckIn ?? this.lastCheckIn,
+      lastCheckOut: lastCheckOut ?? this.lastCheckOut,
     );
   }
 
-  Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      'id': id,
-      'name': name,
-      'nrp': nrp,
-      'job_id': job_id,
-      'job_title': job_title,
-      'work_email': work_email,
-      'work_phone': work_phone,
-      'address_id': address_id,
-      'parent_id': parent_id,
-      '__last_update': last_update,
-      'image_128': image_128,
-      'image_1920': image_1920,
-      'tz': tz,
-      'last_check_in': last_check_in,
-      'last_check_out': last_check_out,
-    };
-  }
+  factory Employee.fromJson(String source) => 
+      _$EmployeeFromJson(json.decode(source) as Map<String, dynamic>);
 
-  
-
-  String toJson() => json.encode(toMap());
-
-  factory Employee.fromJson(String source) =>
-      Employee.fromMap(json.decode(source) as Map<String, dynamic>);
+  String toJson() => json.encode(_$EmployeeToJson(this));
 
   @override
   String toString() {
-    return 'Employee(id: $id, name: $name, nrp: $nrp, job_id: $job_id, job_title: $job_title, work_email: $work_email, work_phone: $work_phone, address_id: $address_id, parent_id: $parent_id, last_update: $last_update, image_128: $image_128, image_1920: $image_1920, tz: $tz, last_check_in: $last_check_in, last_check_out: $last_check_out)';
-  }
-
-  factory Employee.fromMap(Map<String, dynamic> map) {
-    return Employee(
-      id: map['id'] != false ? map['id'] as int : null,
-      name: map['name'] != false ? map['name'] as String : null,
-      nrp: map['nrp'] != false ? map['nrp'] as String : null,
-      job_id: map['job_id'] != false ? map['job_id'][0] as int : null,
-      job_title: map['job_title'] != false ? map['job_title'] as String : null,
-      work_email: map['work_email'] != false ? map['work_email'] as String : null,
-      work_phone: map['work_phone'] != false ? map['work_phone'] as String : null,
-      address_id: map['address_id'] != false ? map['address_id'][1] as String : null,
-      parent_id: map['parent_id'] != false ? map['parent_id'][1] as String : null,
-      last_update: map['__last_update'] != false ? map['__last_update'] as String : null,
-      image_128: map['image_128'] != false ? map['image_128'] as String : null,
-      image_1920: map['image_1920'] != false ? map['image_1920'] as String : null,
-      tz: map['tz'] != false ? map['tz'] as String : null,
-      last_check_in: map['last_check_in'] != false ? map['last_check_in'] as String : null,
-      last_check_out: map['last_check_out'] != false ? map['last_check_out'] as String : null,
-    );
+    return 'Employee(id: $id, name: $name, nrp: $nrp, jobId: $jobId, jobTitle: $jobTitle, workEmail: $workEmail, workPhone: $workPhone, addressId: $addressId, parentId: $parentId, lastUpdate: $lastUpdate, image128: $image128, image1920: $image1920, tz: $tz, lastCheckIn: $lastCheckIn, lastCheckOut: $lastCheckOut)';
   }
 
   @override
-  bool operator ==(covariant Employee other) {
+  bool operator ==(Object other) {
     if (identical(this, other)) return true;
-  
-    return 
-      other.id == id &&
-      other.name == name &&
-      other.nrp == nrp &&
-      other.job_id == job_id &&
-      other.job_title == job_title &&
-      other.work_email == work_email &&
-      other.work_phone == work_phone &&
-      other.address_id == address_id &&
-      other.parent_id == parent_id &&
-      other.last_update == last_update &&
-      other.image_128 == image_128 &&
-      other.image_1920 == image_1920 &&
-      other.tz == tz &&
-      other.last_check_in == last_check_in &&
-      other.last_check_out == last_check_out;
+    return other is Employee &&
+        other.id == id &&
+        other.name == name &&
+        other.nrp == nrp &&
+        other.jobId == jobId &&
+        other.jobTitle == jobTitle &&
+        other.workEmail == workEmail &&
+        other.workPhone == workPhone &&
+        other.addressId == addressId &&
+        other.parentId == parentId &&
+        other.lastUpdate == lastUpdate &&
+        other.image128 == image128 &&
+        other.image1920 == image1920 &&
+        other.tz == tz &&
+        other.lastCheckIn == lastCheckIn &&
+        other.lastCheckOut == lastCheckOut;
   }
 
   @override
   int get hashCode {
-    return id.hashCode ^
-      name.hashCode ^
-      nrp.hashCode ^
-      job_id.hashCode ^
-      job_title.hashCode ^
-      work_email.hashCode ^
-      work_phone.hashCode ^
-      address_id.hashCode ^
-      parent_id.hashCode ^
-      last_update.hashCode ^
-      image_128.hashCode ^
-      image_1920.hashCode ^
-      tz.hashCode ^
-      last_check_in.hashCode ^
-      last_check_out.hashCode;
+    return Object.hashAll([
+      id,
+      name,
+      nrp,
+      jobId,
+      jobTitle,
+      workEmail,
+      workPhone,
+      addressId,
+      parentId,
+      lastUpdate,
+      image128,
+      image1920,
+      tz,
+      lastCheckIn,
+      lastCheckOut,
+    ]);
   }
 }

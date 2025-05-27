@@ -13,61 +13,79 @@ extension EmployeeStatusX on EmployeeStatus {
 }
 
 class EmployeeState extends Equatable {
-  EmployeeState({
+  const EmployeeState({
     this.status = EmployeeStatus.initial,
-    Employee? employee,
-  }) : employee = employee ?? Employee.empty;
+    this.employee = Employee.empty,
+    this.errorMessage = '',
+  });
 
   final Employee employee;
   final EmployeeStatus status;
+  final String errorMessage;
 
   @override
-  List<Object?> get props => [status, employee];
+  List<Object?> get props => [status, employee, errorMessage];
 
   EmployeeState copyWith({
     Employee? employee,
     EmployeeStatus? status,
+    String? errorMessage,
   }) {
     return EmployeeState(
       employee: employee ?? this.employee,
       status: status ?? this.status,
+      errorMessage: errorMessage ?? this.errorMessage,
     );
   }
 }
 
-class EmployeeEvent extends Equatable {
+abstract class EmployeeEvent extends Equatable {
+  const EmployeeEvent();
+
   @override
   List<Object?> get props => [];
 }
 
 class GetEmployee extends EmployeeEvent {
-  @override
-  List<Object?> get props => [];
+  const GetEmployee();
 }
 
 class EmployeeBloc extends Bloc<EmployeeEvent, EmployeeState> {
   EmployeeBloc({
     required this.employeeRepository,
-  }) : super(EmployeeState()) {
+  }) : super(const EmployeeState()) {
     on<GetEmployee>(_mapGetEmployeeEventToState);
   }
 
   final EmployeeRepository employeeRepository;
 
-  void _mapGetEmployeeEventToState(
-      GetEmployee event, Emitter<EmployeeState> emit) async {
+  Future<void> _mapGetEmployeeEventToState(
+    GetEmployee event,
+    Emitter<EmployeeState> emit,
+  ) async {
     try {
       emit(state.copyWith(status: EmployeeStatus.loading));
-      Map<String, dynamic> result = await employeeRepository.getEmployee();
-      Employee employee = result["data"];
-      emit(
-        state.copyWith(
+      
+      final result = await employeeRepository.getEmployee();
+      
+      if (result["success"] == true) {
+        final employee = result["data"] as Employee;
+        emit(state.copyWith(
           status: EmployeeStatus.success,
           employee: employee,
-        ),
-      );
+          errorMessage: '',
+        ));
+      } else {
+        emit(state.copyWith(
+          status: EmployeeStatus.error,
+          errorMessage: result["errorMessage"] as String,
+        ));
+      }
     } catch (error) {
-      emit(state.copyWith(status: EmployeeStatus.error));
+      emit(state.copyWith(
+        status: EmployeeStatus.error,
+        errorMessage: 'Failed to fetch employee data',
+      ));
     }
   }
 }

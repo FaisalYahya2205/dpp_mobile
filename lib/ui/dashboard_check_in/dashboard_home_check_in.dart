@@ -14,6 +14,7 @@ import 'package:dpp_mobile/utils/themes/app_colors.dart';
 import 'package:dpp_mobile/utils/themes/text_style.dart';
 import 'package:dpp_mobile/widgets/dialogs/app_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:iconsax/iconsax.dart';
 
 class DashboardHomeCheckIn extends StatefulWidget {
@@ -27,6 +28,7 @@ class _DashboardHomeCheckInState extends State<DashboardHomeCheckIn> {
   late CameraController _controller;
   late Future<void> _initializeControllerFuture;
 
+  ValueNotifier<int> attendanceId = ValueNotifier<int>(0);
   ValueNotifier<String> currentShowTime = ValueNotifier<String>("");
   ValueNotifier<String> currentTime = ValueNotifier<String>("");
   ValueNotifier<double> currentPositionLatitude = ValueNotifier<double>(0);
@@ -62,13 +64,15 @@ class _DashboardHomeCheckInState extends State<DashboardHomeCheckIn> {
       final Uint8List bytes = await picture.readAsBytes();
       String base64 = base64Encode(bytes);
 
-      final odooResponse = await AttendanceService().postCheckInAttendance(
-          currentTime.value,
-          currentPositionLatitude.value,
-          currentPositionLongitude.value,
-          base64);
+      Map<String, dynamic> odooResponse = await AttendanceService()
+          .postCheckInAttendance(
+              currentTime.value,
+              currentPositionLatitude.value,
+              currentPositionLongitude.value,
+              base64);
 
-      if (odooResponse.runtimeType == int) {
+      if (odooResponse["data"].runtimeType == int) {
+        attendanceId.value = odooResponse["data"];
         returnValue = true;
       }
     } catch (e) {
@@ -220,7 +224,7 @@ class _DashboardHomeCheckInState extends State<DashboardHomeCheckIn> {
                           color: Colors.grey.shade100,
                         ),
                         child: FutureBuilder(
-                          future: LocationService().getCurrentPosition(),
+                          future: const LocationService().getCurrentPosition(),
                           builder: (context, snapshot) {
                             if (snapshot.connectionState ==
                                 ConnectionState.waiting) {
@@ -247,7 +251,7 @@ class _DashboardHomeCheckInState extends State<DashboardHomeCheckIn> {
                       ),
                     ),
                     const SizedBox(
-                      height: 16,
+                      height: 8,
                     ),
                     SizedBox(
                       width: double.infinity,
@@ -286,9 +290,9 @@ class _DashboardHomeCheckInState extends State<DashboardHomeCheckIn> {
                             return;
                           }
 
-                          bool checkOutSuccess = await checkIn(context);
+                          bool checkInSuccess = await checkIn(context);
 
-                          if (checkOutSuccess) {
+                          if (checkInSuccess) {
                             // dismiss loading dialog
                             Navigator.of(context).pop();
                             // show success dialog
@@ -299,7 +303,7 @@ class _DashboardHomeCheckInState extends State<DashboardHomeCheckIn> {
                                   AppDialog(
                                 type: "success",
                                 title: "Check In Berhasil",
-                                message: "Kembali ke dashboard...",
+                                message: "Mengalihkan...",
                                 onOkPress: () {},
                               ),
                             );
@@ -308,7 +312,8 @@ class _DashboardHomeCheckInState extends State<DashboardHomeCheckIn> {
                               // dismiss loading dialog
                               Navigator.of(context).pop();
                               // back to dashboard
-                              Navigator.of(context).pop(true);
+                              context.go("/check_in_survey",
+                                  extra: attendanceId.value);
                             });
                           } else {
                             // dismiss loading dialog

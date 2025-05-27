@@ -21,7 +21,7 @@ void main() async {
         'limit': 80,
       },
     });
-    debugPrint("DATA USER => " + userData[0].toString());
+    debugPrint("DATA USER => ${userData[0]}");
     final employeeData = await client.callKw({
       'model': 'hr.employee',
       'method': 'search_read',
@@ -50,7 +50,7 @@ void main() async {
       'model': 'hr.attendance',
       'method': 'write',
       'args': [
-        49570,
+        49622,
         {
           'employee_id': employeeData[0]['id'],
           'check_out': DateTime.now().toUtc().toString().split(".")[0],

@@ -23,12 +23,12 @@ class AttendanceHistory extends StatelessWidget {
           BlocProvider<AttendanceBloc>(
             create: (context) => AttendanceBloc(
               attendanceRepository: context.read<AttendanceRepository>(),
-            )..add(GetAttendance()),
+            )..add(const GetAttendance()),
           ),
           BlocProvider<EmployeeBloc>(
             create: (context) => EmployeeBloc(
               employeeRepository: context.read<EmployeeRepository>(),
-            )..add(GetEmployee()),
+            )..add(const GetEmployee()),
           ),
         ],
         child: Scaffold(

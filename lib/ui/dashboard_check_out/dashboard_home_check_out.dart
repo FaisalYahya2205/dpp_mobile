@@ -224,7 +224,7 @@ class _DashboardHomeCheckOutState extends State<DashboardHomeCheckOut> {
                             color: Colors.grey.shade200,
                           ),
                           child: FutureBuilder(
-                            future: LocationService().getCurrentPosition(),
+                            future: const LocationService().getCurrentPosition(),
                             builder: (context, snapshot) {
                               if (snapshot.connectionState ==
                                   ConnectionState.waiting) {

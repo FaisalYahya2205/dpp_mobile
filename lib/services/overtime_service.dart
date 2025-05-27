@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dpp_mobile/main.dart';
 import 'package:dpp_mobile/models/employee.dart';
 import 'package:dpp_mobile/models/overtime.dart';
@@ -7,48 +9,53 @@ import 'package:odoo_rpc/odoo_rpc.dart';
 import 'package:translator/translator.dart';
 
 class OvertimeService {
-  final translator = GoogleTranslator();
+  const OvertimeService({required this.translator});
+
+  final GoogleTranslator translator;
+
+  static const _model = 'hr.overtime';
+  static const _overtimeTypeModel = 'overtime.type';
+  static const _searchReadMethod = 'search_read';
+  static const _createMethod = 'create';
+  static const _employeeAccessDenied = 'Employee Access Denied';
+  static const _formatInvalid = 'Format Invalid';
+  static const _binSize = {'bin_size': true};
 
   Future<Map<String, dynamic>> getOvertimeList(String status) async {
     try {
-      Map<String, dynamic> getEmployee = await EmployeeService().getEmployee();
-      Employee employeeData = getEmployee["data"];
+      final employeeService = EmployeeService(translator: translator);
+      final getEmployee = await employeeService.getEmployee();
+      final employeeData = getEmployee['data'] as Employee;
 
       if (employeeData.id == 0) {
-        return {
-          "success": false,
-          "errorMessage": "Employee Access Denied",
-          "data": Overtime.emptyList,
-        };
+        return _createErrorResponse(_employeeAccessDenied, Overtime.emptyList);
       }
 
-      debugPrint("GET OVERTIME STATUS => $status");
+      debugPrint('GET OVERTIME STATUS => $status');
 
-      List<dynamic> data = await client!.callKw({
-        'model': 'hr.overtime',
-        'method': 'search_read',
+      final data = await client!.callKw({
+        'model': _model,
+        'method': _searchReadMethod,
         'args': [],
         'kwargs': {
-          'context': {'bin_size': true},
+          'context': _binSize,
           'domain': [
-            ["employee_id", "=", employeeData.id],
-            ["state", "=", status],
+            ['employee_id', '=', employeeData.id],
+            ['state', '=', status],
           ],
           'fields': getOvertimeFields(),
         },
       });
 
-      List<Overtime>? overtimesList;
-
       try {
-        for (var overtime in data) {
+        for (final overtime in data) {
           if (overtime['overtime_type_id'] != false) {
-            List<dynamic> overtimeType = await client!.callKw({
-              'model': 'overtime.type',
-              'method': 'search_read',
+            final overtimeType = await client!.callKw({
+              'model': _overtimeTypeModel,
+              'method': _searchReadMethod,
               'args': [],
               'kwargs': {
-                'context': {'bin_size': true},
+                'context': _binSize,
                 'domain': [
                   ['id', '=', overtime['overtime_type_id'][0]],
                 ],
@@ -59,32 +66,35 @@ class OvertimeService {
             overtime['overtime_type_id'] = overtimeType[0];
           }
         }
-        overtimesList = List<Overtime>.from(data.map((item) {
-          return Overtime.fromMap(item);
-        }));
-      } catch (e) {
-        return {
-          "success": false,
-          "errorMessage": "Format Invalid",
-          "data": Overtime.emptyList,
-        };
-      }
 
-      return {
-        "success": true,
-        "errorMessage": "",
-        "data": overtimesList,
-      };
+        final overtimesList = List<Overtime>.from(
+          data.map((item) => Overtime.fromJson(json.encode(item))),
+        );
+
+        return {
+          'success': true,
+          'errorMessage': '',
+          'data': overtimesList,
+        };
+      } catch (e) {
+        debugPrint('Error processing overtime data: $e');
+        return _createErrorResponse(_formatInvalid, Overtime.emptyList);
+      }
     } on OdooException catch (e) {
-      debugPrint(e.toString());
-      String message = e.message.split("message: ")[2].split(",")[0];
-      Translation errorMessage =
-          await translator.translate(message, from: "en", to: "id");
-      return {
-        "success": false,
-        "errorMessage": errorMessage.text,
-        "data": Overtime.emptyList,
-      };
+      debugPrint('Odoo error: $e');
+      final message = e.message.split('message: ')[2].split(',')[0];
+      final errorMessage = await translator.translate(
+        message,
+        from: 'en',
+        to: 'id',
+      );
+      return _createErrorResponse(errorMessage.text, Overtime.emptyList);
+    } catch (e) {
+      debugPrint('Unexpected error: $e');
+      return _createErrorResponse(
+        'An unexpected error occurred',
+        Overtime.emptyList,
+      );
     }
   }
 
@@ -95,20 +105,17 @@ class OvertimeService {
     String desc,
   ) async {
     try {
-      Map<String, dynamic> getEmployee = await EmployeeService().getEmployee();
-      Employee employeeData = getEmployee["data"];
+      final employeeService = EmployeeService(translator: translator);
+      final getEmployee = await employeeService.getEmployee();
+      final employeeData = getEmployee['data'] as Employee;
 
       if (employeeData.id == 0) {
-        return {
-          "success": false,
-          "errorMessage": "Employee Access Denied",
-          "data": 0,
-        };
+        return _createErrorResponse(_employeeAccessDenied, 0);
       }
 
       final requestResponse = await client!.callKw({
-        'model': 'hr.overtime',
-        'method': 'create',
+        'model': _model,
+        'method': _createMethod,
         'args': [
           {
             'employee_id': employeeData.id,
@@ -122,20 +129,33 @@ class OvertimeService {
       });
 
       return {
-        "success": true,
-        "errorMessage": "",
-        "data": requestResponse,
+        'success': true,
+        'errorMessage': '',
+        'data': requestResponse,
       };
     } on OdooException catch (e) {
-      debugPrint(e.toString());
-      String message = e.message.split("message: ")[2].split(",")[0];
-      Translation errorMessage =
-          await translator.translate(message, from: "en", to: "id");
-      return {
-        "success": false,
-        "errorMessage": errorMessage.text,
-        "data": 0,
-      };
+      debugPrint('Odoo error: $e');
+      final message = e.message.split('message: ')[2].split(',')[0];
+      final errorMessage = await translator.translate(
+        message,
+        from: 'en',
+        to: 'id',
+      );
+      return _createErrorResponse(errorMessage.text, 0);
+    } catch (e) {
+      debugPrint('Unexpected error: $e');
+      return _createErrorResponse(
+        'An unexpected error occurred',
+        0,
+      );
     }
+  }
+
+  Map<String, dynamic> _createErrorResponse(String message, dynamic data) {
+    return {
+      'success': false,
+      'errorMessage': message,
+      'data': data,
+    };
   }
 }

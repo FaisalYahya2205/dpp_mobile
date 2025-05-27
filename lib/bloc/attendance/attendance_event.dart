@@ -1,17 +1,18 @@
 part of 'attendance_bloc.dart';
 
-class AttendanceEvent extends Equatable {
+abstract class AttendanceEvent extends Equatable {
+  const AttendanceEvent();
+
   @override
   List<Object?> get props => [];
 }
 
 class GetAttendance extends AttendanceEvent {
-  @override
-  List<Object?> get props => [];
+  const GetAttendance();
 }
 
 class CheckInAttendance extends AttendanceEvent {
-  CheckInAttendance({
+  const CheckInAttendance({
     required this.checkIn,
     required this.latitude,
     required this.longitude,
@@ -28,7 +29,7 @@ class CheckInAttendance extends AttendanceEvent {
 }
 
 class CheckOutAttendance extends AttendanceEvent {
-  CheckOutAttendance({
+  const CheckOutAttendance({
     required this.checkOut,
     required this.latitude,
     required this.longitude,

@@ -3,6 +3,7 @@ import 'package:dpp_mobile/models/overtime.dart';
 import 'package:dpp_mobile/ui/attendance_history/attendance_history.dart';
 import 'package:dpp_mobile/ui/attendance_history/attendance_history_detail.dart';
 import 'package:dpp_mobile/ui/dashboard.dart';
+import 'package:dpp_mobile/ui/dashboard_check_in/dashboard_home_check_in_survey.dart';
 import 'package:dpp_mobile/ui/dashboard_overtime/add_edit_overtime.dart';
 import 'package:dpp_mobile/ui/dashboard_overtime/detail_overtime.dart';
 import 'package:dpp_mobile/ui/forgot_password.dart';
@@ -70,6 +71,16 @@ final GoRouter appRouter = GoRouter(
             return DetailOvertime(
               overtime: state.extra as Overtime,
             );
+          },
+        ),
+        GoRoute(
+          path: '/check_in_survey',
+          name: 'check_in_survey',
+          builder: (
+            BuildContext context,
+            GoRouterState state,
+          ) {
+            return DashboardHomeCheckInSurvey(attendanceId: state.extra as int);
           },
         ),
       ],
